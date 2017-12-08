@@ -10,12 +10,13 @@
     "build": "node build/build.js"
   },
   "dependencies": {
-    "echarts": "^3.8.5",
     "element-ui": "^2.0.7",
+    "mapbox-gl": "^0.42.2",
     "node-sass": "^4.7.2",
     "sass-loader": "^6.0.6",
     "vue": "^2.5.2",
-    "vue-router": "^3.0.1"
+    "vue-router": "^3.0.1",
+    "zrender": "https://github.com/uooo/zrender/archive/2.1.1-webpack.tar.gz"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

@@ -4,7 +4,7 @@
       <div class="maptitle">
         全国出品监测
       </div>
-      <div id="mapBox">
+      <div id="map">
 
       </div>
 
@@ -34,14 +34,19 @@
           </el-option>
         </el-select>
       </div>
-      <el-button type="primary" round class="loginBtn">登陆</el-button>
+      <el-button type="primary" round class="loginBtn" v-on:click="toLogin()" >登陆</el-button>
 
     </div>
 
   </div>
 </template>
-
 <script type='text/ecmascript-6'>
+  import mapboxgl from 'mapbox-gl';
+  import '../lib/mapbox-gl/dist/mapbox-gl.css';
+  import '../lib/mapbox-gl/dist/mapbox-gl';
+  import {maplayer} from '../layer.js';
+  console.dir(mapboxgl);
+
   export default {
     data() {
       return {
@@ -70,29 +75,29 @@
       }
     },
     mounted() {
-      this.drawLine();
+      this.createMap()
     },
     methods: {
-      drawLine() {
-        // 基于准备好的dom，初始化echarts实例
-        let myChart = this.$echarts.init(document.getElementById('mapBox'))
-        // 绘制图表
-        myChart.setOption({
-          title: {text: '在Vue中使用echarts'},
-          tooltip: {},
-          xAxis: {
-            data: ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"]
-          },
-          yAxis: {},
-          series: [{
-            name: '销量',
-            type: 'bar',
-            data: [5, 20, 36, 10, 10, 20]
-          }]
-        });
+      createMap: function () {
+        mapboxgl.mapboxToken = 'pk.eyJ1IjoiZmFuZ2xhbmsiLCJhIjoiY2lpcjc1YzQxMDA5NHZra3NpaDAyODB4eSJ9.z6uZHccXvtyVqA5zmalfGg',
+        this.map = new mapboxgl.Map({
+          container: 'map',
+          style: maplayer.simple,
+          zoom: 4,
+          center: [108.94704, 34.25943],
+          repaint: true,
+          pitch: 0
+        })
+      },
+      toLogin:function () {
+        this.$router.push('/login');
       }
     }
   }
+
+
+
+
 
 
 </script>
@@ -106,12 +111,16 @@
   }
   .mapInfo{
     float:left;
-    width:750px;
+    width:900px;
     border:1px solid lightskyblue;
     height:600px;
     .maptitle{
       font-size: 28px;
       text-align: center;
+    }
+    #map{
+      width: 900px;
+      height:550px;
     }
   }
 
