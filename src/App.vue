@@ -10,12 +10,10 @@
   }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
   @import './style/common';
-  #app{
-    width:1300px;
-    overflow: auto;
-    border:1px solid yellow;
+  #app {
+    height: 100%;
 
   }
 

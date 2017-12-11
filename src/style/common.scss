@@ -5,7 +5,6 @@ body, div, span, header, footer, nav, ul, dl, dt, dd, li, a, p, h1, h2, h3, h4,h
   font-style: normal;
   text-decoration: none;
   border: none;
-  color: #333;
   font-weight: normal;
   font-family: "Microsoft Yahei";
   box-sizing: border-box;
@@ -38,7 +37,6 @@ html,body{
 .wrapper {
   margin: 0 auto;
   position: relative;
-  margin-top: 30px;
 }
 
 .clear:after {
@@ -54,21 +52,6 @@ input[type="button"], input[type="submit"], input[type="search"], input[type="re
   -webkit-appearance: none;
 }
 
-.scroll_style {
-  overflow: auto;
-  height: 100%;
-}
-.scroll_style::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-  background: rgba(0, 0, 0, 0.1);
-}
-.scroll_style::-webkit-scrollbar-thumb {
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
-  border-radius: 3px;
-  background: #c1c1c1;
-}
 .login-container {
   border-radius: 5px 5px 5px 5px;
   width: 350px;
@@ -81,15 +64,22 @@ input[type="button"], input[type="submit"], input[type="search"], input[type="re
     text-align: center;
     color: #505458;
   }
-  .page-link {
-    text-align: right;
-    span {
-      color: #409eff;
-      padding: 4px;
-      cursor: pointer;
-      font-size: 14px;
-    }
-  }
+}
+
+/*滚动条*/
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+  background:#F4F5F7;
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+
+*::-webkit-scrollbar-thumb {
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  background:rgba(189,196,210,0.5);
 }
 
 

@@ -3,7 +3,7 @@
     <div class="change"></div>
     <div class="stable">
       <el-form :model="ruleForm" :rules="rules" :status-icon="true" ref="ruleForm" class="login-container">
-        <h1 class="title" >系统登录</h1>
+        <h1 class="title" >用户登录</h1>
         <el-form-item prop="account">
           <el-input type="text" v-model="ruleForm.account" auto-complete="off" placeholder="账号"></el-input>
         </el-form-item>
@@ -11,12 +11,8 @@
           <el-input type="password" v-model="ruleForm.checkPass"  auto-complete="off" placeholder="密码"></el-input>
         </el-form-item>
         <el-form-item style="width:100%;">
-          <el-button type="primary" style="width:100%;"  :loading="logining">登录</el-button>
+          <el-button type="primary" style="width:100%;height:40px;color: #ffffff" :loading="logining">登录</el-button>
         </el-form-item>
-        <div class="page-link">
-          <span>重置密码</span>
-          <span>用户注册</span>
-        </div>
       </el-form>
     </div>
     <div class="change"></div>
@@ -113,17 +109,16 @@
   }
 </script>
 <style scoped lang="scss">
-  @import '../style/common';
   .parent{
     height: 100%;
-    display:flex; /*设为伸缩容器*/
-    flex-flow:row; /*伸缩项目单行排列*/
-    align-items: center; /* 上下居中 */
-    background-image: url(../assets/loginPic.jpg);
+    display:flex;
+    flex-flow:row;
+    align-items: center;
+    background-image: url(../img/loginPic.jpg);
     background-size: 100% 100%;
-    background-position: 50%;
+    background-position: center;
     .stable{
-      width:450px; /*固定宽度*/
+      width:450px;
     }
     .change{
       flex:1; /*这里设置为占比1，填充满剩余空间*/

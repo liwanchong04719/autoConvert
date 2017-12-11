@@ -1,5 +1,6 @@
 <template>
-  <div class="clear">
+  <div class="container">
+  <div class="clear content wrapper">
     <div class="mapInfo">
       <div class="maptitle">
         全国出品监测
@@ -9,10 +10,10 @@
       </div>
 
     </div>
-    <div style="float:right;width:40%">
+    <div style="float:right;width:35%">
       <div style="margin-bottom: 20px">
-        <span>任务类型</span>
-        <el-select v-model="value1" placeholder="日出品">
+        <span style="color:#ffffff">任务类型</span>
+        <el-select v-model="value1" placeholder="日出品" size="small">
           <el-option
             v-for="item in options1"
             :key="item.value"
@@ -23,8 +24,8 @@
         </el-select>
       </div>
       <div>
-        <span>细分类型</span>
-        <el-select v-model="value2" placeholder="poi">
+        <span style="color:#ffffff">细分类型</span>
+        <el-select v-model="value2" placeholder="poi" size="small">
           <el-option
             v-for="item in options2"
             :key="item.value"
@@ -35,9 +36,16 @@
         </el-select>
       </div>
       <el-button type="primary" round class="loginBtn" v-on:click="toLogin()" >登陆</el-button>
+      <div style="height: 300px;width:300px;border: 1px solid lightgreen;margin:20px 0px">
+
+      </div>
+      <div style="height:270px;width:300px;border: 1px solid lightgrey;">
+
+      </div>
 
     </div>
 
+  </div>
   </div>
 </template>
 <script type='text/ecmascript-6'>
@@ -45,7 +53,6 @@
   import '../lib/mapbox-gl/dist/mapbox-gl.css';
   import '../lib/mapbox-gl/dist/mapbox-gl';
   import {maplayer} from '../layer.js';
-  console.dir(mapboxgl);
 
   export default {
     data() {
@@ -83,8 +90,10 @@
         this.map = new mapboxgl.Map({
           container: 'map',
           style: maplayer.simple,
-          zoom: 4,
-          center: [108.94704, 34.25943],
+          zoom: 3.3,
+          maxZoom: 4.5,
+          minZoom: 3,
+          center: [107.02932,  37.68486],
           repaint: true,
           pitch: 0
         })
@@ -103,24 +112,39 @@
 </script>
 
 <style lang="scss" scoped>
+  .container{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    background-color: rgba(45,101,203,.89);
+    background-image: radial-gradient(farthest-side ellipse at 10% 0,rgba(45,101,203,.8) 30%,rgba(174,180,186,.8) 76%,rgba(199,175,156,.8));
+    background-image: -webkit-radial-gradient(10% 0,farthest-side ellipse,rgba(45,101,203,.8) 30%,rgba(174,180,186,.8) 76%,rgba(199,175,156,.8));
+    .content{
+      width: 1280px;
+    }
+
+  }
+
   .loginBtn{
     width:150px;
     position: absolute;
-    right: 10px;
-    top:10px;
+    right: 0px;
+    top:0px;
   }
   .mapInfo{
     float:left;
-    width:900px;
-    border:1px solid lightskyblue;
-    height:600px;
+    width:800px;
+    height:700px;
     .maptitle{
+      color:#ffffff;
       font-size: 28px;
       text-align: center;
+      margin-bottom: 20px;
     }
     #map{
-      width: 900px;
-      height:550px;
+      width: 800px;
+      height:630px;
     }
   }
 
