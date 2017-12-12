@@ -1,13 +1,36 @@
 import Vue from 'vue';
 import router from './router';
 import App from './App';
-import { Button,Select,Option,FormItem,Form,Input} from 'element-ui';
+import {
+  Button,
+  Select,
+  Option,
+  FormItem,
+  Form,
+  Input,
+  Table,
+  TableColumn,
+  Menu,
+  MenuItem,
+  Submenu,
+  Row,
+  Collapse,
+  CollapseItem
+} from 'element-ui';
 Vue.use(Button);
 Vue.use(Select);
 Vue.use(Option);
 Vue.use(FormItem);
 Vue.use(Form);
 Vue.use(Input);
+Vue.use(Table);
+Vue.use(TableColumn);
+Vue.use(Menu);
+Vue.use(MenuItem);
+Vue.use(Submenu);
+Vue.use(Row);
+Vue.use(Collapse);
+Vue.use(CollapseItem);
 
 
 
