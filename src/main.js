@@ -15,8 +15,11 @@ import {
   Submenu,
   Row,
   Collapse,
-  CollapseItem
+  CollapseItem,
+  Checkbox,
+  DatePicker
 } from 'element-ui';
+
 Vue.use(Button);
 Vue.use(Select);
 Vue.use(Option);
@@ -31,6 +34,8 @@ Vue.use(Submenu);
 Vue.use(Row);
 Vue.use(Collapse);
 Vue.use(CollapseItem);
+Vue.use(Checkbox);
+Vue.use(DatePicker);
 
 
 

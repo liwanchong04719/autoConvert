@@ -70,9 +70,12 @@ input[type="button"], input[type="submit"], input[type="search"], input[type="re
 *::-webkit-scrollbar {
   width: 6px;
   height: 6px;
-  background:#F4F5F7;
+  background:#f4f4f4;
   padding-top: 2px;
   padding-bottom: 2px;
+}
+.leftMenu::-webkit-scrollbar {
+  display: none;
 }
 
 *::-webkit-scrollbar-thumb {

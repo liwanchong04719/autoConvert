@@ -1,5 +1,5 @@
 <template>
-  <div class="flexItem">
+  <div class="flexItem" v-on:click="enterOperate(option)">
     <span class="picPos" v-bgcolor=colorVal>
       <img src="../img/task.png" alt="">
       <span style="display:inline-block;vertical-align: middle;height: 100%;width: 0px"></span>
@@ -20,8 +20,17 @@
          colorVal:{
            type:[String],
            default:'rgb(111, 239, 152)'
+         },
+         option:{
+           type:[String]
          }
-      }
+      },
+     methods:{
+       enterOperate:function (option) {
+         console.log(option);
+         this.$router.push(option);
+       }
+     }
   }
   //全局指令
     Vue.directive("bgcolor", function (el, binding) {
@@ -33,7 +42,7 @@
   .flexItem {
     display: flex;
     width: 22%;
-    height: 120px;
+    height: 110px;
     border-radius: 5px;
     background-color: #ffffff;
     cursor: pointer;
@@ -44,7 +53,7 @@
       height: 100%;
       background-color: rgb(85, 195, 252);
       border-radius: 5px 0px 0px 5px;
-      width: 120px;
+      width: 110px;
       text-align: center;
       img {
         display: inline-block;
@@ -58,13 +67,13 @@
       height: 100%;
       flex: 1;
       text-align: center;
-      transform: translateY(38%);
+      line-height: 110px;
     }
     &:hover {
       box-shadow: 0px 0px 15px rgba(0, 0, 0, .3);
     }
     &:hover img {
-      transform: scale(1.2);
+      transform: scale(1.1);
       transition: all 0.7s linear;
     }
   }

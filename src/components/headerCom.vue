@@ -1,12 +1,16 @@
 <template>
   <div class="header clear">
-    <div class="fl" style="color:rgb(85, 195, 252);font-size: 22px;margin-left: 30px;font-weight: 800">
-      自动化出品管理
+    <div class="wrapper" style="width: 1160px">
+      <div class="fl" style="color:#009a61;font-size: 22px;font-weight: 600">
+        自动化出品管理
+      </div>
+      <div class="fr">
+        <router-link to="/monitor" class="btnbg">监控页</router-link>
+        <router-link to="/login" class="btnbg">退出登录</router-link>
+      </div>
+
     </div>
-    <div class="fr" style="margin-right: 30px">
-      <router-link to="/monitor" class="btnbg">监控页</router-link>
-      <router-link to="/login" class="btnbg">退出登录</router-link>
-    </div>
+
   </div>
 </template>
 <script>
@@ -18,23 +22,33 @@
 
 <style lang="scss" scoped>
   .header{
-    height: 70px;
-    background-color: white;
-    line-height: 70px;
+    height: 64px;
+    line-height:64px;
     position: fixed;
     width: 100%;
     z-index: 3;
+    border-top: 3px solid #009a61;
+    box-shadow: 0px 2px 10px 0px rgba(0,0,0,0.1), 0 1px rgba(0,0,0,0.1);
+    background: #fafafa;
     .btnbg{
       display: inline-block;
-      background-color: rgb(85, 195, 252);
-      width: 130px;
+      width: 90px;
       height: 35px;
       line-height: 35px;
-      color:#ffffff;
       text-align: center;
-      border-radius: 10px;
       margin-right: 20px;
       cursor: pointer;
+      color: #fff;
+      background-color: #009a61;
+      border-color: #008151;
+      padding: 0 13px;
+      font-size: 14px;
+      border-radius: 4px;
+      &:hover{
+        color: #fff;
+        background-color: #006741;
+        border-color: #00432a;
+      }
     }
   }
 </style>

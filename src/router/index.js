@@ -3,6 +3,8 @@ import VueRouter from 'vue-router';
 import loginView from '../views/loginView.vue';
 import menuView from '../views/menuView.vue';
 import monitorView from '../views/monitorView.vue';
+import recodeView from '../views/recodeView.vue';
+import retaskView from '../views/retaskView.vue';
 Vue.use(VueRouter)
 
 
@@ -26,6 +28,14 @@ export default new VueRouter({
     {
       path: '/menu',
       component: menuView
+    },
+    {
+      path: '/recode',
+      component: recodeView
+    },
+    {
+      path: '/retask',
+      component: retaskView
     }
 
   ]

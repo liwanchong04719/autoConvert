@@ -10,6 +10,7 @@
         <el-form-item prop="checkPass">
           <el-input type="password" v-model="ruleForm.checkPass"  auto-complete="off" placeholder="密码"></el-input>
         </el-form-item>
+        <el-checkbox v-model="checked" v-on:click="rememberMe()" style="margin-bottom: 30px;margin-left: 270px">记住我</el-checkbox>
         <el-form-item style="width:100%;">
           <el-button type="primary" style="width:100%;height:40px;color: #ffffff" :loading="logining">登录</el-button>
         </el-form-item>
