@@ -164,8 +164,9 @@
       li {
         display: inline-block;
         a {
-          color: #009a61;
+          color:#3399ff;
           font-size: 14px;
+          font-weight: 700;
         }
       }
     }
@@ -174,7 +175,8 @@
         margin-top: 30px;
         .demonstration{
           font-size: 14px;
-          color:#009a61;
+          color:#3399ff;
+          font-weight: 700;
         }
       }
 

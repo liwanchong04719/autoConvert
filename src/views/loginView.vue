@@ -10,14 +10,18 @@
         <el-form-item prop="checkPass">
           <el-input type="password" v-model="ruleForm.checkPass"  auto-complete="off" placeholder="密码"></el-input>
         </el-form-item>
-        <el-checkbox v-model="checked" v-on:click="rememberMe()" style="margin-bottom: 30px;margin-left: 270px">记住我</el-checkbox>
+        <el-checkbox v-model="checked"  style="margin-bottom: 30px;margin-left: 270px">记住我</el-checkbox>
         <el-form-item style="width:100%;">
           <el-button type="primary" style="width:100%;height:40px;color: #ffffff" :loading="logining">登录</el-button>
         </el-form-item>
       </el-form>
     </div>
     <div class="change"></div>
+    <div @click="rememberMe('123')" style="width: 100px;height: 100%;border:1px solid red">
+      测试测试
+    </div>
   </div>
+
 </template>
 
 <script>
@@ -28,15 +32,6 @@
   export default {
     name: 'Login',
     data () {
-      let validatePass = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error('请再次输入密码'));
-        } else if (value !== this.registerForm.password) {
-          callback(new Error('两次输入密码不一致!'));
-        } else {
-          callback();
-        }
-      };
       return {
         logining: false,
         ruleForm: {
@@ -54,7 +49,28 @@
         checked: true
       }
     },
-//    methods: {
+    mounted(){
+      this.autoLogin()
+
+    },
+    methods: {
+      rememberMe:function(str){
+        console.log(str);
+        console.log(this.ruleForm.account);
+        console.log(this.ruleForm.checkPass);
+        localStorage.setItem('user',this.ruleForm.account);
+        localStorage.setItem('pwd',this.ruleForm.checkPass);
+      },
+      autoLogin:function(){
+        let user = localStorage.getItem('user');
+        let password = localStorage.getItem('pwd');
+        this.ruleForm.account = user ;
+        this.ruleForm.checkPass = password ;
+
+
+      }
+
+    }
 //      initRuleForm () {
 //        this.$refs.ruleForm.resetFields();
 //      },

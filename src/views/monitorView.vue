@@ -81,13 +81,15 @@
     </button>
     <transition
       name="custom-classes-transition"
-      enter-to-class="animated bounceIn">
+      enter-to-class="animated zoomIn">
       <div v-if="show" class="provinceDel">
         <div class="centerBlock">
-          <div class="closeBtn" @click="show = !show">
-            <img src="../img/light_close.png" alt="">
+          <div class="singleProtitle">
+            日出品单省转换信息
           </div>
-          <div style="font-size:26px;margin-bottom: 30px;">日出品单省转换信息</div>
+          <div class="closeBtn" @click="show = !show">
+            x
+          </div>
           <ul>
             <li>
               <span>省份：</span>
@@ -112,8 +114,8 @@
           </ul>
           <el-table
             :data="tableData"
-            stripe
-            style="width: 100%">
+            style="width: 100%; padding: 30px 30px 0px;"
+          >
             <el-table-column
               prop="taskId"
               label="子任务号"
@@ -122,11 +124,11 @@
             <el-table-column
               prop="province"
               label="省份"
+              width="100"
              >
             </el-table-column>
             <el-table-column
               prop="proApart"
-              width="90"
               label="省份（份）">
             </el-table-column>
             <el-table-column
@@ -338,11 +340,10 @@
     .provinceDel {
       width: 100%;
       height: 100%;
-      background-color: rgba(255, 255, 255, 0.7);
+      background-color: rgba(0, 0, 0, 0.3);
       position: absolute;
       left: 0px;
       top: 0px;
-      text-align: center;
       .centerBlock {
         position: absolute;
         left: 0px;
@@ -352,17 +353,36 @@
         margin: auto;
         width: 1180px;
         height: 600px;
+        border-radius: 6px;
+        background-color: #ffffff;
+        .singleProtitle{
+          font-size:18px;
+          line-height: 56px;
+          height: 56px;
+          background-color: rgb(88, 150, 255);
+          overflow: hidden;
+          color: #ffffff;
+          text-align: left;
+          text-indent: 30px;
+          border-top-left-radius: 6px;
+          border-top-right-radius: 6px
+        }
         ul {
           display: flex;
           justify-content: space-between;
-          margin-bottom: 10px;
-          color: #009a61;
+          padding:30px 40px 0px 40px;
+          font-size: 14px;
+          color:rgb(88, 150, 255);
+          font-weight: 600;
         }
         .closeBtn {
           position: absolute;
-          right: -20px;
-          top: -20px;
+          right: 20px;
+          top: 17px;
+          color: #ffffff;
           cursor: pointer;
+          font-size: 21px;
+          line-height: 1;
         }
       }
     }

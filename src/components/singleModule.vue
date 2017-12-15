@@ -1,10 +1,11 @@
 <template>
   <div class="flexItem" v-on:click="enterOperate(option)">
-    <span class="picPos" v-bgcolor=colorVal>
+    <div class="pic">
       <img src="../img/task.png" alt="">
-      <span style="display:inline-block;vertical-align: middle;height: 100%;width: 0px"></span>
-    </span>
-    <span class="bar">{{taskTitle}}</span>
+    </div>
+    <div class="words">
+      {{taskTitle}}
+    </div>
   </div>
 
 </template>
@@ -18,8 +19,7 @@
            default: '代码重载'
          },
          colorVal:{
-           type:[String],
-           default:'rgb(111, 239, 152)'
+           type:[String]
          },
          option:{
            type:[String]
@@ -40,42 +40,85 @@
 
 <style lang="scss" scoped>
   .flexItem {
-    display: flex;
     width: 22%;
-    height: 110px;
     border-radius: 5px;
-    background-color: #ffffff;
     cursor: pointer;
     margin-bottom: 30px;
     margin-right: 3%;
-    .picPos {
-      display: inline-block;
-      height: 100%;
-      background-color: rgb(85, 195, 252);
-      border-radius: 5px 0px 0px 5px;
-      width: 110px;
+    padding: 20px;
+    transition: all 0.3s ;
+    position: relative;
+    &::before{
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: calc(100% - 35px);
+      height: calc(100% - 35px);
+      border: 1px solid #e5e7e9;
+      border-width: 1px 0 0 1px;
+      pointer-events: none;
+      transition: .3s all ease;
+      display: block;
+    }
+    &::after{
+      content: '';
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: calc(100% - 35px);
+      height: calc(100% - 35px);
+      border: 1px solid #e5e7e9;
+      border-width: 0 1px 1px 0;
+      pointer-events: none;
+      transition: .3s all ease;
+      display: block;
+    }
+    .pic{
       text-align: center;
-      img {
-        display: inline-block;
-        vertical-align: middle;
+      vertical-align: middle;
+      width: 100%;
+      padding: 20px;
+      img{
+        width:50px;
+        height: 50px;
       }
+
     }
-    .bar {
-      color: #505458;
-      display: inline-block;
-      font-size: 20px;
-      height: 100%;
-      flex: 1;
+    .words{
       text-align: center;
-      line-height: 110px;
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      &::after{
+        content: "";
+        display: block;
+        position: absolute;
+        height: 2px;
+        width: 40px;
+        background-color: #37ccf4;
+        transition: all 0.3s;
+        left: 110px;
+        text-align: center;
+        bottom: 10px;
+      }
+
     }
-    &:hover {
-      box-shadow: 0px 0px 15px rgba(0, 0, 0, .3);
-    }
-    &:hover img {
-      transform: scale(1.1);
-      transition: all 0.7s linear;
-    }
+
+  }
+  .flexItem:hover :after{
+    width: 100px;
+    left:78px;
+  }
+  .flexItem:hover:before{
+     width: 100%;
+     height: 100%;
+     border-color:#37ccf4;
+   }
+  .flexItem:hover:after{
+    width: 100%;
+    height: 100%;
+    border-color:#37ccf4;
   }
 
 </style>
