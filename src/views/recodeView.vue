@@ -79,8 +79,13 @@
            </el-table>
 
          </div>
-
        </div>
+      <el-pagination
+        background
+        layout="prev, pager, next"
+        :total="200"
+      >
+      </el-pagination>
     </div>
   </div>
 </template>
@@ -171,6 +176,7 @@
       }
     }
     .Main{
+      margin-bottom: 30px;
       .selectOption{
         margin-top: 30px;
         .demonstration{
@@ -186,6 +192,9 @@
     content: ">";
     padding: 0 8px;
     color: #ccc;
+  }
+  .el-pagination{
+    float: right;
   }
 
 </style>

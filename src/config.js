@@ -11,17 +11,8 @@ export const appConfig = {
   appName: 'autoConvert',
   // serviceUrl: 'http://192.168.15.220:3000' // 正式环境的服务地址
   // serviceUrl: 'http://192.168.4.189:3000' // 开发环境的服务地址
-  serviceUrl: 'http://localhost:8080' // 开发环境的服务地址
+  serviceUrl: 'http://localhost:8080' ,// 开发环境的服务地址
+  developUrl:'http://fs.navinfo.com/smap/'
 }
 
-export const appUtil = {
-  setCurrentUser: function (user) {
-    sessionStorage.setItem(`${appConfig.appName}-user`, JSON.stringify(user));
-  },
-  getCurrentUser: function () {
-    return JSON.parse(sessionStorage.getItem(`${appConfig.appName}-user`));
-  },
-  removeCurrentUser: function () {
-    sessionStorage.removeItem(`${appConfig.appName}-user`);
-  }
-}
+

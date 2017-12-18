@@ -17,7 +17,8 @@ import {
   Collapse,
   CollapseItem,
   Checkbox,
-  DatePicker
+  DatePicker,
+  Pagination
 } from 'element-ui';
 
 Vue.use(Button);
@@ -36,6 +37,7 @@ Vue.use(Collapse);
 Vue.use(CollapseItem);
 Vue.use(Checkbox);
 Vue.use(DatePicker);
+Vue.use(Pagination);
 
 
 

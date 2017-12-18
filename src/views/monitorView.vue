@@ -1,84 +1,81 @@
 <template>
   <div class="container">
-  <div class="content">
-    <div class="leftMenu">
-      <el-menu
-        default-active="2"
-        class="el-menu-vertical-demo"
-        @open="handleOpen"
-        @close="handleClose"
-        background-color="#545c64"
-        text-color="#fff"
-        active-text-color="#ffd04b">
-        <el-submenu index="1">
-          <template slot="title">
-            <i class="el-icon-location"></i>
-            <span>任务类型</span>
-          </template>
+    <div class="content">
+      <div class="leftMenu">
+        <el-menu
+          default-active="2"
+          class="el-menu-vertical-demo"
+          @open="handleOpen"
+          @close="handleClose"
+          background-color="#545c64"
+          text-color="#fff"
+          active-text-color="#ffd04b">
+          <el-submenu index="1">
+            <template slot="title">
+              <i class="el-icon-location"></i>
+              <span>任务类型</span>
+            </template>
             <el-menu-item index="1-1">日出品</el-menu-item>
             <el-menu-item index="1-2">月出品</el-menu-item>
             <el-menu-item index="1-3">季出品</el-menu-item>
-        </el-submenu>
-        <el-submenu index="2">
-          <template slot="title">
-            <i class="el-icon-menu"></i>
-            <span>细分类型</span>
-          </template>
+          </el-submenu>
+          <el-submenu index="2">
+            <template slot="title">
+              <i class="el-icon-menu"></i>
+              <span>细分类型</span>
+            </template>
             <el-menu-item index="2-1">poi</el-menu-item>
             <el-menu-item index="2-2">poi_road</el-menu-item>
-        </el-submenu>
-        <el-menu-item index="3">
-          <i class="el-icon-document"></i>
-          <span slot="title">出品任务概述</span>
-        </el-menu-item>
-        <div class="taskDes">
-          <span>所属日期：</span>
-          <span> 20171215</span><br/>
-          <span>总任务号：</span>
-          <span> 32</span><br/>
-          <span>数据发布：</span>
-          <span> 未发布</span><br/>
-          <span style="margin-left:13px">作业季：</span>
-          <span> 17WIN</span><br/>
-          <span style="margin-left:13px">总状态：</span>
-          <span> 转换中</span><br/>
-          <span>开始时间：</span>
-          <span> 2017-12-15 15:23:45</span><br/>
-          <span>结束时间：</span>
-          <span> 2017-12-15 15:23:45</span><br/>
-          <span style="margin-left:27px">耗时：</span>
-          <span> 5小时10分</span><br/>
+          </el-submenu>
+          <el-menu-item index="3">
+            <i class="el-icon-document"></i>
+            <span slot="title">出品任务概述</span>
+          </el-menu-item>
+          <div class="taskDes">
+            <span>所属日期：</span>
+            <span> 20171215</span><br/>
+            <span>总任务号：</span>
+            <span> 32</span><br/>
+            <span>数据发布：</span>
+            <span> 未发布</span><br/>
+            <span style="margin-left:13px">作业季：</span>
+            <span> 17WIN</span><br/>
+            <span style="margin-left:13px">总状态：</span>
+            <span> 转换中</span><br/>
+            <span>开始时间：</span>
+            <span> 2017-12-15 15:23:45</span><br/>
+            <span>结束时间：</span>
+            <span> 2017-12-15 15:23:45</span><br/>
+            <span style="margin-left:27px">耗时：</span>
+            <span> 5小时10分</span><br/>
 
-        </div>
-        <el-menu-item index="4">
-          <i class="el-icon-news"></i>
-          <span slot="title">出品省份信息</span>
-        </el-menu-item>
-        <div class="taskDes">
-          <div>成功省份：</div>
-          <span>上海市,黑龙江省,湖南省,甘肃省,浙江省,山东省,福建省,吉林省,贵州省,四川省,云南省,天津市,陕西省,河南省,内蒙古自治区,广东省,江西省,湖北省,重庆市,安徽省,辽宁省,新疆维吾尔自治区,山西省,广西壮族自治区,海南省,河北省,江苏省
+          </div>
+          <el-menu-item index="4">
+            <i class="el-icon-news"></i>
+            <span slot="title">出品省份信息</span>
+          </el-menu-item>
+          <div class="taskDes">
+            <div>成功省份：</div>
+            <span>上海市,黑龙江省,湖南省,甘肃省,浙江省,山东省,福建省,吉林省,贵州省,四川省,云南省,天津市,陕西省,河南省,内蒙古自治区,广东省,江西省,湖北省,重庆市,安徽省,辽宁省,新疆维吾尔自治区,山西省,广西壮族自治区,海南省,河北省,江苏省
 </span><br/>
-          <div style="margin-top: 10px">失败省份：</div>
-          <span> 湖北，福建，陕西</span><br/>
-          <div style="margin-top: 10px">转换中省份：</div>
-          <span> 四川省,云南省,天津市,陕西省,河南省,内蒙古自治区</span>
+            <div style="margin-top: 10px">失败省份：</div>
+            <span> 湖北，福建，陕西</span><br/>
+            <div style="margin-top: 10px">转换中省份：</div>
+            <span> 四川省,云南省,天津市,陕西省,河南省,内蒙古自治区</span>
+          </div>
+
+        </el-menu>
+      </div>
+      <div class="mapInfo">
+        <div class="maptitle">
+          全国出品监测
+        </div>
+        <div id="map">
+
         </div>
 
-      </el-menu>
-    </div>
-    <div class="mapInfo">
-      <div class="maptitle">
-        全国出品监测
       </div>
-      <div id="map">
-
-      </div>
-
     </div>
-  </div>
-    <button @click="show = !show">
-      Toggle render
-    </button>
     <transition
       name="custom-classes-transition"
       enter-to-class="animated zoomIn">
@@ -125,7 +122,7 @@
               prop="province"
               label="省份"
               width="100"
-             >
+            >
             </el-table-column>
             <el-table-column
               prop="proApart"
@@ -181,6 +178,7 @@
   import '../lib/mapbox-gl/dist/mapbox-gl';
   import {maplayer} from '../layer.js';
   import '../lib/animate.css';
+  import {getconfig} from '../dataService/service';
 
   export default {
     data() {
@@ -231,7 +229,7 @@
           endTime: '2017-12-12 16:20:09',
           spendtime: '12.9',
           logfile: '11111'
-        },{
+        }, {
           taskId: '2016',
           province: '四川省',
           proApart: '四川1',
@@ -243,7 +241,7 @@
           endTime: '2017-12-12 16:20:09',
           spendtime: '12.9',
           logfile: '11111'
-        },{
+        }, {
           taskId: '2016',
           province: '四川省',
           proApart: '四川1',
@@ -256,41 +254,105 @@
           spendtime: '12.9',
           logfile: '11111'
         }],
-        show:false
+        show: false
       }
     },
-    mounted() {
+    mounted: function () {
       this.createMap()
+      this.initConfig()
     },
     methods: {
       createMap: function () {
         mapboxgl.mapboxToken = 'pk.eyJ1IjoiZmFuZ2xhbmsiLCJhIjoiY2lpcjc1YzQxMDA5NHZra3NpaDAyODB4eSJ9.z6uZHccXvtyVqA5zmalfGg',
-        this.map = new mapboxgl.Map({
-          container: 'map',
-          style: maplayer.simple,
-          zoom: 3.8,
-          maxZoom: 4.5,
-          minZoom: 3,
-          center: [107.02932,  37.68486],
-          repaint: true,
-          pitch: 0
+          this.map = new mapboxgl.Map({
+            container: 'map',
+            style: maplayer.simple,
+            zoom: 3.8,
+            maxZoom: 4.5,
+            minZoom: 3,
+            center: [107.02932, 37.68486],
+            repaint: true,
+            pitch: 0
+          })
+
+        let that = this;                   //保存this指针的指向：指向vue实例
+        this.map.on('load', function () {
+          that.map.addLayer({
+            "id": "plate",
+            "type": "fill",
+            "source": {
+              "type": "geojson",
+              "data": {
+                "type": "Feature",
+                "properties": {},
+                "geometry": {
+                  "type": "Polygon",
+                  "coordinates": [
+                    [
+                      [109.2041015625, 32.3057060139],
+                      [110.4345703125, 34.2345123624],
+                      [110.2807617188, 35.4248679193],
+                      [109.7973632813, 37.3526928037],
+                      [108.7646484375, 36.7564903295],
+                      [108.5009765625, 35.7465122599],
+                      [109.2041015625, 32.3057060139]
+                    ]
+                  ]
+                }
+              }
+            },
+            "layout": {
+              "visibility": "visible"
+            },
+            "paint": {
+              "fill-color": "rgba(255, 116, 116, .3)",
+              'fill-outline-color': '#ff7474'
+            }
+          });
+
+          that.map.on('click', 'plate', function () {
+            that.show = true
+          });
+          this.popup = new mapboxgl.Popup({
+            closeButton: false,
+            closeOnClick: false
+          });
+
+          that.map.on('mouseenter', 'plate', function () {
+            that.map.getCanvas().style.cursor = 'pointer';
+            this.popup.setLngLat([109.55331540892581, 36.00854528903716])
+              .setHTML('正在转换的步骤：XXXX<br/>失败项：无')
+              .addTo(that.map);
+          });
+
+          that.map.on('mouseleave', 'plate', function () {
+            that.map.getCanvas().style.cursor = '';
+            this.popup.remove();
+          });
         })
       },
-      toLogin:function () {
+      toLogin: function () {
         this.$router.push('/login');
       },
+      //下拉列表的折叠和收起
       handleOpen(key, keyPath) {
-//        console.log(key, keyPath);
+        console.log(key, keyPath);
       },
       handleClose(key, keyPath) {
-//        console.log(key, keyPath);
+        console.log(key, keyPath);
+      },
+      //请求后台服务
+      initConfig:function() {
+        getconfig().then(function(data){
+          console.log(data);
+
+        })
       }
+
+
     }
+
   }
-
-
-
-
 
 
 </script>
@@ -307,13 +369,13 @@
         height: 100%;
         max-height: 100%;
         overflow: auto;
-        background-color:#545c64;
-        .taskDes{
+        background-color: #545c64;
+        .taskDes {
           padding: 0px 20px;
-          color:#ffffff;
-          font-size:14px;
+          color: #ffffff;
+          font-size: 14px;
           line-height: 20px;
-          color:rgb(255, 208, 75);
+          color: rgb(255, 208, 75);
         }
       }
       .mapInfo {
@@ -328,7 +390,7 @@
           width: 100%;
           text-align: center;
           color: #ffffff;
-          background: url(../img/monitorTitle.png) no-repeat 50% 50% ;
+          background: url(../img/monitorTitle.png) no-repeat 50% 50%;
 
         }
         #map {
@@ -355,8 +417,8 @@
         height: 600px;
         border-radius: 6px;
         background-color: #ffffff;
-        .singleProtitle{
-          font-size:18px;
+        .singleProtitle {
+          font-size: 18px;
           line-height: 56px;
           height: 56px;
           background-color: rgb(88, 150, 255);
@@ -370,9 +432,9 @@
         ul {
           display: flex;
           justify-content: space-between;
-          padding:30px 40px 0px 40px;
+          padding: 30px 40px 0px 40px;
           font-size: 14px;
-          color:rgb(88, 150, 255);
+          color: rgb(88, 150, 255);
           font-weight: 600;
         }
         .closeBtn {
@@ -392,7 +454,7 @@
     position: absolute;
     right: 10px;
     top: 10px;
-    border-radius:18px;
+    border-radius: 18px;
     background-color: #55c3fc;
     width: 130px;
     height: 35px;
@@ -401,12 +463,14 @@
     text-align: center;
     cursor: pointer;
   }
+
   .el-menu-item-group_title {
     padding: 0px;
     line-height: normal;
     font-size: 12px;
     color: #878d99;
   }
+
   .el-menu {
     border: none;
   }

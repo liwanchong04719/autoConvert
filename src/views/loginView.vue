@@ -10,16 +10,16 @@
         <el-form-item prop="checkPass">
           <el-input type="password" v-model="ruleForm.checkPass"  auto-complete="off" placeholder="密码"></el-input>
         </el-form-item>
-        <el-checkbox v-model="checked"  style="margin-bottom: 30px;margin-left: 270px">记住我</el-checkbox>
+        <el-checkbox v-model="checked"  @change="rememberMe('123')"  style="margin-bottom: 30px;margin-left: 270px">记住我</el-checkbox>
         <el-form-item style="width:100%;">
-          <el-button type="primary" style="width:100%;height:40px;color: #ffffff" :loading="logining">登录</el-button>
+          <el-button type="primary" style="width:100%;height:40px;color: #ffffff" :loading="logining" @click="loginSys()">登录</el-button>
         </el-form-item>
       </el-form>
     </div>
     <div class="change"></div>
-    <div @click="rememberMe('123')" style="width: 100px;height: 100%;border:1px solid red">
-      测试测试
-    </div>
+    <!--<div @click="rememberMe('123')" style="width: 100px;height: 100%;border:1px solid red">-->
+      <!--测试测试-->
+    <!--</div>-->
   </div>
 
 </template>
@@ -28,6 +28,7 @@
 //  import { login, registerApi } from '../dataService/api';
 //  import { appUtil } from '../config';
 //  import { Utils } from '../common/js/utils.js'
+import  '../lib/jquery-1.8.3.min'
 
   export default {
     name: 'Login',
@@ -55,18 +56,30 @@
     },
     methods: {
       rememberMe:function(str){
-        console.log(str);
-        console.log(this.ruleForm.account);
-        console.log(this.ruleForm.checkPass);
-        localStorage.setItem('user',this.ruleForm.account);
-        localStorage.setItem('pwd',this.ruleForm.checkPass);
+        if ($(".el-checkbox input[type='checkbox']").is(':checked') == true) {
+          console.log(str);
+          console.log(this.ruleForm.account);
+          console.log(this.ruleForm.checkPass);
+          localStorage.setItem('user',this.ruleForm.account);
+          localStorage.setItem('pwd',this.ruleForm.checkPass);
+        } else {
+          localStorage.clear();
+        }
+
       },
       autoLogin:function(){
         let user = localStorage.getItem('user');
         let password = localStorage.getItem('pwd');
         this.ruleForm.account = user ;
         this.ruleForm.checkPass = password ;
-
+      },
+      loginSys:function () {
+        if ($(".el-checkbox input[type='checkbox']").is(':checked') == true) {
+          localStorage.setItem('user',this.ruleForm.account);
+          localStorage.setItem('pwd',this.ruleForm.checkPass);
+        }
+        this.$router.push('/menu');
+        console.log('login');
 
       }
 
