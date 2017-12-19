@@ -9,10 +9,8 @@
 
 export const appConfig = {
   appName: 'autoConvert',
-  // serviceUrl: 'http://192.168.15.220:3000' // 正式环境的服务地址
-  // serviceUrl: 'http://192.168.4.189:3000' // 开发环境的服务地址
-  serviceUrl: 'http://localhost:8080' ,// 开发环境的服务地址
-  developUrl:'http://fs.navinfo.com/smap/'
+  serviceUrl: 'http://localhost:8080' ,                      // 本地开发环境的服务地址
+  developUrl:'http://192.168.15.41:9999/smapapi/'            // 测试环境服务地址
 }
 
 

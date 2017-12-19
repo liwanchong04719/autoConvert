@@ -18,18 +18,17 @@
     </div>
     <div class="change"></div>
     <!--<div @click="rememberMe('123')" style="width: 100px;height: 100%;border:1px solid red">-->
-      <!--测试测试-->
+    <!--测试测试-->
     <!--</div>-->
   </div>
 
 </template>
 
 <script>
-//  import { login, registerApi } from '../dataService/api';
-//  import { appUtil } from '../config';
-//  import { Utils } from '../common/js/utils.js'
-import  '../lib/jquery-1.8.3.min'
-
+  //  import { login, registerApi } from '../dataService/api';
+  //  import { appUtil } from '../config';
+  //  import { Utils } from '../common/js/utils.js'
+  import  '../lib/jquery-1.8.3.min'
   export default {
     name: 'Login',
     data () {
@@ -52,7 +51,6 @@ import  '../lib/jquery-1.8.3.min'
     },
     mounted(){
       this.autoLogin()
-
     },
     methods: {
       rememberMe:function(str){
@@ -65,7 +63,6 @@ import  '../lib/jquery-1.8.3.min'
         } else {
           localStorage.clear();
         }
-
       },
       autoLogin:function(){
         let user = localStorage.getItem('user');
@@ -80,9 +77,7 @@ import  '../lib/jquery-1.8.3.min'
         }
         this.$router.push('/menu');
         console.log('login');
-
       }
-
     }
 //      initRuleForm () {
 //        this.$refs.ruleForm.resetFields();
@@ -135,7 +130,7 @@ import  '../lib/jquery-1.8.3.min'
 //      toResetPassword() {
 //        this.$router.push('/monitor');
 //      }
-  //}
+    //}
   }
 </script>
 <style scoped lang="scss">
@@ -147,12 +142,11 @@ import  '../lib/jquery-1.8.3.min'
     background-image: url(../img/loginPic.jpg);
     background-size: 100% 100%;
     background-position: center;
-    .stable{
-      width:450px;
-    }
-    .change{
-      flex:1; /*这里设置为占比1，填充满剩余空间*/
-    }
+  .stable{
+    width:450px;
+  }
+  .change{
+    flex:1; /*这里设置为占比1，填充满剩余空间*/
+  }
   }
 </style>
-

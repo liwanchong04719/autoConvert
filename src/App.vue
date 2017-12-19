@@ -11,7 +11,7 @@
 </script>
 
 <style lang="scss">
-  @import './style/common';
+  @import './style/common.scss';
   #app {
     height: 100%;
   }

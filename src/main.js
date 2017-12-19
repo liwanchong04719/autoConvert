@@ -1,4 +1,4 @@
-import Vue from 'vue';
+import Vue from "vue";
 import router from './router';
 import App from './App';
 import {
@@ -39,12 +39,9 @@ Vue.use(Checkbox);
 Vue.use(DatePicker);
 Vue.use(Pagination);
 
+// 创建一个 App 实例，并且挂载到选择符 #app 匹配的元素上
 
-
-
-
-// 路由器会创建一个 App 实例，并且挂载到选择符 #app 匹配的元素上。
-new Vue({
+ new Vue({
   el: '#app',
   router,
   template: '<App/>',

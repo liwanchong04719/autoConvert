@@ -56,7 +56,7 @@
           </el-menu-item>
           <div class="taskDes">
             <div>成功省份：</div>
-            <span>上海市,黑龙江省,湖南省,甘肃省,浙江省,山东省,福建省,吉林省,贵州省,四川省,云南省,天津市,陕西省,河南省,内蒙古自治区,广东省,江西省,湖北省,重庆市,安徽省,辽宁省,新疆维吾尔自治区,山西省,广西壮族自治区,海南省,河北省,江苏省
+            <span>上海市,黑龙江省,湖南省,甘肃省,浙江省,山东省,福建省,吉林省,贵州省,四川省,广东省,江西省,湖北省,重庆市,安徽省,辽宁省,新疆维吾尔自治区,山西省,广西壮族自治区,海南省,河北省,江苏省
 </span><br/>
             <div style="margin-top: 10px">失败省份：</div>
             <span> 湖北，福建，陕西</span><br/>
@@ -109,6 +109,35 @@
               <span>2012-12-11 12:23:24</span>
             </li>
           </ul>
+          <div class="selectOption">
+            <span class="demonstration">程序</span>
+            <el-select v-model="value" placeholder="请选择" size="small">
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+            <span class="demonstration">阶段</span>
+            <el-select v-model="value" placeholder="请选择" size="small">
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+            <span class="demonstration">状态</span>
+            <el-select v-model="value" placeholder="请选择" size="small">
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </div>
           <el-table
             :data="tableData"
             style="width: 100%; padding: 30px 30px 0px;"
@@ -167,7 +196,7 @@
         </div>
       </div>
     </transition>
-    <div v-on:click="toLogin()" class="loginBtn">
+    <div @click="toLogin()" class="loginBtn">
       登陆
     </div>
   </div>
@@ -254,7 +283,22 @@
           spendtime: '12.9',
           logfile: '11111'
         }],
-        show: false
+        show: false,
+        value:'',
+        value5:'',
+        options: [{
+          value: '选项1',
+          label: '17SPR'
+        }, {
+          value: '选项2',
+          label: '17SUM'
+        }, {
+          value: '选项3',
+          label: '17AUT'
+        }, {
+          value: '选项4',
+          label: '17WIN'
+        }]
       }
     },
     mounted: function () {
@@ -275,7 +319,7 @@
             pitch: 0
           })
 
-        let that = this;                   //保存this指针的指向：指向vue实例
+        let that = this;                   //保存this指针的指向：指向vue实例-VueCompents
         this.map.on('load', function () {
           that.map.addLayer({
             "id": "plate",
@@ -375,7 +419,7 @@
           color: #ffffff;
           font-size: 14px;
           line-height: 20px;
-          color: rgb(255, 208, 75);
+          color: #ecf5ff;
         }
       }
       .mapInfo {
@@ -474,6 +518,16 @@
   .el-menu {
     border: none;
   }
+
+  .selectOption{
+    padding: 40px 40px 0px;
+    .demonstration{
+      font-size: 14px;
+      color:#3399ff;
+    }
+  }
+
+
 
 
 </style>
