@@ -20,9 +20,10 @@ export default new VueRouter({
     //重定向:使首次进入页面显示monitorView
     {
       path: '/',
-      redirect: '/menu'
+      redirect: '/monitor'
     },
-    { path: '/login',
+    {
+      path: '/login',
       component: loginView
     },
     {

@@ -2,73 +2,78 @@
   <div class="container">
     <div class="content">
       <div class="leftMenu">
-        <el-menu
-          default-active="2"
-          class="el-menu-vertical-demo"
-          @open="handleOpen"
-          @close="handleClose"
-          background-color="#545c64"
-          text-color="#fff"
-          active-text-color="#ffd04b">
-          <el-submenu index="1">
-            <template slot="title">
-              <i class="el-icon-location"></i>
-              <span>任务类型</span>
-            </template>
-            <el-menu-item index="1-1">日出品</el-menu-item>
-            <el-menu-item index="1-2">月出品</el-menu-item>
-            <el-menu-item index="1-3">季出品</el-menu-item>
-          </el-submenu>
-          <el-submenu index="2">
-            <template slot="title">
-              <i class="el-icon-menu"></i>
-              <span>细分类型</span>
-            </template>
-            <el-menu-item index="2-1">poi</el-menu-item>
-            <el-menu-item index="2-2">poi_road</el-menu-item>
-          </el-submenu>
-          <el-menu-item index="3">
-            <i class="el-icon-document"></i>
-            <span slot="title">出品任务概述</span>
-          </el-menu-item>
-          <div class="taskDes">
-            <span>所属日期：</span>
-            <span> 20171215</span><br/>
-            <span>总任务号：</span>
-            <span> 32</span><br/>
-            <span>数据发布：</span>
-            <span> 未发布</span><br/>
-            <span style="margin-left:13px">作业季：</span>
-            <span> 17WIN</span><br/>
-            <span style="margin-left:13px">总状态：</span>
-            <span> 转换中</span><br/>
-            <span>开始时间：</span>
-            <span> 2017-12-15 15:23:45</span><br/>
-            <span>结束时间：</span>
-            <span> 2017-12-15 15:23:45</span><br/>
-            <span style="margin-left:27px">耗时：</span>
-            <span> 5小时10分</span><br/>
+        <div>
+          <span>任务类型：</span>
+          <el-select v-model="typeVal" placeholder="请选择" size="small" style="width: 130px">
+            <el-option
+              v-for="item in taskType"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </div>
+        <div style="margin-top: 20px">
+          <span>细分类型：</span>
+          <el-select v-model="detailsVal" placeholder="请选择" size="small" style="width: 130px">
+            <el-option
+              v-for="one in detailsType"
+              :key="one.value"
+              :label="one.label"
+              :value="one.value">
+            </el-option>
+          </el-select>
+        </div>
+        <div class="taskTitle">出品任务概述</div>
+        <div class="taskDes">
+          <span>所属日期：</span>
+          <span> 20171215</span><br/>
+          <span>总任务号：</span>
+          <span> 32</span><br/>
+          <span>数据发布：</span>
+          <span> 未发布</span><br/>
+          <span style="margin-left:13px">作业季：</span>
+          <span> 17WIN</span><br/>
+          <span style="margin-left:13px">总状态：</span>
+          <span> 转换中</span><br/>
+          <span>开始时间：</span>
+          <span> 2017-12-15 15:23:45</span><br/>
+          <span>结束时间：</span>
+          <span> 2017-12-15 15:23:45</span><br/>
+          <span style="margin-left:27px">耗时：</span>
+          <span> 5小时10分</span><br/>
+        </div>
+        <div class="taskTitle" style="margin-top: 20px">出品执行情况</div>
+        <div class="provinceClass">
+          <span v-for="(item,index) in provinceList"
+                @click="showProvince(index)"
+                :class="{'activePro':curIndex === index}"
+          >
+            {{item}}
+          </span>
+        </div>
+        <ul class="successPro" v-show="successshow">
+          <li @click="showDetails(item)" v-for="item in successList">{{item}}</li>
+        </ul>
+        <ul class="failPro" v-show="failshow">
+          <li>福建省</li>
+          <li>吉林省</li>
+          <li>贵州省</li>
+          <li>四川省</li>
+          <li>广东省</li>
+          <li>江西省</li>
+        </ul>
+        <ul class="runningPro" v-show="runningshow">
+          <li>浙江省</li>
+          <li>山东省</li>
+        </ul>
 
-          </div>
-          <el-menu-item index="4">
-            <i class="el-icon-news"></i>
-            <span slot="title">出品省份信息</span>
-          </el-menu-item>
-          <div class="taskDes">
-            <div>成功省份：</div>
-            <span>上海市,黑龙江省,湖南省,甘肃省,浙江省,山东省,福建省,吉林省,贵州省,四川省,广东省,江西省,湖北省,重庆市,安徽省,辽宁省,新疆维吾尔自治区,山西省,广西壮族自治区,海南省,河北省,江苏省
-</span><br/>
-            <div style="margin-top: 10px">失败省份：</div>
-            <span> 湖北，福建，陕西</span><br/>
-            <div style="margin-top: 10px">转换中省份：</div>
-            <span> 四川省,云南省,天津市,陕西省,河南省,内蒙古自治区</span>
-          </div>
-
-        </el-menu>
       </div>
       <div class="mapInfo">
         <div class="maptitle">
-          全国出品监测
+          <img src="../img/icon_line1.png" alt="" style="margin-top: 10px">
+          <span style="margin-left: -20px">全国出品监测</span>
+          <img src="../img/icon_line2.png" alt="" style="margin-bottom:-15px">
         </div>
         <div id="map">
 
@@ -116,7 +121,9 @@
                 v-for="item in options"
                 :key="item.value"
                 :label="item.label"
-                :value="item.value">
+                :value="item.value"
+                size="small"
+              >
               </el-option>
             </el-select>
             <span class="demonstration">阶段</span>
@@ -197,8 +204,10 @@
       </div>
     </transition>
     <div @click="toLogin()" class="loginBtn">
-      登陆
+      <span class="loginbg">登陆</span>
+      <img src="../img/border.png" alt="" style="vertical-align: middle">
     </div>
+
   </div>
 </template>
 <script type='text/ecmascript-6'>
@@ -212,18 +221,35 @@
   export default {
     data() {
       return {
-        options1: [{
-          value: '选项1',
-          label: '日出品'
-        }, {
-          value: '选项2',
-          label: '月出品',
-          disabled: true
-        }, {
-          value: '选项2',
-          label: '季出品',
-          disabled: true
-        }],
+        provinceList:['成功省份','失败省份','转换中'],
+        successList:[
+          "上海市","黑龙江省","湖南省","甘肃省","浙江省","山东省","福建省","吉林省","贵州省",
+          "四川省","广东省","江西省","湖北省","重庆市","安徽省","辽宁省","新疆维吾尔自治区"
+        ],
+        successshow:true,
+        failshow:false,
+        runningshow:false,
+        curIndex:0,
+        typeVal:'日出品',
+        detailsVal:'poi',
+        taskType:[
+          {
+            value: 'taskType1',
+            label:'日出品'
+          },
+          {
+            value: 'taskType2',
+            label:'季出品'
+          }],
+        detailsType:[
+          {
+            value: 'detailsType1',
+            label:'poi'
+          },
+          {
+            value: 'detailsType2',
+            label:'poi_road'
+          }],
         value1: '',
         options2: [{
           value: '选项1',
@@ -378,12 +404,26 @@
       toLogin: function () {
         this.$router.push('/login');
       },
-      //下拉列表的折叠和收起
-      handleOpen(key, keyPath) {
-        console.log(key, keyPath);
+      showDetails: function(provinceName){
+        this.show = true;
+        console.log(provinceName);
+        //调用接口：展示不同省份的转换信息
       },
-      handleClose(key, keyPath) {
-        console.log(key, keyPath);
+      showProvince: function(index){
+        this.curIndex = index;
+        if(index == 0){
+          this.successshow = true;
+          this.failshow = false;
+          this.runningshow = false;
+        }else if(index == 1){
+          this.successshow = false;
+          this.failshow = true;
+          this.runningshow = false;
+        }else if(index == 2){
+          this.successshow = false;
+          this.failshow = false;
+          this.runningshow = true;
+        }
       },
       //请求后台服务
       initConfig:function() {
@@ -413,13 +453,41 @@
         height: 100%;
         max-height: 100%;
         overflow: auto;
-        background-color: #545c64;
+        background-color: rgb(67, 77, 107);
+        padding:20px;
+        font-size: 14px;
+        color:#ffffff;
+        .taskTitle{
+          background: url(../img/monitorTitle.png) no-repeat center;
+          background-size: 220px 100%;
+          font-size: 16px;
+          line-height: 30px;
+          color:#47CDF5;
+          text-align: center;
+          margin: 30px 0px 20px;
+          font-weight: 600;
+         }
         .taskDes {
-          padding: 0px 20px;
-          color: #ffffff;
-          font-size: 14px;
           line-height: 20px;
-          color: #ecf5ff;
+        }
+        .provinceClass{
+          line-height: 30px;
+          color:#47CDF5;
+          margin-bottom:10px;
+          text-align: center;
+          span{
+            padding: 0px 5px 5px;
+            cursor: pointer;
+          }
+        }
+        li{
+          line-height: 30px;
+          border-bottom: 1px solid #577398;
+          text-align: center;
+          &:hover{
+            color: #47CDF5 ;
+            cursor: pointer;
+           }
         }
       }
       .mapInfo {
@@ -432,10 +500,9 @@
           font-size: 18px;
           text-align: center;
           width: 100%;
-          text-align: center;
-          color: #ffffff;
-          background: url(../img/monitorTitle.png) no-repeat 50% 50%;
-
+          color: #47CDF5;
+          height: 80px;
+          line-height: 80px;
         }
         #map {
           width: 100%;
@@ -446,10 +513,11 @@
     .provinceDel {
       width: 100%;
       height: 100%;
-      background-color: rgba(0, 0, 0, 0.3);
+      background-color: rgba(0, 0, 0, 0.4);
       position: absolute;
       left: 0px;
       top: 0px;
+      z-index:10;
       .centerBlock {
         position: absolute;
         left: 0px;
@@ -496,16 +564,23 @@
 
   .loginBtn {
     position: absolute;
-    right: 10px;
-    top: 10px;
-    border-radius: 18px;
-    background-color: #55c3fc;
-    width: 130px;
-    height: 35px;
-    line-height: 35px;
+    right: 0px;
+    top: 5px;
+    z-index: 5;
     color: #ffffff;
-    text-align: center;
-    cursor: pointer;
+    font-size: 14px;
+    .loginbg {
+      display: inline-block;
+      width: 100px;
+      height: 35px;
+      line-height: 35px;
+      text-align: center;
+      background: url('../img/monitorlogin.png') no-repeat center;
+      cursor: pointer;
+      &:hover {
+          background-image: url('../img/monitorlogin_active.png')
+       }
+    }
   }
 
   .el-menu-item-group_title {
@@ -525,6 +600,10 @@
       font-size: 14px;
       color:#3399ff;
     }
+  }
+
+  .activePro{
+    border-bottom:3px solid #47CDF5;
   }
 
 
