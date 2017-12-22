@@ -56,7 +56,9 @@
              :data="tableData3"
              tooltip-effect="dark"
              style="width: 100%; background-color: #F5F5F5;"
-             @selection-change="handleSelectionChange">
+             @selection-change="handleSelectionChange"
+             @select="selectOnecol"
+             @select-all="selectAllcol">
              <el-table-column
                type="selection"
                width="55">
@@ -84,6 +86,8 @@
         background
         layout="prev, pager, next"
         :total="200"
+        @size-change="pageSize"
+        @current-change="currentPage"
       >
       </el-pagination>
     </div>
@@ -148,9 +152,29 @@
       headerCom,
       singleModule
     },
+    mounted:function(){
+    },
     methods: {
       handleSelectionChange(val) {
+        console.log('aaa');
         this.multipleSelection = val;
+      },
+      selectOnecol(selection, row){
+        console.log('---selectOne---');
+        console.log(selection, row);
+      },
+      selectAllcol(selection){
+        console.log('---selectAll---');
+        console.log(selection);
+      },
+      pageSize(num){
+        console.log('---onepageSize---');
+        console.log(num);
+      },
+      currentPage(cur){
+        console.log('---currentPageNum---');
+        console.log(cur);
+
       }
 
     }

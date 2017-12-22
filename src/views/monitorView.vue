@@ -78,7 +78,6 @@
         <div id="map">
 
         </div>
-
       </div>
     </div>
     <transition
@@ -229,6 +228,7 @@
         successshow:true,
         failshow:false,
         runningshow:false,
+        loadingshow:true,
         curIndex:0,
         typeVal:'日出品',
         detailsVal:'poi',
@@ -333,6 +333,7 @@
     },
     methods: {
       createMap: function () {
+        this.loadingshow = true;
         mapboxgl.mapboxToken = 'pk.eyJ1IjoiZmFuZ2xhbmsiLCJhIjoiY2lpcjc1YzQxMDA5NHZra3NpaDAyODB4eSJ9.z6uZHccXvtyVqA5zmalfGg',
           this.map = new mapboxgl.Map({
             container: 'map',
@@ -344,7 +345,6 @@
             repaint: true,
             pitch: 0
           })
-
         let that = this;                   //保存this指针的指向：指向vue实例-VueCompents
         this.map.on('load', function () {
           that.map.addLayer({
@@ -382,6 +382,7 @@
 
           that.map.on('click', 'plate', function () {
             that.show = true
+            //请求接口：传入省份名称、主任务号
           });
           this.popup = new mapboxgl.Popup({
             closeButton: false,
@@ -476,8 +477,10 @@
           margin-bottom:10px;
           text-align: center;
           span{
-            padding: 0px 5px 5px;
+            padding: 0px 5px;
             cursor: pointer;
+            text-align: center;
+            display: inline-block;
           }
         }
         li{
