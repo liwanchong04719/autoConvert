@@ -64,19 +64,53 @@
                width="55">
              </el-table-column>
              <el-table-column
-               label="日期"
-               width="120">
-               <template slot-scope="scope">{{ scope.row.date }}</template>
+               label="主任务号"
+               prop = "taskMain"
+             >
              </el-table-column>
              <el-table-column
-               prop="name"
-               label="姓名"
+               prop="taskSub"
+               label="子任务号"
                width="120">
              </el-table-column>
              <el-table-column
-               prop="address"
-               label="地址"
+               prop="date"
+               label="所属日期"
                show-overflow-tooltip>
+             </el-table-column>
+             <el-table-column
+               prop="province"
+               label="省份"
+               show-overflow-tooltip>
+             </el-table-column>
+             <el-table-column
+               prop="provinceDe"
+               label="省份（份）"
+               show-overflow-tooltip>
+             </el-table-column>
+             <el-table-column
+               prop="program"
+               label="程序"
+               :filters="[{ text: 'idb_conv', value: 'idb_conv' }, { text: 'db_diff', value: 'db_diff' }]"
+               :filter-method="filterProgram"
+               filter-placement="bottom"
+               >
+             </el-table-column>
+             <el-table-column
+               prop="stage"
+               label="阶段"
+               :filters="[{ text: 'day', value: 'day' }, { text: 'mifg', value: 'mifg' }]"
+               :filter-method="filterStage"
+               filter-placement="bottom"
+             >
+             </el-table-column>
+             <el-table-column
+               prop="status"
+               label="状态"
+               :filters="[{ text: '成功', value: '成功' }, { text: '失败', value: '失败' },{ text: '转换中', value: '转换中' }]"
+               :filter-method="filterStatus"
+               filter-placement="bottom"
+              >
              </el-table-column>
            </el-table>
 
@@ -116,33 +150,69 @@
           label: '17WIN'
         }],
         tableData3: [{
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
+          taskMain: '20',
+          taskSub:'1230',
+          province:'陕西省',
+          provinceDe:'陕西省',
+          date:'20171220',
+          program:'db_diff',
+          stage:'day',
+          status:'成功'
         }, {
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
+          taskMain: '20',
+          taskSub:'1231',
+          province:'山西省',
+          provinceDe:'山西省',
+          date:'20171220',
+          program:'idb_conv',
+          stage:'mifg',
+          status:'转换中'
         }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
+          taskMain: '20',
+          taskSub:'1232',
+          province:'湖北省',
+          provinceDe:'湖北省',
+          date:'20171220',
+          program:'db_diff',
+          stage:'day',
+          status:'失败'
         }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
+          taskMain: '20',
+          taskSub:'1233',
+          province:'云南省',
+          provinceDe:'云南省',
+          date:'20171220',
+          program:'db_diff',
+          stage:'mifg',
+          status:'转换中'
         }, {
-          date: '2016-05-08',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
+          taskMain: '20',
+          taskSub:'1234',
+          province:'四川省',
+          provinceDe:'四川1',
+          date:'20171220',
+          program:'db_diff',
+          stage:'day',
+          status:'失败'
         }, {
-          date: '2016-05-06',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
+          taskMain: '20',
+          taskSub:'1235',
+          province:'广西省',
+          provinceDe:'广西省',
+          date:'20171220',
+          address: '市普',
+          program:'db_diff',
+          stage:'day',
+          status:'失败'
         }, {
-          date: '2016-05-07',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
+          taskMain: '20',
+          taskSub:'1236',
+          province:'浙江省',
+          provinceDe:'浙江省',
+          date:'20171220',
+          program:'idb_conv',
+          stage:'day',
+          status:'成功'
         }],
         multipleSelection: []
 
@@ -155,6 +225,15 @@
     mounted:function(){
     },
     methods: {
+      filterProgram(value, row) {
+        return row.program === value;
+      },
+      filterStage(value, row) {
+        return row.stage === value;
+      },
+      filterStatus(value,row){
+        return row.status === value;
+      },
       handleSelectionChange(val) {
         console.log('aaa');
         this.multipleSelection = val;

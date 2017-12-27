@@ -16,10 +16,6 @@
         </el-form-item>
       </el-form>
     </div>
-    <div class="change"></div>
-    <!--<div @click="rememberMe('123')" style="width: 100px;height: 100%;border:1px solid red">-->
-    <!--测试测试-->
-    <!--</div>-->
   </div>
 
 </template>
@@ -137,7 +133,7 @@
   .parent{
     height: 100%;
     display:flex;
-    flex-flow:row;
+    justify-content: center;
     align-items: center;
     background-image: url(../img/loginPic.jpg);
     background-size: 100% 100%;
@@ -145,8 +141,6 @@
   .stable{
     width:450px;
   }
-  .change{
-    flex:1; /*这里设置为占比1，填充满剩余空间*/
-  }
+
   }
 </style>
