@@ -81,8 +81,8 @@
       </div>
     </div>
     <transition
-      name="custom-classes-transition"
-      enter-to-class="animated zoomIn">
+      name="bounce"
+    >
       <div v-if="show" class="provinceDel">
         <div class="centerBlock">
           <div class="singleProtitle">
@@ -607,6 +607,19 @@
 
   .activePro{
     border-bottom:3px solid #47CDF5;
+  }
+
+  .bounce-enter-active {
+    animation: bounce-in 0.7s;
+  }
+
+  @keyframes bounce-in {
+    0% {
+      transform: scale(0);
+    }
+    100% {
+      transform: scale(1);
+    }
   }
 
 
