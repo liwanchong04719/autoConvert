@@ -19,15 +19,18 @@
                type="year"
                placeholder="选择年"
                size="small"
+               @change="changeYear"
+               value-format="yyyy"
              >
              </el-date-picker>
            <span class="demonstration">作业季</span>
-           <el-select v-model="value" placeholder="请选择" size="small">
+           <el-select v-model="seasonVal" placeholder="请选择" size="small"  @change="curSeason">
              <el-option
-               v-for="item in options"
+               v-for="item in workSeason"
                :key="item.value"
                :label="item.label"
-               :value="item.value">
+               :value="item.value"
+             >
              </el-option>
            </el-select>
            <span class="demonstration">任务类型</span>
@@ -36,7 +39,8 @@
                v-for="item in options"
                :key="item.value"
                :label="item.label"
-               :value="item.value">
+               :value="item.value"
+             >
              </el-option>
            </el-select>
            <span class="demonstration">细分类型</span>
@@ -135,10 +139,20 @@
     data() {
       return {
         value5: '',
+        seasonVal:'',
         value:'',
+        workSeason: [{
+          value: '17SPR'
+        }, {
+          value: '17SUM'
+        }, {
+          value: '17AUT'
+        }, {
+          value: '17WIN'
+        }],
         options: [{
           value: '选项1',
-          label: '17SPR'
+          label: '17SPR'   //选项的标签，若不设置则默认与 value 相同
         }, {
           value: '选项2',
           label: '17SUM'
@@ -223,6 +237,7 @@
       singleModule
     },
     mounted:function(){
+
     },
     methods: {
       filterProgram(value, row) {
@@ -250,10 +265,17 @@
         console.log('---onepageSize---');
         console.log(num);
       },
-      currentPage(cur){
+      currentPage(curPage){
         console.log('---currentPageNum---');
-        console.log(cur);
-
+        console.log(curPage);
+      },
+      changeYear(curYear){
+        console.log('-----currentYear-selected----------');
+        console.log(curYear);
+      },
+      curSeason(curSeason){
+        console.log('-----currentSeason-selected----------');
+        console.log(curSeason);
       }
 
     }

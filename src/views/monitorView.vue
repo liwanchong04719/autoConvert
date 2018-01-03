@@ -203,7 +203,7 @@
       </div>
     </transition>
     <div @click="toLogin()" class="loginBtn">
-      <span class="loginbg">登陆</span>
+      <span class="loginbg" v-html="loginVal"></span>
       <img src="../img/border.png" alt="" style="vertical-align: middle">
     </div>
 
@@ -220,6 +220,7 @@
   export default {
     data() {
       return {
+        loginVal:'登陆',
         provinceList:['成功省份','失败省份','转换中'],
         successList:[
           "上海市","黑龙江省","湖南省","甘肃省","浙江省","山东省","福建省","吉林省","贵州省",
@@ -428,6 +429,14 @@
       },
       //请求后台服务
       initConfig:function() {
+        if(localStorage.getItem('user')){
+          this.loginVal = '退出登陆'
+        }
+        if(this.loginVal == '退出登陆'){
+          console.log('ss');
+          localStorage.clear();
+          this.loginVal = '登陆';
+        }
         getconfig().then(function(data){
           console.log(data);
 

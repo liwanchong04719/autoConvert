@@ -1,5 +1,5 @@
 <template>
-  <div class="flexItem" v-on:click="enterOperate(option)">
+  <div class="flexItem" @click="enterOperate(option)">
     <span class="picPos" v-bgcolor=colorVal>
       <img src="../img/task2.png" alt="">
       <span style="display:inline-block;vertical-align: middle;height: 100%;width: 0px"></span>
