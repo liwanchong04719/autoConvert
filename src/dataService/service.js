@@ -10,12 +10,16 @@ var postReq = function (url, param) {
   if (!param) {
     param = {};
   }
-  return axios.post(`${baseUrl + url}`, param).then(res => res.data).catch(res => ({errcode: null, message: '处理失败'}));
+  return axios.post(`${baseUrl + url}`, param).then(res => res.data.data).catch(res => ({errcode: null, message: '处理失败'}));
 }
 
 // -- 监控界面接口  --
 export const getconfig = param => { return postReq('monitor/query/getconfig', param)};
-export const maintask = param => { return postReq('monitor/query/maintask', param)};
+export const getMaintask = param => { return postReq('monitor/query/maintask', param)};
+export const getProvincestatus =  param =>{ return postReq('monitor/query/provincestatus', param)};
+export const getSubstatus =  param =>{ return postReq('monitor/query/substatus', param)};
+export const getSubconfig =  param =>{ return postReq('monitor/query/subconfig', param)};
+export const getSubinfo =  param =>{ return postReq('monitor/query/subinfo', param)};
 
 
 

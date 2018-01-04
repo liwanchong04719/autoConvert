@@ -234,23 +234,14 @@
         typeVal:'日出品',
         detailsVal:'poi',
         taskType:[
-          {
-            value: 'taskType1',
-            label:'日出品'
+          { key:'1',
+            value: '日出品'
           },
           {
-            value: 'taskType2',
-            label:'季出品'
+            key:'0',
+            value: '季出品'
           }],
-        detailsType:[
-          {
-            value: 'detailsType1',
-            label:'poi'
-          },
-          {
-            value: 'detailsType2',
-            label:'poi_road'
-          }],
+        detailsType:[],
         value1: '',
         options2: [{
           value: '选项1',
@@ -436,9 +427,25 @@
           console.log('ss');
           localStorage.clear();
           this.loginVal = '登陆';
+
         }
+        let that  = this ;
         getconfig().then(function(data){
           console.log(data);
+          var detailstype = data.configName;
+          //将[1,2]转换为[{'key1':'1'},{'key2':'2'}]
+          var arr = [];
+          for (var i = 0; i < detailstype.length; i++) {
+            var obj = {};
+            obj.value = detailstype[i];
+            arr.push(obj);
+          }
+          that.detailsType = arr;
+
+
+
+
+
 
         })
       }
