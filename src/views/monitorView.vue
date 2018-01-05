@@ -4,7 +4,7 @@
       <div class="leftMenu">
         <div>
           <span>任务类型：</span>
-          <el-select v-model="typeVal" placeholder="请选择" size="small" style="width: 130px">
+          <el-select v-model="typeVal" placeholder="请选择" size="small" style="width: 130px" @change="selectTasktype">
             <el-option
               v-for="item in taskType"
               :key="item.value"
@@ -15,7 +15,7 @@
         </div>
         <div style="margin-top: 20px">
           <span>细分类型：</span>
-          <el-select v-model="detailsVal" placeholder="请选择" size="small" style="width: 130px">
+          <el-select v-model="detailsVal" placeholder="请选择" size="small" style="width: 130px" @change="selectDetail">
             <el-option
               v-for="one in detailsType"
               :key="one.value"
@@ -27,21 +27,21 @@
         <div class="taskTitle">出品任务概述</div>
         <div class="taskDes">
           <span>所属日期：</span>
-          <span> 20171215</span><br/>
+          <span> {{belongDay}}</span><br/>
           <span>总任务号：</span>
-          <span> 32</span><br/>
+          <span> {{convListId}}</span><br/>
           <span>数据发布：</span>
-          <span> 未发布</span><br/>
+          <span> {{releaseFlag}}</span><br/>
           <span style="margin-left:13px">作业季：</span>
-          <span> 17WIN</span><br/>
+          <span> {{convVersion}}</span><br/>
           <span style="margin-left:13px">总状态：</span>
-          <span> 转换中</span><br/>
+          <span> {{status}}</span><br/>
           <span>开始时间：</span>
-          <span> 2017-12-15 15:23:45</span><br/>
+          <span> {{beginTime}}</span><br/>
           <span>结束时间：</span>
-          <span> 2017-12-15 15:23:45</span><br/>
+          <span> {{endTime}}</span><br/>
           <span style="margin-left:27px">耗时：</span>
-          <span> 5小时10分</span><br/>
+          <span> {{consumTime}}</span><br/>
         </div>
         <div class="taskTitle" style="margin-top: 20px">出品执行情况</div>
         <div class="provinceClass">
@@ -115,9 +115,9 @@
           </ul>
           <div class="selectOption">
             <span class="demonstration">程序</span>
-            <el-select v-model="value" placeholder="请选择" size="small">
+            <el-select v-model="programVal" placeholder="请选择" size="small" @change="programSelect">
               <el-option
-                v-for="item in options"
+                v-for="item in programArr"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -137,7 +137,7 @@
             <span class="demonstration">状态</span>
             <el-select v-model="value" placeholder="请选择" size="small">
               <el-option
-                v-for="item in options"
+                v-for="item in states"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value">
@@ -215,43 +215,38 @@
   import '../lib/mapbox-gl/dist/mapbox-gl';
   import {maplayer} from '../layer.js';
   import '../lib/animate.css';
-  import {getconfig} from '../dataService/service';
+  import {getconfig, getMaintask, getSubconfig, getProvincestatus, getSubstatus} from '../dataService/service';
 
   export default {
     data() {
       return {
-        loginVal:'登陆',
-        provinceList:['成功省份','失败省份','转换中'],
-        successList:[
-          "上海市","黑龙江省","湖南省","甘肃省","浙江省","山东省","福建省","吉林省","贵州省",
-          "四川省","广东省","江西省","湖北省","重庆市","安徽省","辽宁省","新疆维吾尔自治区"
-        ],
-        successshow:true,
-        failshow:false,
-        runningshow:false,
-        loadingshow:true,
-        curIndex:0,
-        typeVal:'日出品',
-        detailsVal:'poi',
-        taskType:[
-          { key:'1',
-            value: '日出品'
-          },
-          {
-            key:'0',
-            value: '季出品'
-          }],
-        detailsType:[],
-        value1: '',
-        options2: [{
-          value: '选项1',
-          label: 'poi'
-        }, {
-          value: '选项2',
-          label: 'poi_road',
-          disabled: true
-        }],
-        value2: '',
+        loginVal: '登陆',
+        configName: '',
+        versionType: '',
+        belongDay: '',
+        consumTime: '',
+        convListId: '',
+        convVersion: '',
+        belongDay: '',
+        beginTime: '',
+        endTime: '',
+        releaseFlag: '',
+        status: '',
+        provinceList: ['成功省份', '失败省份', '转换中'],
+        successList: [],
+        states: [],
+        programArr: [],
+        programCollection:[],
+        successshow: true,
+        failshow: false,
+        runningshow: false,
+        loadingshow: true,
+        curIndex: 0,
+        typeVal: '',
+        detailsVal: '',
+        programVal: '',
+        taskType: [],
+        detailsType: [],
         tableData: [{
           taskId: '2016',
           province: '四川省',
@@ -302,8 +297,8 @@
           logfile: '11111'
         }],
         show: false,
-        value:'',
-        value5:'',
+        value: '',
+        value5: '',
         options: [{
           value: '选项1',
           label: '17SPR'
@@ -397,64 +392,120 @@
       toLogin: function () {
         this.$router.push('/login');
       },
-      showDetails: function(provinceName){
+      showDetails: function (provinceName) {
         this.show = true;
         console.log(provinceName);
-        //调用接口：展示不同省份的转换信息
+        //调用服务：展示不同省份的转换信息
+        console.log(this.convListId);
+        let param = `provinceName=${provinceName}&convListId=${this.convListId}`;
+        getSubstatus(param).then((data) => {
+          console.log(data);
+
+        })
       },
-      showProvince: function(index){
+      showProvince: function (index) {
         this.curIndex = index;
-        if(index == 0){
+        if (index == 0) {
           this.successshow = true;
           this.failshow = false;
           this.runningshow = false;
-        }else if(index == 1){
+        } else if (index == 1) {
           this.successshow = false;
           this.failshow = true;
           this.runningshow = false;
-        }else if(index == 2){
+        } else if (index == 2) {
           this.successshow = false;
           this.failshow = false;
           this.runningshow = true;
         }
       },
-      //请求后台服务
-      initConfig:function() {
-        if(localStorage.getItem('user')){
+      selectDetail(param) {
+        let spr = {};
+        spr = this.detailsType.find((item) => {
+          return item.value === param
+        })
+        this.configName = spr.key;
+      },
+      selectTasktype(param) {
+        let obj = {};
+        obj = this.taskType.find((item) => {
+          return item.value === param;
+        });
+        this.versionType = obj.key;
+
+        var param = `configName=${this.configName}&versionType=${this.versionType}`;
+        console.log(param);
+        getMaintask(param).then(function (data) {
+          console.log(data);
+        })
+      },
+      programSelect(param) {
+        console.log(param);
+        //获取单省转换信息初始化的程序选项
+
+        for(var i=0;i<this.programCollection.length;i++){
+
+          console.log(this.programCollection[i]);
+                         //遗留
+        }
+      },
+      //初始化请求服务
+      initConfig: function () {
+        if (localStorage.getItem('user')) {
           this.loginVal = '退出登陆'
         }
-        if(this.loginVal == '退出登陆'){
+        if (this.loginVal == '退出登陆') {
           console.log('ss');
           localStorage.clear();
           this.loginVal = '登陆';
-
         }
-        let that  = this ;
-        getconfig().then(function(data){
-          console.log(data);
-          var detailstype = data.configName;
-          //将[1,2]转换为[{'key1':'1'},{'key2':'2'}]
-          var arr = [];
-          for (var i = 0; i < detailstype.length; i++) {
-            var obj = {};
-            obj.value = detailstype[i];
-            arr.push(obj);
+        getconfig().then((data) => {
+          this.detailsType = data.configName;
+          this.taskType = data.versionType;
+          this.typeVal = data.versionType[0].value;
+          this.detailsVal = data.configName[0].value;
+          this.configName = data.configName[0].key;
+          this.versionType = data.versionType[0].key;
+          let param = `configName=${this.configName}&versionType=${this.versionType}`;
+          console.log(param);
+          getMaintask(param).then((data) => {
+            this.beginTime = data.beginTime;
+            this.belongDay = data.belongDay;
+            this.consumTime = data.consumTime;
+            this.convListId = data.convListId;
+            this.convVersion = data.convVersion;
+            this.endTime = data.endTime;
+            this.releaseFlag = data.releaseFlag;
+            this.status = data.status;
+            getProvincestatus(`convListId=${this.convListId}`).then((data) => {
+              for (let i = 0; i < data.success.length; i++) {
+                this.successList.push(data.success[i].provinceName);
+              }
+              for (let i = 0; i < data.success.length; i++) {
+                this.successList.push(data.success[i].provinceName);
+              }
+              for (let i = 0; i < data.success.length; i++) {
+                this.successList.push(data.success[i].provinceName);
+              }
+            })
+          })
+        })
+
+        //获取单省转换信息初始化的程序选项
+        getSubconfig().then((data) => {
+          this.states = data.status;
+          this.programCollection = data.programCode;        //获取所有程序及对应的状态集合，用于选择程序时联动查找对应状态
+          for (let i = 0; i < data.programCode.length; i++) {
+            for (let key in data.programCode[i]) {
+              this.programArr.push({
+                value: key
+              })
+            }
           }
-          that.detailsType = arr;
-
-
-
-
-
-
         })
       }
-
-
     }
-
   }
-
 
 </script>
 
@@ -463,122 +514,122 @@
     width: 100%;
     height: 100%;
     .content {
-      height: 100%;
-      .leftMenu {
-        width: 260px;
-        float: left;
-        height: 100%;
-        max-height: 100%;
-        overflow: auto;
-        background-color: rgb(67, 77, 107);
-        padding:20px;
-        font-size: 14px;
-        color:#ffffff;
-        .taskTitle{
+       height: 100%;
+        .leftMenu {
+          width: 260px;
+          float: left;
+          height: 100%;
+          max-height: 100%;
+          overflow: auto;
+          background-color: rgb(67, 77, 107);
+          padding: 20px;
+          font-size: 14px;
+          color: #ffffff;
+        .taskTitle {
           background: url(../img/monitorTitle.png) no-repeat center;
           background-size: 220px 100%;
           font-size: 16px;
           line-height: 30px;
-          color:#47CDF5;
+          color: #47CDF5;
           text-align: center;
           margin: 30px 0px 20px;
           font-weight: 600;
-         }
-        .taskDes {
-          line-height: 20px;
         }
-        .provinceClass{
-          line-height: 30px;
-          color:#47CDF5;
-          margin-bottom:10px;
-          text-align: center;
-          span{
-            padding: 0px 5px;
-            cursor: pointer;
-            text-align: center;
-            display: inline-block;
-          }
-        }
-        li{
-          line-height: 30px;
-          border-bottom: 1px solid #577398;
-          text-align: center;
-          &:hover{
-            color: #47CDF5 ;
-            cursor: pointer;
-           }
-        }
-      }
-      .mapInfo {
-        overflow: hidden;
-        height: 100%;
-        position: relative;
-        .maptitle {
-          position: absolute;
-          z-index: 3;
-          font-size: 18px;
-          text-align: center;
-          width: 100%;
-          color: #47CDF5;
-          height: 80px;
-          line-height: 80px;
-        }
-        #map {
-          width: 100%;
-          height: 100%;
-        }
-      }
+    .taskDes {
+      line-height: 20px;
     }
-    .provinceDel {
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.4);
+    .provinceClass {
+      line-height: 30px;
+      color: #47CDF5;
+      margin-bottom: 10px;
+      text-align: center;
+    span {
+      padding: 0px 5px;
+      cursor: pointer;
+      text-align: center;
+      display: inline-block;
+    }
+  }
+    li {
+      line-height: 30px;
+      border-bottom: 1px solid #577398;
+      text-align: center;
+      &:hover {
+        color: #47CDF5;
+        cursor: pointer;
+        }
+    }
+  }
+  .mapInfo {
+    overflow: hidden;
+    height: 100%;
+    position: relative;
+    .maptitle {
       position: absolute;
-      left: 0px;
-      top: 0px;
-      z-index:10;
-      .centerBlock {
-        position: absolute;
-        left: 0px;
-        top: 0px;
-        bottom: 0px;
-        right: 0px;
-        margin: auto;
-        width: 1180px;
-        height: 600px;
-        border-radius: 6px;
-        background-color: #ffffff;
-        .singleProtitle {
-          font-size: 18px;
-          line-height: 56px;
-          height: 56px;
-          background-color: rgb(88, 150, 255);
-          overflow: hidden;
-          color: #ffffff;
-          text-align: left;
-          text-indent: 30px;
-          border-top-left-radius: 6px;
-          border-top-right-radius: 6px
-        }
-        ul {
-          display: flex;
-          justify-content: space-between;
-          padding: 30px 40px 0px 40px;
-          font-size: 14px;
-          color: rgb(88, 150, 255);
-          font-weight: 600;
-        }
-        .closeBtn {
-          position: absolute;
-          right: 20px;
-          top: 17px;
-          color: #ffffff;
-          cursor: pointer;
-          font-size: 21px;
-          line-height: 1;
-        }
-      }
+      z-index: 3;
+      font-size: 18px;
+      text-align: center;
+      width: 100%;
+      color: #47CDF5;
+      height: 80px;
+      line-height: 80px;
+  }
+    #map {
+    width: 100%;
+    height: 100%;
+     }
     }
+  }
+  .provinceDel {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    z-index: 10;
+  .centerBlock {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    bottom: 0px;
+    right: 0px;
+    margin: auto;
+    width: 1180px;
+    height: 600px;
+    border-radius: 6px;
+    background-color: #ffffff;
+    .singleProtitle {
+      font-size: 18px;
+      line-height: 56px;
+      height: 56px;
+      background-color: rgb(88, 150, 255);
+      overflow: hidden;
+      color: #ffffff;
+      text-align: left;
+      text-indent: 30px;
+      border-top-left-radius: 6px;
+      border-top-right-radius: 6px
+    }
+    ul {
+      display: flex;
+      justify-content: space-between;
+      padding: 30px 40px 0px 40px;
+      font-size: 14px;
+      color: rgb(88, 150, 255);
+      font-weight: 600;
+    }
+    .closeBtn {
+      position: absolute;
+      right: 20px;
+      top: 17px;
+      color: #ffffff;
+      cursor: pointer;
+      font-size: 21px;
+      line-height: 1;
+     }
+    }
+   }
   }
 
   .loginBtn {
@@ -588,17 +639,17 @@
     z-index: 5;
     color: #ffffff;
     font-size: 14px;
-    .loginbg {
-      display: inline-block;
-      width: 100px;
-      height: 35px;
-      line-height: 35px;
-      text-align: center;
-      background: url('../img/monitorlogin.png') no-repeat center;
-      cursor: pointer;
+  .loginbg {
+    display: inline-block;
+    width: 100px;
+    height: 35px;
+    line-height: 35px;
+    text-align: center;
+    background: url('../img/monitorlogin.png') no-repeat center;
+    cursor: pointer;
       &:hover {
           background-image: url('../img/monitorlogin_active.png')
-       }
+      }
     }
   }
 
@@ -613,16 +664,16 @@
     border: none;
   }
 
-  .selectOption{
+  .selectOption {
     padding: 40px 40px 0px;
-    .demonstration{
+    .demonstration {
       font-size: 14px;
-      color:#3399ff;
+      color: #3399ff;
     }
   }
 
-  .activePro{
-    border-bottom:3px solid #47CDF5;
+  .activePro {
+    border-bottom: 3px solid #47CDF5;
   }
 
   .bounce-enter-active {
@@ -637,8 +688,6 @@
       transform: scale(1);
     }
   }
-
-
 
 
 </style>
