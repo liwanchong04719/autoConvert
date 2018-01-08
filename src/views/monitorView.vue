@@ -56,16 +56,10 @@
           <li @click="showDetails(item)" v-for="item in successList">{{item}}</li>
         </ul>
         <ul class="failPro" v-show="failshow">
-          <li>福建省</li>
-          <li>吉林省</li>
-          <li>贵州省</li>
-          <li>四川省</li>
-          <li>广东省</li>
-          <li>江西省</li>
+          <li @click="showDetails(item)" v-for="item in failList">{{item}}</li>
         </ul>
         <ul class="runningPro" v-show="runningshow">
-          <li>浙江省</li>
-          <li>山东省</li>
+          <li @click="showDetails(item)" v-for="item in runningList">{{item}}</li>
         </ul>
 
       </div>
@@ -94,23 +88,23 @@
           <ul>
             <li>
               <span>省份：</span>
-              <span>陕西省</span>
+              <span>{{singleProvince}}</span>
             </li>
             <li>
               <span>总状态：</span>
-              <span>转换中</span>
+              <span>{{singleState}}</span>
             </li>
             <li>
               <span>所属日期：</span>
-              <span>2017-12-12</span>
+              <span>{{singleDate}}</span>
             </li>
             <li>
               <span>开始时间：</span>
-              <span>2012-12-11 12:23:24</span>
+              <span>{{singleBegintime}}</span>
             </li>
             <li>
               <span>结束时间：</span>
-              <span>2012-12-11 12:23:24</span>
+              <span>{{singleEndtime}}</span>
             </li>
           </ul>
           <div class="selectOption">
@@ -126,16 +120,16 @@
               </el-option>
             </el-select>
             <span class="demonstration">阶段</span>
-            <el-select v-model="value" placeholder="请选择" size="small">
+            <el-select v-model="stageVal" placeholder="请选择" size="small" @change="stageSelect">
               <el-option
-                v-for="item in options"
+                v-for="item in stageArr"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value">
               </el-option>
             </el-select>
             <span class="demonstration">状态</span>
-            <el-select v-model="value" placeholder="请选择" size="small">
+            <el-select v-model="stateVal" placeholder="请选择" size="small" @change="stateSelect">
               <el-option
                 v-for="item in states"
                 :key="item.value"
@@ -146,56 +140,59 @@
           </div>
           <el-table
             :data="tableData"
-            style="width: 100%; padding: 30px 30px 0px;"
+            style="width: 200%; padding: 30px 30px 0px;overflow: auto"
+            height="413"
           >
             <el-table-column
-              prop="taskId"
+              prop="convListDetailRuntimeId"
               label="子任务号"
-              width="80">
-            </el-table-column>
-            <el-table-column
-              prop="province"
-              label="省份"
-              width="100"
             >
             </el-table-column>
             <el-table-column
-              prop="proApart"
-              label="省份（份）">
+              prop="provinceNM"
+              label="省份"
+            >
             </el-table-column>
             <el-table-column
-              prop="program"
+              prop="provinceNMNosep"
+              label="省份（份）"
+              width="100">
+            </el-table-column>
+            <el-table-column
+              prop="programCode"
+              width="100"
               label="程序">
             </el-table-column>
             <el-table-column
-              prop="stage"
+              prop="convStep"
               label="阶段">
             </el-table-column>
             <el-table-column
-              prop="state"
+              prop="status"
               label="状态">
             </el-table-column>
             <el-table-column
-              prop="repeatTimes"
+              prop="reconvert"
               label="重转次数">
             </el-table-column>
             <el-table-column
-              prop="startTime"
-              width="160"
+              prop="beginTime"
+              width="180"
               label="开始时间">
             </el-table-column>
             <el-table-column
               prop="endTime"
-              width="160"
+              width="180"
               label="结束时间">
             </el-table-column>
             <el-table-column
-              prop="spendtime"
-              width="120"
+              prop="consumTime"
+              width="110"
               label="耗时（小时）">
             </el-table-column>
             <el-table-column
-              prop="logfile"
+              prop="logPath"
+              width="500"
               label="log文件">
             </el-table-column>
           </el-table>
@@ -215,7 +212,14 @@
   import '../lib/mapbox-gl/dist/mapbox-gl';
   import {maplayer} from '../layer.js';
   import '../lib/animate.css';
-  import {getconfig, getMaintask, getSubconfig, getProvincestatus, getSubstatus} from '../dataService/service';
+  import {
+    getconfig,
+    getMaintask,
+    getSubconfig,
+    getProvincestatus,
+    getSubstatus,
+    getSubinfo
+  } from '../dataService/service';
 
   export default {
     data() {
@@ -234,9 +238,12 @@
         status: '',
         provinceList: ['成功省份', '失败省份', '转换中'],
         successList: [],
+        failList:[],
+        runningList:[],
         states: [],
         programArr: [],
-        programCollection:[],
+        stageArr: [],
+        programCollection: [],
         successshow: true,
         failshow: false,
         runningshow: false,
@@ -244,74 +251,21 @@
         curIndex: 0,
         typeVal: '',
         detailsVal: '',
+        provinceCur: '',
         programVal: '',
+        stageVal: '',
+        stateVal: '',
+        stateCode: '',
         taskType: [],
         detailsType: [],
-        tableData: [{
-          taskId: '2016',
-          province: '四川省',
-          proApart: '四川1',
-          program: 'idb_conv',
-          stage: 'day',
-          state: '成功',
-          repeatTimes: '0',
-          startTime: '2017-12-12 16:20:09',
-          endTime: '2017-12-12 16:20:09',
-          spendtime: '12.9',
-          logfile: '11111'
-        }, {
-          taskId: '2016',
-          province: '四川省',
-          proApart: '四川1',
-          program: 'idb_conv',
-          stage: 'day',
-          state: '成功',
-          repeatTimes: '0',
-          startTime: '2017-12-12 16:20:09',
-          endTime: '2017-12-12 16:20:09',
-          spendtime: '12.9',
-          logfile: '11111'
-        }, {
-          taskId: '2016',
-          province: '四川省',
-          proApart: '四川1',
-          program: 'idb_conv',
-          stage: 'day',
-          state: '成功',
-          repeatTimes: '0',
-          startTime: '2017-12-12 16:20:09',
-          endTime: '2017-12-12 16:20:09',
-          spendtime: '12.9',
-          logfile: '11111'
-        }, {
-          taskId: '2016',
-          province: '四川省',
-          proApart: '四川1',
-          program: 'idb_conv',
-          stage: 'day',
-          state: '成功',
-          repeatTimes: '0',
-          startTime: '2017-12-12 16:20:09',
-          endTime: '2017-12-12 16:20:09',
-          spendtime: '12.9',
-          logfile: '11111'
-        }],
-        show: false,
-        value: '',
-        value5: '',
-        options: [{
-          value: '选项1',
-          label: '17SPR'
-        }, {
-          value: '选项2',
-          label: '17SUM'
-        }, {
-          value: '选项3',
-          label: '17AUT'
-        }, {
-          value: '选项4',
-          label: '17WIN'
-        }]
+        tableData: [],
+        singleProvince:'',
+        singleState:'',
+        singleBegintime:'',
+        singleEndtime:'',
+        singleDate:'',
+        show: false
+
       }
     },
     mounted: function () {
@@ -392,15 +346,62 @@
       toLogin: function () {
         this.$router.push('/login');
       },
+      changeType: function (typeparam) {               //taskType,detailsType改变时调用
+        getMaintask(typeparam).then((data) => {
+          this.beginTime = data.beginTime;
+          this.belongDay = data.belongDay;
+          this.consumTime = data.consumTime;
+          this.convListId = data.convListId;
+          this.convVersion = data.convVersion;
+          this.endTime = data.endTime;
+          this.releaseFlag = data.releaseFlag;
+          this.status = data.status;
+          getProvincestatus(`convListId=${this.convListId}`).then((data) => {
+            this.successList = [];
+            if(data) {
+              if (data.success.length > 0) {
+                for (let i = 0; i < data.success.length; i++) {
+                  this.successList.push(data.success[i].provinceName);
+                }
+              }
+              if (data.failed.length > 0) {
+                for (let i = 0; i < data.failed.length; i++) {
+                  this.failList.push(data.failed[i].provinceName);
+                }
+              }
+              if (data.running.length > 0) {
+                for (let i = 0; i < data.running.length; i++) {
+                  this.runningList.push(data.running[i].provinceName);
+                }
+              }
+            }
+          })
+        })
+      },
+      changeOption: function (param) {              //改变选项时调用
+        getSubinfo(param).then((data) => {
+          this.tableData = data;
+        })
+      },
       showDetails: function (provinceName) {
         this.show = true;
         console.log(provinceName);
-        //调用服务：展示不同省份的转换信息
+        this.provinceCur = provinceName;
+        this.programVal = '全部';
+        this.stageVal = '全部' ;
+        this.stateVal = '全部';
+        //展示不同省份的转换信息
         console.log(this.convListId);
         let param = `provinceName=${provinceName}&convListId=${this.convListId}`;
         getSubstatus(param).then((data) => {
-          console.log(data);
-
+          this.singleProvince = data.provinceNMNosep;
+          this.singleState = data.status;
+          this.singleBegintime = data.beginTime;
+          this.singleEndtime = data.endTime;
+          this.singleDate = data.belongDay;
+        })
+        getSubinfo(param).then((data) => {
+          this.tableData = data;
         })
       },
       showProvince: function (index) {
@@ -425,6 +426,8 @@
           return item.value === param
         })
         this.configName = spr.key;
+        let typeparam = `configName=${this.configName}&versionType=${this.versionType}`;
+        this.changeType(typeparam);
       },
       selectTasktype(param) {
         let obj = {};
@@ -432,22 +435,64 @@
           return item.value === param;
         });
         this.versionType = obj.key;
-
-        var param = `configName=${this.configName}&versionType=${this.versionType}`;
-        console.log(param);
-        getMaintask(param).then(function (data) {
-          console.log(data);
-        })
+        let typeparam = `configName=${this.configName}&versionType=${this.versionType}`;
+        this.changeType(typeparam);
       },
       programSelect(param) {
-        console.log(param);
-        //获取单省转换信息初始化的程序选项
-
-        for(var i=0;i<this.programCollection.length;i++){
-
-          console.log(this.programCollection[i]);
-                         //遗留
+        this.stageArr.splice(0, this.stageArr.length);
+        this.stageVal = '';
+        //获取单省转换信息初始化的"阶段"选项
+        for (let key in this.programCollection) {
+          if (Object.keys(this.programCollection[key]) == param) {
+            for (let s in this.programCollection[key][param]) {
+              this.stageArr.push({
+                value: this.programCollection[key][param][s]
+              })
+            }
+            this.stageArr.push({
+              value: '全部'
+            })
+            break;
+          }
         }
+        let programParm;
+        let stageParm;
+        this.programVal === '全部' ? programParm = '' : programParm = this.programVal;
+        this.stageVal === '全部' ? stageParm = '' : stageParm = this.stageVal;
+        if (this.stateVal === '全部') {
+          this.stateCode = '';
+        }
+        let multi = `provinceName=${this.provinceCur}&convListId=${this.convListId}&programCode=${programParm}&step=${stageParm}&status=${this.stateCode}`;
+        this.changeOption(multi);
+      },
+      stageSelect(param) {
+        let programParm;
+        let stageParm;
+        this.programVal === '全部' ? programParm = '' : programParm = this.programVal;
+        this.stageVal === '全部' ? stageParm = '' : stageParm = this.stageVal;
+        if (this.stateVal === '全部') {
+          this.stateCode = '';
+        }
+        let multi = `provinceName=${this.provinceCur}&convListId=${this.convListId}&programCode=${programParm}&step=${stageParm}&status=${this.stateCode}`;
+        this.changeOption(multi);
+
+      },
+      stateSelect(param) {
+        let obj = {};
+        obj = this.states.find((item) => {
+          return item.value === param;
+        });
+        this.stateCode = obj.key;
+        let programParm;
+        let stageParm;
+        this.programVal === '全部' ? programParm = '' : programParm = this.programVal;
+        this.stageVal === '全部' ? stageParm = '' : stageParm = this.stageVal;
+        if (this.stateVal === '全部') {
+          this.stateCode = '';
+        }
+        let multi = `provinceName=${this.provinceCur}&convListId=${this.convListId}&programCode=${programParm}&step=${stageParm}&status=${this.stateCode}`;
+        this.changeOption(multi);
+
       },
       //初始化请求服务
       initConfig: function () {
@@ -467,33 +512,13 @@
           this.configName = data.configName[0].key;
           this.versionType = data.versionType[0].key;
           let param = `configName=${this.configName}&versionType=${this.versionType}`;
-          console.log(param);
-          getMaintask(param).then((data) => {
-            this.beginTime = data.beginTime;
-            this.belongDay = data.belongDay;
-            this.consumTime = data.consumTime;
-            this.convListId = data.convListId;
-            this.convVersion = data.convVersion;
-            this.endTime = data.endTime;
-            this.releaseFlag = data.releaseFlag;
-            this.status = data.status;
-            getProvincestatus(`convListId=${this.convListId}`).then((data) => {
-              for (let i = 0; i < data.success.length; i++) {
-                this.successList.push(data.success[i].provinceName);
-              }
-              for (let i = 0; i < data.success.length; i++) {
-                this.successList.push(data.success[i].provinceName);
-              }
-              for (let i = 0; i < data.success.length; i++) {
-                this.successList.push(data.success[i].provinceName);
-              }
-            })
-          })
+          this.changeType(param);
         })
 
         //获取单省转换信息初始化的程序选项
         getSubconfig().then((data) => {
           this.states = data.status;
+          this.states.unshift({value: '全部'});
           this.programCollection = data.programCode;        //获取所有程序及对应的状态集合，用于选择程序时联动查找对应状态
           for (let i = 0; i < data.programCode.length; i++) {
             for (let key in data.programCode[i]) {
@@ -502,6 +527,9 @@
               })
             }
           }
+          this.programArr.unshift({
+            value: '全部'
+          })
         })
       }
     }
