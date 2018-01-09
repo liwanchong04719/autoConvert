@@ -12,38 +12,7 @@
       </ul>
        <div class="Main">
          <div class="selectOption">
-             <span class="demonstration">年份</span>
-             <el-date-picker
-               v-model="value5"
-               align="left"
-               type="year"
-               placeholder="选择年"
-               size="small"
-               @change="changeYear"
-               value-format="yyyy"
-             >
-             </el-date-picker>
-           <span class="demonstration">作业季</span>
-           <el-select v-model="seasonVal" placeholder="请选择" size="small"  @change="curSeason">
-             <el-option
-               v-for="item in workSeason"
-               :key="item.value"
-               :label="item.label"
-               :value="item.value"
-             >
-             </el-option>
-           </el-select>
            <span class="demonstration">任务类型</span>
-           <el-select v-model="value" placeholder="请选择" size="small">
-             <el-option
-               v-for="item in options"
-               :key="item.value"
-               :label="item.label"
-               :value="item.value"
-             >
-             </el-option>
-           </el-select>
-           <span class="demonstration">细分类型</span>
            <el-select v-model="value" placeholder="请选择" size="small">
              <el-option
                v-for="item in options"
@@ -52,7 +21,16 @@
                :value="item.value">
              </el-option>
            </el-select>
-           <el-button type="primary" style="margin-left: 20px" size="small">重转<i class="el-icon-upload el-icon--right"></i></el-button>
+           <span class="demonstration" style="margin-left: 30px">细分类型</span>
+           <el-select v-model="value" placeholder="请选择" size="small" >
+             <el-option
+               v-for="item in options"
+               :key="item.value"
+               :label="item.label"
+               :value="item.value">
+             </el-option>
+           </el-select>
+           <el-button type="primary" style="margin-right: 20px;float:right"  size="small">重转<i class="el-icon-upload el-icon--right"></i></el-button>
          </div>
          <div style="margin-top: 20px">
            <el-table

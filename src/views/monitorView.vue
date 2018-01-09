@@ -140,60 +140,74 @@
           </div>
           <el-table
             :data="tableData"
-            style="width: 200%; padding: 30px 30px 0px;overflow: auto"
-            height="413"
+            style="width: 1126px; overflow: auto;margin: 20px 25px 0px"
+            height="380"
           >
             <el-table-column
               prop="convListDetailRuntimeId"
               label="子任务号"
+              width="78"
             >
             </el-table-column>
             <el-table-column
               prop="provinceNM"
               label="省份"
+              width="80"
             >
             </el-table-column>
             <el-table-column
               prop="provinceNMNosep"
               label="省份（份）"
-              width="100">
+              width="90">
             </el-table-column>
             <el-table-column
               prop="programCode"
-              width="100"
+              width="110"
               label="程序">
             </el-table-column>
             <el-table-column
               prop="convStep"
+              width="80"
               label="阶段">
             </el-table-column>
             <el-table-column
               prop="status"
+              width="62"
               label="状态">
             </el-table-column>
             <el-table-column
               prop="reconvert"
+              width="90"
               label="重转次数">
             </el-table-column>
             <el-table-column
               prop="beginTime"
-              width="180"
+              width="170"
               label="开始时间">
             </el-table-column>
             <el-table-column
               prop="endTime"
-              width="180"
+              width="170"
               label="结束时间">
             </el-table-column>
             <el-table-column
               prop="consumTime"
-              width="110"
-              label="耗时（小时）">
+              width="90"
+              label="耗时（h）">
             </el-table-column>
             <el-table-column
-              prop="logPath"
-              width="500"
+              width="100"
               label="log文件">
+              <template slot-scope="scope">
+                <el-button
+                  @click.native.prevent="loadLogfile(scope.$index, tableData)"
+                  type="primary"
+                  size="mini"
+                  icon="el-icon-download"
+                >
+                  下载
+                </el-button>
+              </template>
             </el-table-column>
           </el-table>
         </div>
@@ -439,25 +453,32 @@
         this.changeType(typeparam);
       },
       programSelect(param) {
-        this.stageArr.splice(0, this.stageArr.length);
-        this.stageVal = '';
+        this.stageArr.splice(1, this.stageArr.length);
+        this.stageVal = '全部';
         //获取单省转换信息初始化的"阶段"选项
-        for (let key in this.programCollection) {
-          if (Object.keys(this.programCollection[key]) == param) {
-            for (let s in this.programCollection[key][param]) {
+        if(param === '全部'){
+          getSubconfig().then((data) => {
+            for (let i in data.all) {
               this.stageArr.push({
-                value: this.programCollection[key][param][s]
+                value: data.all[i]
               })
             }
-            this.stageArr.push({
-              value: '全部'
-            })
-            break;
+          })
+        }else {
+          for (let key in this.programCollection) {
+            if (Object.keys(this.programCollection[key]) == param) {
+              for (let s in this.programCollection[key][param]) {
+                this.stageArr.push({
+                  value: this.programCollection[key][param][s]
+                })
+              }
+              break;
+            }
           }
         }
         let programParm;
         let stageParm;
-        this.programVal === '全部' ? programParm = '' : programParm = this.programVal;
+        this.programVal === '全部' ? programParm = '': programParm = this.programVal;
         this.stageVal === '全部' ? stageParm = '' : stageParm = this.stageVal;
         if (this.stateVal === '全部') {
           this.stateCode = '';
@@ -494,13 +515,18 @@
         this.changeOption(multi);
 
       },
+      loadLogfile(index,rows){
+        let logpath = rows[index].logPath;                       //加上服务器地址
+        window.location.href='http://192.168.15.41:9999/testload.log';
+        window.event.returnValue=false;
+
+      },
       //初始化请求服务
       initConfig: function () {
         if (localStorage.getItem('user')) {
           this.loginVal = '退出登陆'
         }
         if (this.loginVal == '退出登陆') {
-          console.log('ss');
           localStorage.clear();
           this.loginVal = '登陆';
         }
@@ -517,6 +543,12 @@
 
         //获取单省转换信息初始化的程序选项
         getSubconfig().then((data) => {
+          for(let i in data.all){
+            this.stageArr.push({
+              value: data.all[i]
+            })
+          }
+          this.stageArr.unshift({value: '全部'});
           this.states = data.status;
           this.states.unshift({value: '全部'});
           this.programCollection = data.programCode;        //获取所有程序及对应的状态集合，用于选择程序时联动查找对应状态
@@ -693,7 +725,7 @@
   }
 
   .selectOption {
-    padding: 40px 40px 0px;
+    padding: 30px 40px 0px;
     .demonstration {
       font-size: 14px;
       color: #3399ff;
