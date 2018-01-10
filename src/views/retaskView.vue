@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="background-color: #FaFaFa">
     <header-com></header-com>
     <div class="content wrapper" >
       <ul class="indexNav">
@@ -240,8 +240,8 @@
 
 <style lang="scss" scoped>
   .content {
-    width: 1160px;
-    padding-top: 70px;
+    width: 1200px;
+    padding-top: 56px;
   .indexNav {
     padding-top: 25px;
   li {

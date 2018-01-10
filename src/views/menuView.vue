@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="background-color: #FaFaFa">
     <header-com></header-com>
     <div class="scrollBox wrapper">
       <div>
@@ -78,14 +78,15 @@
 
 <style lang="scss" scoped>
   .scrollBox{
-    padding-top:100px;
-    width: 1160px;
+    padding-top:95px;
+    width: 1200px;
     .itemTitle{
       line-height: 24px;
-      font-size: 20px;
-      font-weight: bold;
-      color: #333;
-      padding-bottom: 20px;
+      font-size: 18px;
+      color: #333333;
+      margin-bottom: 20px;
+      background: url(../img/item1.png) left center no-repeat;
+      text-indent: 30px;
     }
     .everySpc{
       display: flex;

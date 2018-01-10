@@ -476,25 +476,46 @@
             }
           }
         }
-        let programParm;
-        let stageParm;
-        this.programVal === '全部' ? programParm = '': programParm = this.programVal;
-        this.stageVal === '全部' ? stageParm = '' : stageParm = this.stageVal;
-        if (this.stateVal === '全部') {
-          this.stateCode = '';
+
+        //处理三个参数组合的情况
+        let paramArr = [{programCode:this.programVal},{step:this.stageVal},{status:this.stateCode}];
+        let combineStr = '';
+        paramArr.forEach(function(el){
+          for(let index in el){
+            if(el[index] != '全部'){
+              combineStr = combineStr + index +'='+el[index]+'&';
+            }
+          }
+        })
+
+        if(combineStr.indexOf('status=&')>-1){
+          combineStr = combineStr.replace(/status=&/g,'');
+        }else{
+          combineStr = combineStr.slice(0,combineStr.length-1);
         }
-        let multi = `provinceName=${this.provinceCur}&convListId=${this.convListId}&programCode=${programParm}&step=${stageParm}&status=${this.stateCode}`;
+
+        let multi = `provinceName=${this.provinceCur}&convListId=${this.convListId}&${combineStr}`;
         this.changeOption(multi);
       },
-      stageSelect(param) {
-        let programParm;
-        let stageParm;
-        this.programVal === '全部' ? programParm = '' : programParm = this.programVal;
-        this.stageVal === '全部' ? stageParm = '' : stageParm = this.stageVal;
-        if (this.stateVal === '全部') {
-          this.stateCode = '';
+      stageSelect() {
+        //处理三个参数组合的情况
+        let paramArr = [{programCode:this.programVal},{step:this.stageVal},{status:this.stateCode}];
+        let combineStr = '';
+        paramArr.forEach(function(el){
+          for(let index in el){
+            if(el[index] != '全部'){
+              combineStr = combineStr + index +'='+el[index]+'&';
+            }
+          }
+        })
+
+        if(combineStr.indexOf('status=&')>-1){
+          combineStr = combineStr.replace(/status=&/g,'');
+        }else{
+          combineStr = combineStr.slice(0,combineStr.length-1);
         }
-        let multi = `provinceName=${this.provinceCur}&convListId=${this.convListId}&programCode=${programParm}&step=${stageParm}&status=${this.stateCode}`;
+
+        let multi = `provinceName=${this.provinceCur}&convListId=${this.convListId}&${combineStr}`;
         this.changeOption(multi);
 
       },
@@ -504,20 +525,34 @@
           return item.value === param;
         });
         this.stateCode = obj.key;
-        let programParm;
-        let stageParm;
-        this.programVal === '全部' ? programParm = '' : programParm = this.programVal;
-        this.stageVal === '全部' ? stageParm = '' : stageParm = this.stageVal;
-        if (this.stateVal === '全部') {
+        if(param === '全部'){
           this.stateCode = '';
         }
-        let multi = `provinceName=${this.provinceCur}&convListId=${this.convListId}&programCode=${programParm}&step=${stageParm}&status=${this.stateCode}`;
+
+        //处理三个参数组合的情况
+        let paramArr = [{programCode:this.programVal},{step:this.stageVal},{status:this.stateCode}];
+        let combineStr = '';
+        paramArr.forEach(function(el){
+          for(let index in el){
+            if(el[index] != '全部'){
+              combineStr = combineStr + index +'='+el[index]+'&';
+            }
+          }
+        })
+
+        if(combineStr.indexOf('status=&')>-1){
+          combineStr = combineStr.replace(/status=&/g,'');
+        }else{
+          combineStr = combineStr.slice(0,combineStr.length-1);
+        }
+
+        let multi = `provinceName=${this.provinceCur}&convListId=${this.convListId}&${combineStr}`;
         this.changeOption(multi);
 
       },
       loadLogfile(index,rows){
         let logpath = rows[index].logPath;                       //加上服务器地址
-        window.location.href='http://192.168.15.41:9999/testload.log';
+        window.location.href='http://192.168.15.41:9988/app/smap/smap_scenic/nohup.log';
         window.event.returnValue=false;
 
       },

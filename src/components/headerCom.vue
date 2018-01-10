@@ -1,7 +1,7 @@
 <template>
   <div class="header clear">
-    <div class="wrapper" style="width: 1160px">
-      <div class="fl" style="color:#1478ff;font-size: 22px;font-weight: 600">
+    <div class="wrapper" style="width: 1200px">
+      <div class="fl" style="color:#ffffff;font-size: 20px;font-weight: 400">
         自动化出品管理
       </div>
       <div class="fr">
@@ -22,14 +22,13 @@
 
 <style lang="scss" scoped>
   .header{
-    height: 64px;
-    line-height:64px;
+    height: 56px;
+    line-height:56px;
     position: fixed;
     width: 100%;
     z-index: 3;
-    border-top: 3px solid #1478ff;
-    box-shadow: 0px 2px 10px 0px rgba(0,0,0,0.1), 0 1px rgba(0,0,0,0.1);
-    background: #fafafa;
+    box-shadow: 0px 0px 5px 3px rgba(0,0,0,0.2);
+    background-color:#3367D6;
     .btnbg{
       display: inline-block;
       width: 90px;
@@ -39,15 +38,15 @@
       margin-right: 20px;
       cursor: pointer;
       color: #fff;
-      background-color: rgb(88, 150, 255);
+      background-color: #2850A7;
       border-color: #1478ff;
       padding: 0 13px;
       font-size: 14px;
       border-radius: 4px;
       &:hover{
         color: #fff;
-        background-color: #1478ff;
-        border-color: #1DA1F2;
+        background-color:#3399ff;
+        border-color: #25396e;
       }
     }
   }
