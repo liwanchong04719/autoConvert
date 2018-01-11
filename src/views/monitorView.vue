@@ -551,10 +551,10 @@
 
       },
       loadLogfile(index,rows){
-        let logpath = rows[index].logPath;                       //加上服务器地址
-        window.location.href='http://192.168.15.41:9988/app/smap/smap_scenic/nohup.log';
-        window.event.returnValue=false;
-
+        let logpath = rows[index].logPath;                       //加上服务器地址,修改判断
+        console.log('logpath:'+logpath);
+        window.location.href = 'http://192.168.15.41:9988/3337/idb_conv/Convert/Bin/convert.log';
+        window.event.returnValue = false;
       },
       //初始化请求服务
       initConfig: function () {

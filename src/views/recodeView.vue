@@ -271,12 +271,13 @@
     height:100%;
     .indexNav {
       padding-top: 25px;
+      line-height: 40px;
+      border-bottom: 1px solid #dfe4ed;
       li {
         display: inline-block;
         a {
-          color:#3399ff;
-          font-size: 14px;
-          font-weight: 700;
+          color:#1180ef;
+          font-size: 16px;
         }
       }
     }

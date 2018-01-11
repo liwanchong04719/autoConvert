@@ -16,7 +16,6 @@
           <single-Module taskTitle="任务加锁"></single-Module>
         </div>
       </div>
-      <!--<div style="width:100%;border-bottom: 1px solid #e0e0e0"></div>-->
       <div style="margin-top: 20px">
         <div class="itemTitle">
           统计信息
@@ -29,7 +28,6 @@
           <singleblock blockname="任务加锁"></singleblock>
         </div>
       </div>
-      <!--<div style="width:100%;border-bottom:1px solid #e0e0e0"></div>-->
       <div style="margin-top: 20px">
         <div class="itemTitle">
           系统管理

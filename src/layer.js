@@ -1054,13 +1054,15 @@ export const maplayer = {
           "line-cap": "round"
         },
         "paint": {
-          "line-dasharray": [
-            5,
-            3
-          ],
           "line-color": "#09263b",
           "line-opacity": 1.0,
-          "line-width": 1.0
+          "line-width": {
+            "stops": [
+              [3, 0.5],
+              [8, 1]
+            ],
+            "base": 1.2
+          }
         },
         "source-layer": "Adminbound",
         "minzoom": 3,
@@ -1084,12 +1086,6 @@ export const maplayer = {
           "line-cap": "round"
         },
         "paint": {
-          "line-dasharray": [
-            3,
-            3,
-            5,
-            5
-          ],
           "line-color": "#262121",
           "line-width": {
             "stops": [
