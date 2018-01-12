@@ -223,9 +223,7 @@
 <script type='text/ecmascript-6'>
   import mapboxgl from 'mapbox-gl';
   import '../lib/mapbox-gl/dist/mapbox-gl.css';
-  import '../lib/mapbox-gl/dist/mapbox-gl';
   import {maplayer} from '../layer.js';
-  import '../lib/animate.css';
   import {
     getconfig,
     getMaintask,

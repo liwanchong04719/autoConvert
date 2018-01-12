@@ -1,5 +1,5 @@
 <template>
-  <div style="background-color: #FaFaFa">
+  <div class="menubg">
     <header-com></header-com>
     <div class="scrollBox wrapper">
       <div>
@@ -7,13 +7,13 @@
             任务管理
         </div>
         <div class="everySpc">
-          <single-Module option="recode"></single-Module>
-          <single-Module taskTitle="任务重转"  option="retask"></single-Module>
-          <single-Module taskTitle="云端同步"></single-Module>
-          <single-Module taskTitle="任务重转"></single-Module>
-          <single-Module taskTitle="数据恢复"></single-Module>
-          <single-Module taskTitle="废弃任务"></single-Module>
-          <single-Module taskTitle="任务加锁"></single-Module>
+          <singleblock option="recode"></singleblock>
+          <singleblock taskTitle="任务重转"  option="retask"></singleblock>
+          <singleblock taskTitle="云端同步"></singleblock>
+          <singleblock taskTitle="任务重转"></singleblock>
+          <singleblock taskTitle="数据恢复"></singleblock>
+          <singleblock taskTitle="废弃任务"></singleblock>
+          <singleblock taskTitle="任务加锁"></singleblock>
         </div>
       </div>
       <div style="margin-top: 20px">
@@ -22,10 +22,10 @@
         </div>
         <div class="everySpc">
           <singleblock></singleblock>
-          <singleblock blockname="代码重载"></singleblock>
-          <singleblock blockname="任务恢复"></singleblock>
-          <singleblock blockname="本地上传"></singleblock>
-          <singleblock blockname="任务加锁"></singleblock>
+          <singleblock taskTitle="代码重载"></singleblock>
+          <singleblock taskTitle="任务恢复"></singleblock>
+          <singleblock taskTitle="本地上传"></singleblock>
+          <singleblock taskTitle="任务加锁"></singleblock>
         </div>
       </div>
       <div style="margin-top: 20px">
@@ -33,12 +33,11 @@
           系统管理
         </div>
         <div class="everySpc">
-          <single-task taskTitle="任务重转" colorVal="rgb(85, 195, 252)"></single-task>
-          <single-task taskTitle="数据恢复" colorVal="rgb(255, 87, 130)"></single-task>
-          <single-task taskTitle="废弃任务" colorVal="rgb(111, 239, 152)"></single-task>
-          <single-task taskTitle="任务加锁" colorVal="rgb(85, 195, 252)"></single-task>
-          <single-task taskTitle="任务加锁" colorVal="rgb(111, 239, 152)"></single-task>
-          <single-task taskTitle="数据恢复" colorVal="rgb(255, 87, 130)"></single-task>
+          <singleblock></singleblock>
+          <singleblock taskTitle="代码重载"></singleblock>
+          <singleblock taskTitle="任务恢复"></singleblock>
+          <singleblock taskTitle="本地上传"></singleblock>
+          <singleblock taskTitle="任务加锁"></singleblock>
         </div>
 
       </div>
@@ -91,6 +90,9 @@
       flex-wrap: wrap;
       justify-content: flex-start;
     }
+  }
+  .menubg{
+    background: url(../assets/menubg.jpg);
   }
 
 </style>

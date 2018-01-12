@@ -244,12 +244,13 @@
     padding-top: 56px;
   .indexNav {
     padding-top: 25px;
+    line-height: 40px;
+    border-bottom: 1px solid #dfe4ed;
   li {
     display: inline-block;
   a {
     color:#3399ff;
-    font-size: 14px;
-    font-weight: 700;
+    font-size: 16px;
   }
   }
   }
