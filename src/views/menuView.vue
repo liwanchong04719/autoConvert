@@ -7,13 +7,13 @@
             任务管理
         </div>
         <div class="everySpc">
-          <singleblock option="recode"></singleblock>
+          <singleblock option="recode" :bgImage="bg1"></singleblock>
           <singleblock taskTitle="任务重转"  option="retask"></singleblock>
-          <singleblock taskTitle="云端同步"></singleblock>
-          <singleblock taskTitle="任务重转"></singleblock>
-          <singleblock taskTitle="数据恢复"></singleblock>
-          <singleblock taskTitle="废弃任务"></singleblock>
-          <singleblock taskTitle="任务加锁"></singleblock>
+          <singleblock taskTitle="云端同步" :bgImage="bg2"></singleblock>
+          <singleblock taskTitle="任务重转" :bgImage="bg3"></singleblock>
+          <singleblock taskTitle="数据恢复" :bgImage="bg4"></singleblock>
+          <singleblock taskTitle="废弃任务" :bgImage="bg5"></singleblock>
+          <singleblock taskTitle="任务加锁" :bgImage="bg6"></singleblock>
         </div>
       </div>
       <div style="margin-top: 20px">
@@ -22,10 +22,10 @@
         </div>
         <div class="everySpc">
           <singleblock></singleblock>
-          <singleblock taskTitle="代码重载"></singleblock>
-          <singleblock taskTitle="任务恢复"></singleblock>
-          <singleblock taskTitle="本地上传"></singleblock>
-          <singleblock taskTitle="任务加锁"></singleblock>
+          <singleblock taskTitle="代码重载" :bgImage="bg2"></singleblock>
+          <singleblock taskTitle="任务恢复" :bgImage="bg1"></singleblock>
+          <singleblock taskTitle="本地上传" :bgImage="bg6"></singleblock>
+          <singleblock taskTitle="任务加锁" :bgImage="bg5"></singleblock>
         </div>
       </div>
       <div style="margin-top: 20px">
@@ -35,9 +35,9 @@
         <div class="everySpc">
           <singleblock></singleblock>
           <singleblock taskTitle="代码重载"></singleblock>
-          <singleblock taskTitle="任务恢复"></singleblock>
-          <singleblock taskTitle="本地上传"></singleblock>
-          <singleblock taskTitle="任务加锁"></singleblock>
+          <singleblock taskTitle="任务恢复" :bgImage="bg4"></singleblock>
+          <singleblock taskTitle="本地上传" :bgImage="bg3"></singleblock>
+          <singleblock taskTitle="任务加锁" :bgImage="bg2"></singleblock>
         </div>
 
       </div>
@@ -53,7 +53,12 @@
     name: 'menuList',
     data() {
       return {
-
+        bg1:require('../assets/blockIcon2.png'),
+        bg2:require('../assets/blockIcon3.png'),
+        bg3:require('../assets/blockIcon4.png'),
+        bg4:require('../assets/blockIcon5.png'),
+        bg5:require('../assets/blockIcon6.png'),
+        bg6:require('../assets/blockIcon8.png')
       }
     },
     components: {
@@ -92,7 +97,7 @@
     }
   }
   .menubg{
-    background: url(../assets/menubg.jpg);
+    background:url(../assets/menubg.jpg) 100% 100%;
   }
 
 </style>

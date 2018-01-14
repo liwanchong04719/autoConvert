@@ -1,7 +1,7 @@
 <template>
   <div class="flexItem" @click="enterOperate(option)">
     <div class="pic">
-      <img src='../img/blockIcon1.png' alt="">
+      <img :src='bgImage' alt="">
     </div>
     <div class="words">
       {{taskTitle}}
@@ -20,7 +20,7 @@
       },
       bgImage:{
         type:[String],
-        default:'../img/blockIcon1.png'
+        default:require('../assets/blockIcon1.png')
       },
       option:{
         type:[String]

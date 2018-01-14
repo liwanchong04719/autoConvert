@@ -222,7 +222,7 @@
 </template>
 <script type='text/ecmascript-6'>
   import mapboxgl from 'mapbox-gl';
-  import '../lib/mapbox-gl/dist/mapbox-gl.css';
+  import 'mapbox-gl/dist/mapbox-gl.css';
   import {maplayer} from '../layer.js';
   import {
     getconfig,

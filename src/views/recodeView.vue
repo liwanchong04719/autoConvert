@@ -1,5 +1,5 @@
 <template>
-  <div style="background-color: #FaFaFa;height: 100%">
+  <div>
     <header-com></header-com>
     <div class="content wrapper" >
       <ul class="indexNav">
