@@ -7,9 +7,9 @@
           <el-select v-model="typeVal" placeholder="请选择" size="small" style="width: 130px" @change="selectTasktype">
             <el-option
               v-for="item in taskType"
-              :key="item.value"
+              :key="item.versionValue"
               :label="item.label"
-              :value="item.value">
+              :value="item.versionValue">
             </el-option>
           </el-select>
         </div>
@@ -18,9 +18,9 @@
           <el-select v-model="detailsVal" placeholder="请选择" size="small" style="width: 130px" @change="selectDetail">
             <el-option
               v-for="one in detailsType"
-              :key="one.value"
+              :key="one.configValue"
               :label="one.label"
-              :value="one.value">
+              :value="one.configValue">
             </el-option>
           </el-select>
         </div>
@@ -132,9 +132,8 @@
             <el-select v-model="stateVal" placeholder="请选择" size="small" @change="stateSelect">
               <el-option
                 v-for="item in states"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
+                :key="item.statusValue"
+                :value="item.statusValue">
               </el-option>
             </el-select>
           </div>
@@ -217,6 +216,29 @@
       <span class="loginbg" v-html="loginVal"></span>
       <img src="../img/border.png" alt="" style="vertical-align: middle">
     </div>
+    <div class="stateMark">
+      <div style="text-align: center;margin-bottom: 10px">转换状态</div>
+      <div>
+        <span></span>
+        <i>成功</i>
+      </div>
+      <div>
+        <span v-bgcolor="'#67ba2f'"></span>
+        <i>转换中</i>
+      </div>
+      <div>
+        <span v-bgcolor="'#ffae45'"></span>
+        <i>失败</i>
+      </div>
+      <div>
+        <span v-bgcolor="'#36aeea'"></span>
+        <i>未开始</i>
+      </div>
+      <div>
+        <span v-bgcolor="'#CDE5FD'"></span>
+        <i>废弃</i>
+      </div>
+    </div>
 
   </div>
 </template>
@@ -259,7 +281,6 @@
         successshow: true,
         failshow: false,
         runningshow: false,
-        loadingshow: true,
         curIndex: 0,
         typeVal: '',
         detailsVal: '',
@@ -286,54 +307,20 @@
     },
     methods: {
       createMap: function () {
-        this.loadingshow = true;
         mapboxgl.mapboxToken = 'pk.eyJ1IjoiZmFuZ2xhbmsiLCJhIjoiY2lpcjc1YzQxMDA5NHZra3NpaDAyODB4eSJ9.z6uZHccXvtyVqA5zmalfGg',
           this.map = new mapboxgl.Map({
             container: 'map',
             style: maplayer.simple,
             zoom: 3.8,
-            maxZoom: 4.5,
-            minZoom: 3,
             center: [107.02932, 37.68486],
+            scrollZoom:false,
             repaint: true,
             pitch: 0
           })
         let that = this;                   //保存this指针的指向：指向vue实例-VueCompents
         this.map.on('load', function () {
-          that.map.addLayer({
-            "id": "plate",
-            "type": "fill",
-            "source": {
-              "type": "geojson",
-              "data": {
-                "type": "Feature",
-                "properties": {},
-                "geometry": {
-                  "type": "Polygon",
-                  "coordinates": [
-                    [
-                      [109.2041015625, 32.3057060139],
-                      [110.4345703125, 34.2345123624],
-                      [110.2807617188, 35.4248679193],
-                      [109.7973632813, 37.3526928037],
-                      [108.7646484375, 36.7564903295],
-                      [108.5009765625, 35.7465122599],
-                      [109.2041015625, 32.3057060139]
-                    ]
-                  ]
-                }
-              }
-            },
-            "layout": {
-              "visibility": "visible"
-            },
-            "paint": {
-              "fill-color": "rgba(255, 116, 116, .3)",
-              'fill-outline-color': '#ff7474'
-            }
-          });
-
-          that.map.on('click', 'plate', function () {
+          that.map.on('click', 'ProvincialRegion_all', function (e) {
+            console.log(e);
             that.show = true
             //请求接口：传入省份名称、主任务号
           });
@@ -342,14 +329,14 @@
             closeOnClick: false
           });
 
-          that.map.on('mouseenter', 'plate', function () {
-            that.map.getCanvas().style.cursor = 'pointer';
-            this.popup.setLngLat([109.55331540892581, 36.00854528903716])
-              .setHTML('正在转换的步骤：XXXX<br/>失败项：无')
-              .addTo(that.map);
-          });
+//          that.map.on('mouseenter', 'ProvincialRegion_all', function () {
+//            that.map.getCanvas().style.cursor = 'pointer';
+//            this.popup.setLngLat([109.55331540892581, 36.00854528903716])
+//              .setHTML('正在转换的步骤：XXXX<br/>失败项：无')
+//              .addTo(that.map);
+//          });
 
-          that.map.on('mouseleave', 'plate', function () {
+          that.map.on('mouseleave', 'ProvincialRegion_all', function () {
             that.map.getCanvas().style.cursor = '';
             this.popup.remove();
           });
@@ -373,17 +360,17 @@
             if(data) {
               if (data.success.length > 0) {
                 for (let i = 0; i < data.success.length; i++) {
-                  this.successList.push(data.success[i].provinceName);
+                  this.successList.push(data.success[i]);
                 }
               }
               if (data.failed.length > 0) {
                 for (let i = 0; i < data.failed.length; i++) {
-                  this.failList.push(data.failed[i].provinceName);
+                  this.failList.push(data.failed[i]);
                 }
               }
               if (data.running.length > 0) {
                 for (let i = 0; i < data.running.length; i++) {
-                  this.runningList.push(data.running[i].provinceName);
+                  this.runningList.push(data.running[i]);
                 }
               }
             }
@@ -435,18 +422,18 @@
       selectDetail(param) {
         let spr = {};
         spr = this.detailsType.find((item) => {
-          return item.value === param
+          return item.configValue === param
         })
-        this.configName = spr.key;
+        this.configName = spr.configKey;
         let typeparam = `configName=${this.configName}&versionType=${this.versionType}`;
         this.changeType(typeparam);
       },
       selectTasktype(param) {
         let obj = {};
         obj = this.taskType.find((item) => {
-          return item.value === param;
+          return item.versionValue === param;
         });
-        this.versionType = obj.key;
+        this.versionType = obj.versionKey;
         let typeparam = `configName=${this.configName}&versionType=${this.versionType}`;
         this.changeType(typeparam);
       },
@@ -456,9 +443,9 @@
         //获取单省转换信息初始化的"阶段"选项
         if(param === '全部'){
           getSubconfig().then((data) => {
-            for (let i in data.all) {
+            for (let i in data.allstep) {
               this.stageArr.push({
-                value: data.all[i]
+                value: data.allstep[i]
               })
             }
           })
@@ -520,9 +507,9 @@
       stateSelect(param) {
         let obj = {};
         obj = this.states.find((item) => {
-          return item.value === param;
+          return item.statusValue === param;
         });
-        this.stateCode = obj.key;
+        this.stateCode = obj.statusCode;
         if(param === '全部'){
           this.stateCode = '';
         }
@@ -566,24 +553,24 @@
         getconfig().then((data) => {
           this.detailsType = data.configName;
           this.taskType = data.versionType;
-          this.typeVal = data.versionType[0].value;
-          this.detailsVal = data.configName[0].value;
-          this.configName = data.configName[0].key;
-          this.versionType = data.versionType[0].key;
+          this.typeVal = data.versionType[0].versionValue;
+          this.detailsVal = data.configName[0].configValue;
+          this.configName = data.configName[0].configKey;
+          this.versionType = data.versionType[0].versionKey;
           let param = `configName=${this.configName}&versionType=${this.versionType}`;
           this.changeType(param);
         })
 
         //获取单省转换信息初始化的程序选项
         getSubconfig().then((data) => {
-          for(let i in data.all){
+          for(let i in data.allstep){
             this.stageArr.push({
-              value: data.all[i]
+              value: data.allstep[i]
             })
           }
           this.stageArr.unshift({value: '全部'});
           this.states = data.status;
-          this.states.unshift({value: '全部'});
+          this.states.unshift({"statusValue":"全部"});
           this.programCollection = data.programCode;        //获取所有程序及对应的状态集合，用于选择程序时联动查找对应状态
           for (let i = 0; i < data.programCode.length; i++) {
             for (let key in data.programCode[i]) {
@@ -744,6 +731,33 @@
           background-image: url('../img/monitorlogin_active.png')
       }
     }
+  }
+  .stateMark{
+    position: absolute;
+    right: 10px;
+    bottom:10px;
+    padding: 5px;
+    width: 140px;
+    opacity: 0.9;
+    font-size:14px;
+    border-radius: 10px;
+    border: 2px solid #656c7c;
+    color: #ffffff;
+    background-color: rgba(9,13,25,.8);
+    span{
+      display: inline-block;
+      line-height: 20px;
+      height: 20px;
+      vertical-align: middle;
+      background-color: #ff7474;
+      width: 40px;
+      margin: 5px 15px 5px 10px;
+    }
+    i{
+      font-size: 12px;
+    }
+
+
   }
 
   .el-menu-item-group_title {

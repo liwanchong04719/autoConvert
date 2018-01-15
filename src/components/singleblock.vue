@@ -33,6 +33,10 @@
       }
     }
   }
+  //全局指令
+  Vue.directive("bgcolor", function (el, binding) {
+    el.style.background = binding.value
+  })
 </script>
 
 <style lang="scss" scoped>

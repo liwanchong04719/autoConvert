@@ -4,6 +4,18 @@ export const maplayer = {
     "version": 8,
     "name": "Bright",
     "sources": {
+      "ProvincialRegion":{
+        "tiles": [
+          "http://192.168.15.41:9999/smapapi/automate/monitor/pbf/outline/{z}/{x}/{y}?convListId=61"
+        ],
+        "type": "vector"
+      },
+      "ProvincialPoint":{
+        "tiles": [
+          "http://192.168.15.41:9999/smapapi/automate/monitor/pbf/midpoint/{z}/{x}/{y}"
+        ],
+        "type": "vector"
+      },
       "Zlevel": {
         "tiles": [
           "http://minedata.cn/data/Zlevel/{z}/{x}/{y}?token=fa502cb69dfc4b7bb8a99ac6f092ab47&solu=3994"
@@ -66,7 +78,7 @@ export const maplayer = {
       }
     },
     "glyphs": "http://minedata.cn/minemapapi/v1.3/fonts/{fontstack}/{range}.pbf",
-    "sprite": "",
+    "sprite": "http://192.168.15.41:9998/static/sprite/sprite",
     "layers": [
       {
         "id": "305e7db2535044feb87d3045a268898b",
@@ -12364,95 +12376,6 @@ export const maplayer = {
         "type": "fill"
       },
       {
-        "id": "c1af11fdf28944509f0ff27d77a43ca3",
-        "maxzoom": 17.5,
-        "source": "Buildingmore",
-        "layout": {
-          "visibility": "visible"
-        },
-        "paint": {
-          "fill-extrusion-color": "#274a73",
-          "fill-extrusion-translate-anchor": "map",
-          "fill-extrusion-base": 0,
-          "fill-extrusion-opacity": 0.3,
-          "fill-extrusion-translate": [
-            0,
-            0
-          ],
-          "fill-extrusion-height": {
-            "property": "levels",
-            "type": "identity"
-          }
-        },
-        "source-layer": "Buildingmore",
-        "minzoom": 16.0,
-        "type": "fill-extrusion"
-      },
-      {
-        "id": "99584a40b32941668796a49589c84323",
-        "maxzoom": 17.5,
-        "source": "Merge_1",
-        "layout": {
-          "text-size": 11.0,
-          "visibility": "visible",
-          "symbol-avoid-edges": true,
-          "text-field": "{name_zh}",
-          "text-font": [
-            "REGULAR"
-          ],
-          "symbol-placement": "line"
-        },
-        "source-layer": "Road",
-        "paint": {
-          "text-halo-color": "#ffffff",
-          "text-halo-width": 1,
-          "text-color": "#888888",
-          "icon-color": "#ff0000"
-        },
-        "minzoom": 10.0,
-        "type": "symbol",
-        "filter": [
-          "all",
-          [
-            "==",
-            "kind",
-            13
-          ]
-        ]
-      },
-      {
-        "id": "c19c6126ee1f412ab449c1424c50c43d",
-        "maxzoom": 17.5,
-        "source": "Merge_1",
-        "layout": {
-          "text-size": 11.0,
-          "symbol-avoid-edges": true,
-          "visibility": "visible",
-          "text-field": "{name_zh}",
-          "text-font": [
-            "REGULAR"
-          ],
-          "symbol-placement": "line"
-        },
-        "paint": {
-          "text-halo-color": "#01070f",
-          "text-halo-width": 1,
-          "text-color": "#888888",
-          "icon-color": "#ff0000"
-        },
-        "source-layer": "Road",
-        "minzoom": 15.0,
-        "type": "symbol",
-        "filter": [
-          "all",
-          [
-            "==",
-            "kind",
-            10
-          ]
-        ]
-      },
-      {
         "id": "2af52dd1a94d4416a87e1c6341825e3a",
         "maxzoom": 17.5,
         "source": "Merge_1",
@@ -12484,296 +12407,6 @@ export const maplayer = {
           ]
         ]
       },
-
-      {
-        "id": "2d268a751c99448c818ca295b40ca559",
-        "maxzoom": 17.5,
-        "source": "Merge_1",
-        "layout": {
-          "text-size": {
-            "stops": [
-              [
-                10,
-                10
-              ],
-              [
-                18,
-                14
-              ]
-            ],
-            "base": 1
-          },
-          "symbol-avoid-edges": true,
-          "visibility": "visible",
-          "text-field": "{name_zh}",
-          "text-font": [
-            "REGULAR"
-          ],
-          "symbol-placement": "line"
-        },
-        "source-layer": "Road",
-        "paint": {
-          "text-halo-color": "#01070f",
-          "text-color": "#888888",
-          "text-halo-width": 1,
-          "icon-color": "#ff0000"
-        },
-        "minzoom": 11.0,
-        "type": "symbol",
-        "filter": [
-          "all",
-          [
-            "==",
-            "kind",
-            4
-          ],
-          [
-            "==",
-            "const_st",
-            1
-          ]
-        ]
-      },
-      {
-        "id": "26f7d9efe28c418f9367caadd1dc006f",
-        "maxzoom": 17.5,
-        "source": "Merge_1",
-        "layout": {
-          "text-size": {
-            "stops": [
-              [
-                10,
-                10
-              ],
-              [
-                18,
-                14
-              ]
-            ],
-            "base": 1
-          },
-          "symbol-avoid-edges": true,
-          "visibility": "visible",
-          "text-field": "{name_zh}",
-          "text-font": [
-            "REGULAR"
-          ],
-          "symbol-placement": "line"
-        },
-        "source-layer": "Road",
-        "paint": {
-          "text-halo-color": "#01070f",
-          "text-color": "#888888",
-          "text-halo-width": 1.0,
-          "icon-color": "#ff0000"
-        },
-        "minzoom": 11.0,
-        "type": "symbol",
-        "filter": [
-          "all",
-          [
-            "==",
-            "kind",
-            3
-          ],
-          [
-            "==",
-            "const_st",
-            1
-          ]
-        ]
-      },
-      {
-        "id": "490427bbe40245ff9d4da7c6fcedc3c2",
-        "maxzoom": 17.5,
-        "source": "Merge_1",
-        "layout": {
-          "text-size": {
-            "stops": [
-              [
-                10,
-                10
-              ],
-              [
-                18,
-                14
-              ]
-            ],
-            "base": 1
-          },
-          "visibility": "visible",
-          "symbol-avoid-edges": true,
-          "text-field": "{name_zh}",
-          "text-ignore-placement": false,
-          "text-allow-overlap": false,
-          "text-font": [
-            "BOLD"
-          ],
-          "symbol-placement": "line"
-        },
-        "paint": {
-          "text-halo-color": "#01070f",
-          "text-color": "#888888",
-          "text-halo-width": 1.0,
-          "icon-color": "#ff0000"
-        },
-        "source-layer": "Road",
-        "minzoom": 10.0,
-        "type": "symbol",
-        "filter": [
-          "all",
-          [
-            "==",
-            "kind",
-            2
-          ],
-          [
-            "==",
-            "const_st",
-            1
-          ]
-        ]
-      },
-      {
-        "id": "39645c6113b0423394d987545ba7ab95",
-        "maxzoom": 10.0,
-        "source": "Merge_1",
-        "layout": {
-          "text-size": 12.0,
-          "icon-image": "circle-red-11",
-          "text-pitch-alignment": "viewport",
-          "symbol-avoid-edges": false,
-          "visibility": "visible",
-          "text-field": "{name_zh}",
-          "text-rotation-alignment": "viewport",
-          "text-ignore-placement": false,
-          "text-allow-overlap": false,
-          "text-anchor": "bottom",
-          "text-font": [
-            "REGULAR"
-          ],
-          "icon-size": 0.8,
-          "text-offset": [
-            0,
-            -0.3
-          ]
-        },
-        "paint": {
-          "text-halo-color": "#000202",
-          "text-halo-width": 0.5,
-          "text-color": "#8f8f8f",
-          "icon-color": "#ff0000"
-        },
-        "source-layer": "Adminflag",
-        "minzoom": 2.0,
-        "type": "symbol",
-        "filter": [
-          "all",
-          [
-            "in",
-            "capital",
-            1,
-            2
-          ],
-          [
-            "!in",
-            "name_zh",
-            "香港",
-            "澳門",
-            "天津"
-          ]
-        ]
-      },
-      {
-        "id": "1ea68acfcc084795b6f122342c4f16a6",
-        "maxzoom": 10.0,
-        "source": "Merge_1",
-        "layout": {
-          "text-size": 12.0,
-          "icon-image": "circle-red-11",
-          "text-pitch-alignment": "viewport",
-          "visibility": "visible",
-          "symbol-avoid-edges": false,
-          "text-field": "{name_zh}",
-          "text-ignore-placement": false,
-          "text-rotation-alignment": "viewport",
-          "text-allow-overlap": false,
-          "text-anchor": "left",
-          "text-font": [
-            "REGULAR"
-          ],
-          "icon-size": 0.8,
-          "text-offset": [
-            -2.5,
-            0
-          ]
-        },
-        "source-layer": "Adminflag",
-        "paint": {
-          "text-halo-color": "#000202",
-          "text-color": "#8f8f8f",
-          "text-halo-width": 0.5,
-          "icon-color": "#ff0000"
-        },
-        "minzoom": 2.0,
-        "type": "symbol",
-        "filter": [
-          "all",
-          [
-            "in",
-            "capital",
-            1,
-            2
-          ],
-          [
-            "==",
-            "name_zh",
-            "天津"
-          ]
-        ]
-      },
-      {
-        "id": "25d8342c55274710a06c7ac464c9f0b7",
-        "maxzoom": 6.0,
-        "source": "Merge_1",
-        "layout": {
-          "text-size": 12.0,
-          "icon-image": "star-11",
-          "text-pitch-alignment": "viewport",
-          "symbol-avoid-edges": false,
-          "visibility": "visible",
-          "text-field": "{name_zh}",
-          "text-rotation-alignment": "viewport",
-          "text-anchor": "bottom",
-          "text-font": [
-            "REGULAR"
-          ],
-          "icon-size": 1.2,
-          "text-offset": [
-            0,
-            -0.3
-          ]
-        },
-        "source-layer": "Adminflag",
-        "paint": {
-          "icon-halo-color": "#d0021b",
-          "text-halo-color": "#000202",
-          "text-halo-width": 1.0,
-          "text-color": "#808080",
-          "icon-halo-width": 10.0,
-          "icon-color": "#ff0000"
-        },
-        "minzoom": 2.0,
-        "type": "symbol",
-        "filter": [
-          "all",
-          [
-            "in",
-            "capital",
-            1
-          ]
-        ]
-      },
       {
         "id": "40cea26b72f245ff9ccc1180c2824fc0",
         "maxzoom": 8.5,
@@ -12783,7 +12416,7 @@ export const maplayer = {
           "text-pitch-alignment": "viewport",
           "visibility": "visible",
           "symbol-avoid-edges": false,
-          "text-field": "{name_zh}",
+          // "text-field": "{name_zh}",
           "text-rotation-alignment": "viewport",
           "text-font": [
             "REGULAR"
@@ -12808,37 +12441,38 @@ export const maplayer = {
         ]
       },
       {
-        "id": "092b6ab59c5b410a9045c6baacedff37",
-        "maxzoom": 8.5,
-        "source": "Merge_1",
+        id: 'ProvincialRegion_all',
+        type: 'fill',
+        interactive: true,
+        "source" : "ProvincialRegion",
+        'source-layer': 'outarea',
         "layout": {
-          "text-size": 20.0,
-          "text-pitch-alignment": "viewport",
-          "visibility": "visible",
-          "symbol-avoid-edges": false,
-          "text-field": "{name_zh}",
-          "text-rotation-alignment": "viewport",
-          "text-font": [
-            "REGULAR"
-          ]
+          "visibility": "visible"
         },
-        "source-layer": "Worldannotation",
         "paint": {
-          "text-halo-color": "#000202",
-          "text-halo-width": 1.0,
-          "text-color": "#808080",
-          "icon-color": "#ff0000"
-        },
-        "minzoom": 2.0,
-        "type": "symbol",
-        "filter": [
-          "all",
-          [
-            "==",
-            "kind",
-            "405003"
-          ]
-        ]
+          "fill-color": "rgba(255, 116, 116, .9)",
+          'fill-outline-color': '#ff7474'
+        }
+      },
+      {
+        id: 'ProvincialPoint_name',
+        type: 'symbol',
+        interactive: true,
+        "source" : "ProvincialPoint",
+        'source-layer': 'poi',
+        layout:{
+            'icon-image': 'POI_blue',
+            "text-field": "{provinceName}",
+            'text-size':12,
+            "text-offset":[0,1.5],
+            "text-justify": "center",
+            "visibility": "visible"
+          },
+        paint: {
+            'icon-color': '#ff2d2d',
+            "text-halo-width": 0.5,
+            "text-color": "#ffffff",
+          }
       }
     ]
   }
