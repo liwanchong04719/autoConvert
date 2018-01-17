@@ -4,21 +4,9 @@ export const maplayer = {
     "version": 8,
     "name": "Bright",
     "sources": {
-      "ProvincialRegion":{
-        "tiles": [
-          "http://192.168.15.41:9999/smapapi/automate/monitor/pbf/outline/{z}/{x}/{y}?convListId=''"
-        ],
-        "type": "vector"
-      },
       "ProvincialPoint":{
         "tiles": [
           "http://192.168.15.41:9999/smapapi/automate/monitor/pbf/midpoint/{z}/{x}/{y}"
-        ],
-        "type": "vector"
-      },
-      "mapblock":{
-        "tiles": [
-          "http://192.168.15.41:9999/smapapi/automate/monitor/pbf/meshoutline/{z}/{x}/{y}"
         ],
         "type": "vector"
       },
@@ -12431,95 +12419,8 @@ export const maplayer = {
         "minzoom": 2,
         "type": "symbol",
         "filter": [
-          "all",
-          [
-            "==",
-            "kind",
-            "405002"
-          ]
+          "all", ["==", "kind", "405002"]
         ]
-      },
-      {
-        id: 'ProvincialRegion_success',
-        type: 'fill',
-        interactive: true,
-        "source" : "ProvincialRegion",
-        'source-layer': 'outarea',
-        "layout": {
-          "visibility": "visible"
-        },
-        "paint": {
-          "fill-color": "#ff7474",
-        },
-        "filter": ["==", "status", "1" ]
-      },
-      {
-        id: 'ProvincialRegion_fail',
-        type: 'fill',
-        interactive: true,
-        "source" : "ProvincialRegion",
-        'source-layer': 'outarea',
-        "layout": {
-          "visibility": "visible"
-        },
-        "paint": {
-          "fill-color": "#ffae45",
-          'fill-outline-color': '#ffffff'
-        },
-        "filter": ["==", "status", "0" ]
-      },
-      {
-        id: 'ProvincialRegion_running',
-        type: 'fill',
-        interactive: true,
-        "source" : "ProvincialRegion",
-        'source-layer': 'outarea',
-        "layout": {
-          "visibility": "visible"
-        },
-        "paint": {
-          "fill-color": "#67ba2f",
-        },
-        "filter": ["==", "status", "2" ]
-      }, {
-        id: 'ProvincialRegion_unrun',
-        type: 'fill',
-        interactive: true,
-        "source" : "ProvincialRegion",
-        'source-layer': 'outarea',
-        "layout": {
-          "visibility": "visible"
-        },
-        "paint": {
-          "fill-color": "#36aeea",
-        },
-        "filter": ["==", "status", "3" ]
-      },{
-        id: 'ProvincialRegion_abandon',
-        type: 'fill',
-        interactive: true,
-        "source" : "ProvincialRegion",
-        'source-layer': 'outarea',
-        "layout": {
-          "visibility": "visible"
-        },
-        "paint": {
-          "fill-color": "#CDE5FD",
-        },
-        "filter": ["==", "status", "4" ]
-      },
-      {
-        id: 'mapblock_layer',
-        type: 'fill',
-        interactive: true,
-        "source" : "mapblock",
-        'source-layer': 'mesharea',
-        "layout": {
-          "visibility": "none"
-        },
-        "paint": {
-          "fill-color": "rgba(255,204,204,0.7)"
-        }
       },
       {
         id: 'ProvincialPoint_name',

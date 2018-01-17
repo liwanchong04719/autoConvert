@@ -24,6 +24,17 @@
             </el-option>
           </el-select>
         </div>
+        <div style="margin-top: 20px">
+          <span style="margin-left: 14px">作业季：</span>
+          <el-select v-model="seasonVal" placeholder="请选择" size="small" style="width: 130px" @change="selectWorkseason">
+            <el-option
+              v-for="one in workSeason"
+              :key="one.seasonValue"
+              :label="one.label"
+              :value="one.seasonValue">
+            </el-option>
+          </el-select>
+        </div>
         <div class="taskTitle">出品任务概述</div>
         <div class="taskDes">
           <span>所属日期：</span>
@@ -236,8 +247,10 @@
         <i>废弃</i>
       </div>
     </div>
-    <div class="changeMap">
-      <el-checkbox v-model="checked" @change="changeMesh">图幅</el-checkbox>
+    <div class="changeMap" @click="changeMesh" :class="{'ban':typeVal === '季出品'}">
+      <img src="../img/checkbox_active.png" v-if="checkboxDispaly" alt="">
+      <img src="../img/checkbox_normal.svg" v-if="!checkboxDispaly" alt="">
+      <span>图幅</span>
     </div>
   </div>
 </template>
@@ -251,7 +264,8 @@
     getSubconfig,
     getProvincestatus,
     getSubstatus,
-    getSubinfo
+    getSubinfo,
+    getConfigId
   } from '../dataService/service';
 
   export default {
@@ -277,9 +291,9 @@
         programArr: [],
         stageArr: [],
         programCollection: [],
-        curIndex: 0,
         typeVal: '',
         detailsVal: '',
+        seasonVal:'',
         provinceCur: '',
         programVal: '',
         stageVal: '',
@@ -287,14 +301,17 @@
         stateCode: '',
         taskType: [],
         detailsType: [],
+        workSeason:[],
         tableData: [],
         singleProvince:'',
         singleState:'',
         singleBegintime:'',
         singleEndtime:'',
         singleDate:'',
+        convConfigId:'',
         show: false,
-        checked:false
+        checked:false,
+        checkboxDispaly:false
 
       }
     },
@@ -313,15 +330,25 @@
           this.loginVal = '登陆';
         }
         getconfig().then((data) => {
+          console.log(data.convVersion);
           this.detailsType = data.configName;
           this.taskType = data.versionType;
           this.typeVal = data.versionType[0].versionValue;
           this.detailsVal = data.configName[0].configValue;
           this.configName = data.configName[0].configKey;
           this.versionType = data.versionType[0].versionKey;
-          let param = `configName=${this.configName}&versionType=${this.versionType}`;
-          //this.changeType(param);
-            getMaintask(param).then((data) => {
+          this.seasonVal = data.convVersion[0];
+          for(let i=0;i<data.convVersion.length;i++){
+            this.workSeason.push({
+              seasonValue:data.convVersion[i]
+            })
+          }
+          let param = `configName=${this.configName}&versionType=${this.versionType}&convVersion=${this.seasonVal}`;
+
+          getConfigId(param).then((data)=>{
+            this.convConfigId = data.convConfigId;
+            console.log(this.convConfigId);
+            getMaintask(`convConfigId=${data.convConfigId}`).then((data) => {
               this.beginTime = data.beginTime;
               this.belongDay = data.belongDay;
               this.consumTime = data.consumTime;
@@ -353,6 +380,7 @@
                 }
               })
             })
+          })
         })
 
         //获取单省转换信息初始化的程序选项
@@ -392,91 +420,94 @@
 
         let that = this;                               //保存this指针的指向：指向vue实例-VueCompents
         this.map.on('load', function () {
-          let mapParam= that.convListId;
-          that.mapOperate(mapParam);
+          let mapParam = that.convListId;
+          let meshParam = that.convConfigId;
+          that.mapOperate(mapParam,meshParam);
         })
       },
-      mapOperate:function(param){
+      mapOperate:function(mapParam,meshParam){
+        console.log(meshParam+'lsfkfskf');
+        //添加省份状态图层
         if(this.map.getSource('ProvincialRegion')){
           this.map.removeSource('ProvincialRegion');
         }
         this.map.addSource('ProvincialRegion', {
           "tiles": [
-            "http://192.168.15.41:9999/smapapi/automate/monitor/pbf/outline/{z}/{x}/{y}?convListId="+param
+            "http://192.168.15.41:9999/smapapi/automate/monitor/pbf/outline/{z}/{x}/{y}?convListId="+mapParam
           ],
           "type": "vector"
         })
 
         var provinceSuccesslayer={
-          id: 'ProvincialRegion_success',
-            type: 'fill',
+          id: 'ProvincialRegion_1',
+          type: 'fill',
           interactive: true,
           "source" : "ProvincialRegion",
           'source-layer': 'outarea',
           "layout": {
-          "visibility": "visible"
-        },
+            "visibility": "visible"
+          },
           "paint": {
             "fill-color": "#ff7474",
             'fill-outline-color': '#ffffff'
-        },
+           },
           "filter": ["==", "status", "1" ]
         };
 
         var provinceFaillayer={
-          id: 'ProvincialRegion_fail',
-            type: 'fill',
+          id: 'ProvincialRegion_0',
+          type: 'fill',
           interactive: true,
           "source" : "ProvincialRegion",
           'source-layer': 'outarea',
           "layout": {
-          "visibility": "visible"
-        },
+            "visibility": "visible"
+          },
           "paint": {
-          "fill-color": "#ffae45",
+            "fill-color": "#ffae45",
             'fill-outline-color': '#ffffff'
-        },
+           },
           "filter": ["==", "status", "0" ]
         };
 
         var provinceRunninglayer= {
-          id: 'ProvincialRegion_running',
-            type: 'fill',
+          id: 'ProvincialRegion_2',
+          type: 'fill',
           interactive: true,
           "source" : "ProvincialRegion",
           'source-layer': 'outarea',
           "layout": {
-          "visibility": "visible"
-        },
+            "visibility": "visible"
+          },
           "paint": {
-          "fill-color": "#67ba2f",
-        },
+            "fill-color": "#67ba2f",
+          },
           "filter": ["==", "status", "2" ]
         }
 
         var provinceUnrunlayer={
-          id: 'ProvincialRegion_unrun',
-            type: 'fill',
-            interactive: true,
-            "source" : "ProvincialRegion",
-            'source-layer': 'outarea',
-            "layout": {
-            "visibility": "visible"
+          id: 'ProvincialRegion_3',
+          type: 'fill',
+          interactive: true,
+          "source" : "ProvincialRegion",
+          'source-layer': 'outarea',
+          "layout": {
+              "visibility": "visible"
           },
           "paint": {
             "fill-color": "#36aeea",
             'fill-outline-color': '#ffffff'
-          },
+           },
           "filter": ["==", "status", "3" ]
         };
 
         var provinceAbandonlayer={
-          id: 'ProvincialRegion_abandon',
-            type: 'fill',
-            interactive: true,
-            "source" : "ProvincialRegion",
-            'source-layer': 'outarea',
-            "layout": {
+          id: 'ProvincialRegion_4',
+          type: 'fill',
+          interactive: true,
+          "source" : "ProvincialRegion",
+          'source-layer': 'outarea',
+          "layout": {
             "visibility": "visible"
           },
           "paint": {
@@ -486,11 +517,11 @@
           "filter": ["==", "status", "4" ]
         };
 
-        this.map.removeLayer('ProvincialRegion_fail');
-        this.map.removeLayer('ProvincialRegion_success');
-        this.map.removeLayer('ProvincialRegion_running');
-        this.map.removeLayer('ProvincialRegion_unrun');
-        this.map.removeLayer('ProvincialRegion_abondon');
+        for(let i=0;i<5;i++){                              //第一次不存在图层，其余都存在图层，依次去除5个图层，再添加
+          if(this.map.getLayer('ProvincialRegion_'+i)){
+            this.map.removeLayer('ProvincialRegion_'+i);
+          }
+        }
         this.map.addLayer(provinceSuccesslayer);
         this.map.addLayer(provinceFaillayer);
         this.map.addLayer(provinceRunninglayer);
@@ -503,145 +534,153 @@
           closeOnClick: false
         });
 
-        this.map.on('click', 'ProvincialRegion_fail', function (e) {
-          let provincename_click = e.features[0].properties.provinceName;
-          that.show = true;
-          let paramclick = `provinceName=${provincename_click}&convListId=${that.convListId}`;
-          getSubstatus(paramclick).then((data) => {
-            that.singleProvince = data.provinceNMNosep;
-            that.singleState = data.status;
-            that.singleBegintime = data.beginTime;
-            that.singleEndtime = data.endTime;
-            that.singleDate = data.belongDay;
-          })
-          getSubinfo(paramclick).then((data) => {
-            that.tableData = data;
-          })
-        });
+        for(let i=0;i<3;i++){                            //仅给状态为0失败,1成功,2转换中,的图层添加点击事件和鼠标滑过事件
+          this.map.on('click', 'ProvincialRegion_'+i, function (e) {
+            console.log('ProvincialRegion_'+i);
+            let provincename_click = e.features[0].properties.provinceName;
+            that.show = true;
+            that.provinceCur = provincename_click;
+            that.programVal = '全部';
+            that.stageVal = '全部' ;
+            that.stateVal = '全部';
+            let paramclick = `provinceName=${provincename_click}&convListId=${that.convListId}`;
+            getSubstatus(paramclick).then((data) => {
+              that.singleProvince = data.provinceNMNosep;
+              that.singleState = data.status;
+              that.singleBegintime = data.beginTime;
+              that.singleEndtime = data.endTime;
+              that.singleDate = data.belongDay;
+            })
+            getSubinfo(paramclick).then((data) => {
+              that.tableData = data;
+            })
+          });
 
-        this.map.on('click', 'ProvincialRegion_success', function (e) {
-          let provincename_click = e.features[0].properties.provinceName;
-          that.show = true;
-          let paramclick = `provinceName=${provincename_click}&convListId=${that.convListId}`;
-          getSubstatus(paramclick).then((data) => {
-            that.singleProvince = data.provinceNMNosep;
-            that.singleState = data.status;
-            that.singleBegintime = data.beginTime;
-            that.singleEndtime = data.endTime;
-            that.singleDate = data.belongDay;
-          })
-          getSubinfo(paramclick).then((data) => {
-            that.tableData = data;
-          })
-        });
+          this.map.on('mouseenter', 'ProvincialRegion_'+i, function (e) {
+            that.map.getCanvas().style.cursor = 'pointer';
+            let lng = e.lngLat.lng;
+            let lat = e.lngLat.lat;
+            let div = window.document.createElement('div');
+            div.innerHTML = '<div class="feePopDeep">转换状态：'+e.features[0].properties.percent+'</div>'
+              + '<div  class="tipPopDeep"></div>';
+            that.popup.setLngLat([lng,lat])
+              .setDOMContent(div)
+              .addTo(that.map);
+          });
 
-        this.map.on('click', 'ProvincialRegion_running', function (e) {
-          let provincename_click = e.features[0].properties.provinceName;
-          that.show = true;
-          let paramclick = `provinceName=${provincename_click}&convListId=${that.convListId}`;
-          getSubstatus(paramclick).then((data) => {
-            that.singleProvince = data.provinceNMNosep;
-            that.singleState = data.status;
-            that.singleBegintime = data.beginTime;
-            that.singleEndtime = data.endTime;
-            that.singleDate = data.belongDay;
-          })
-          getSubinfo(paramclick).then((data) => {
-            that.tableData = data;
-          })
-        });
+          this.map.on('mouseleave', 'ProvincialRegion_'+i, function () {
+            that.map.getCanvas().style.cursor = '';
+            that.popup.remove();
+          });
+        }
 
-        this.map.on('mouseenter', 'ProvincialRegion_success', function (e) {
-          that.map.getCanvas().style.cursor = 'pointer';
-          let lng = e.lngLat.lng;
-          let lat = e.lngLat.lat;
-          let div = window.document.createElement('div');
-          div.innerHTML = '<div class="feePopDeep">转换状态：'+e.features[0].properties.percent+'</div>'
-            + '<div  class="tipPopDeep"></div>';
-          that.popup.setLngLat([lng,lat])
-            .setDOMContent(div)
-            .addTo(that.map);
-        });
+        //添加图幅图层
+        if(this.map.getSource('mapMesh')){
+          this.map.removeSource('mapMesh');
+        }
+        this.map.addSource('mapMesh', {
+          "tiles": [
+            "http://192.168.15.41:9999/smapapi/automate/monitor/pbf/meshoutline/{z}/{x}/{y}?convConfigId="+meshParam
+          ],
+          "type": "vector"
+        })
+        console.log(meshParam);
+       var meshLayer_circle = {
+          id: 'mapblock_layer0',
+          type: 'fill',
+          interactive: true,
+          "source" : "mapMesh",
+          'source-layer': 'mesharea',
+          "layout": {
+          "visibility": "none"
+        },
+          "paint": {
+            "fill-color": "rgba(153,51,255,1)"
+        },
+          "filter": ["==", "adja_mesh", "0" ]
+       }
 
-        this.map.on('mouseleave', 'ProvincialRegion_success', function () {
-          that.map.getCanvas().style.cursor = '';
-          that.popup.remove();
-        });
+        var meshLayer_center = {
+          id: 'mapblock_layer1',
+          type: 'fill',
+          interactive: true,
+          "source" : "mapMesh",
+          'source-layer': 'mesharea',
+          "layout": {
+            "visibility": "none"
+          },
+          "paint": {
+            "fill-color": "rgba(255,0,0,1)"
+          },
+          "filter": ["==", "adja_mesh", "1" ]
+        }
 
-        this.map.on('mouseenter', 'ProvincialRegion_fail', function (e) {
-          that.map.getCanvas().style.cursor = 'pointer';
-          let lng = e.lngLat.lng;
-          let lat = e.lngLat.lat;
-          let div = window.document.createElement('div');
-          div.innerHTML = '<div class="feePopDeep">转换状态：'+e.features[0].properties.percent+'</div>'
-            + '<div  class="tipPopDeep"></div>';
-          that.popup.setLngLat([lng,lat])
-            .setDOMContent(div)
-            .addTo(that.map);
-        });
+        var meshLayer_null = {
+          id: 'mapblock_layer2',
+          type: 'fill',
+          interactive: true,
+          "source" : "mapMesh",
+          'source-layer': 'mesharea',
+          "layout": {
+            "visibility": "none"
+          },
+          "paint": {
+            "fill-color": "rgba(255,240,240,0)",
+            'fill-outline-color': '#ffffff'
+          },
+          "filter": ["==", "adja_mesh", "" ]
+        }
 
-        this.map.on('mouseleave', 'ProvincialRegion_fail', function () {
-          that.map.getCanvas().style.cursor = '';
-          that.popup.remove();
-        });
-
-        this.map.on('mouseenter', 'ProvincialRegion_running', function (e) {
-          that.map.getCanvas().style.cursor = 'pointer';
-          let lng = e.lngLat.lng;
-          let lat = e.lngLat.lat;
-          let div = window.document.createElement('div');
-          div.innerHTML = '<div class="feePopDeep">转换状态：'+e.features[0].properties.percent+'</div>'
-            + '<div  class="tipPopDeep"></div>';
-          that.popup.setLngLat([lng,lat])
-            .setDOMContent(div)
-            .addTo(that.map);
-        });
-
-        this.map.on('mouseleave', 'ProvincialRegion_running', function () {
-          that.map.getCanvas().style.cursor = '';
-          that.popup.remove();
-        });
-
-
+        for(let i=0;i<3;i++){                              //第一次不存在图层，其余都存在图层，依次去除5个图层，再添加
+          if(this.map.getLayer('mapblock_layer'+i)){
+            this.map.removeLayer('mapblock_layer'+i);
+          }
+        }
+        this.map.addLayer(meshLayer_center);
+        this.map.addLayer(meshLayer_circle);
+        this.map.addLayer(meshLayer_null);
 
       },
       toLogin: function () {
         this.$router.push('/login');
       },
       changeType: function (typeparam) {               //taskType,detailsType改变时调用
-        getMaintask(typeparam).then((data) => {
-          this.beginTime = data.beginTime;
-          this.belongDay = data.belongDay;
-          this.consumTime = data.consumTime;
-          this.convListId = data.convListId;
-          this.convVersion = data.convVersion;
-          this.endTime = data.endTime;
-          this.releaseFlag = data.releaseFlag;
-          this.status = data.status;
-          getProvincestatus(`convListId=${this.convListId}`).then((data) => {
-            this.successList = [];
-            this.failList = [];
-            this.runningList = [];
-            if(data) {
-              if (data.success.length > 0) {
-                for (let i = 0; i < data.success.length; i++) {
-                  this.successList.push(data.success[i]);
+        getConfigId(typeparam).then((data)=>{
+          this.convConfigId = data.convConfigId;
+          getMaintask(`convConfigId=${data.convConfigId}`).then((data) => {
+            this.beginTime = data.beginTime;
+            this.belongDay = data.belongDay;
+            this.consumTime = data.consumTime;
+            this.convListId = data.convListId;
+            this.convVersion = data.convVersion;
+            this.endTime = data.endTime;
+            this.releaseFlag = data.releaseFlag;
+            this.status = data.status;
+            getProvincestatus(`convListId=${this.convListId}`).then((data) => {
+              this.successList = [];
+              this.failList = [];
+              this.runningList = [];
+              if(data) {
+                if (data.success.length > 0) {
+                  for (let i = 0; i < data.success.length; i++) {
+                    this.successList.push(data.success[i]);
+                  }
+                }
+                if (data.failed.length > 0) {
+                  for (let i = 0; i < data.failed.length; i++) {
+                    this.failList.push(data.failed[i]);
+                  }
+                }
+                if (data.running.length > 0) {
+                  for (let i = 0; i < data.running.length; i++) {
+                    this.runningList.push(data.running[i]);
+                  }
                 }
               }
-              if (data.failed.length > 0) {
-                for (let i = 0; i < data.failed.length; i++) {
-                  this.failList.push(data.failed[i]);
-                }
-              }
-              if (data.running.length > 0) {
-                for (let i = 0; i < data.running.length; i++) {
-                  this.runningList.push(data.running[i]);
-                }
-              }
-            }
+            })
+            console.log(this.convListId);
+            this.mapOperate(this.convListId,this.convConfigId);
           })
-          console.log(this.convListId);
-          this.mapOperate(this.convListId);
         })
       },
       changeOption: function (param) {              //改变选项时调用
@@ -670,15 +709,19 @@
           this.tableData = data;
         })
       },
-      changeMesh(param){
-        console.log(param)
-        var visibility = this.map.getLayoutProperty('mapblock_layer', 'visibility');
-        if (visibility === 'visible') {
-          this.map.setLayoutProperty('mapblock_layer', 'visibility', 'none');
-        } else {
-          this.map.setLayoutProperty('mapblock_layer', 'visibility', 'visible');
+      changeMesh:function(){
+        console.log(this.typeVal);
+        if(this.typeVal === '季出品'){
+          return true;
         }
-
+        this.checkboxDispaly = !this.checkboxDispaly;
+        for(let i=0;i<3;i++) {
+          if (this.map.getLayoutProperty('mapblock_layer'+i, 'visibility') === 'visible') {
+            this.map.setLayoutProperty('mapblock_layer'+i, 'visibility', 'none');
+          } else {
+            this.map.setLayoutProperty('mapblock_layer'+i, 'visibility', 'visible');
+          }
+        }
       },
       selectDetail(param) {
         let spr = {};
@@ -686,19 +729,39 @@
           return item.configValue === param
         })
         this.configName = spr.configKey;
-        let typeparam = `configName=${this.configName}&versionType=${this.versionType}`;
+        let typeparam = `configName=${this.configName}&versionType=${this.versionType}&convVersion=${this.seasonVal}`;
         this.changeType(typeparam);
       },
       selectTasktype(param) {
+        if(this.typeVal === '季出品'){
+          for(let i=0;i<3;i++) {
+            if (this.map.getLayoutProperty('mapblock_layer'+i, 'visibility') === 'visible') {
+              this.map.setLayoutProperty('mapblock_layer'+i, 'visibility', 'none');
+            }
+          }
+          this.checkboxDispaly = false ;
+        }
         let obj = {};
         obj = this.taskType.find((item) => {
           return item.versionValue === param;
         });
         this.versionType = obj.versionKey;
-        let typeparam = `configName=${this.configName}&versionType=${this.versionType}`;
+        let typeparam = `configName=${this.configName}&versionType=${this.versionType}&convVersion=${this.seasonVal}`;
+        this.changeType(typeparam);
+      },
+      selectWorkseason(param){
+        this.seasonVal = param;
+        for(let i=0;i<3;i++) {
+          if (this.map.getLayoutProperty('mapblock_layer'+i, 'visibility') === 'visible') {
+            this.map.setLayoutProperty('mapblock_layer'+i, 'visibility', 'none');
+          }
+        }
+        this.checkboxDispaly = false ;
+        let typeparam = `configName=${this.configName}&versionType=${this.versionType}&convVersion=${this.seasonVal}`;
         this.changeType(typeparam);
       },
       programSelect(param) {
+        console.log(this.provinceCur);
         this.stageArr.splice(1, this.stageArr.length);
         this.stageVal = '全部';
         //获取单省转换信息初始化的"阶段"选项
@@ -797,9 +860,8 @@
 
       },
       loadLogfile(index,rows){
-        let logpath = rows[index].logPath;                       //加上服务器地址,修改判断
-        console.log('logpath:'+logpath);
-        window.location.href = 'http://192.168.15.41:9988/3337/idb_conv/Convert/Bin/convert.log';
+        let logpath = rows[index].logPath;
+        window.location.href = logpath;
         window.event.returnValue = false;
       }
     }
@@ -981,9 +1043,21 @@
   }
   .changeMap{
     position: absolute;
-    left:195px;
-    top:110px;
-    color: #ffffff;
+    left:282px;
+    bottom:10px;
+    height: 30px;
+    color:#ffffff;
+    line-height: 30px;
+    border-radius: 10px;
+    text-align: center;
+    z-index:10;
+    cursor:pointer;
+    img{
+      vertical-align: middle;
+      width: 14px;
+      height: 14px;
+      margin-right: 5px;
+    }
   }
 
   .el-menu-item-group_title {
@@ -1039,6 +1113,10 @@
     text-align: left;
     background-color: rgba(0,0,0,0.3);
     line-height: 30px;
+  }
+  .ban{
+    cursor: not-allowed;
+    color:#5a606b;
   }
 
 

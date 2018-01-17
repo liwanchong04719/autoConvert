@@ -20,6 +20,8 @@ export const getProvincestatus =  param =>{ return postReq('monitor/query/provin
 export const getSubstatus =  param =>{ return postReq('monitor/query/substatus', param)};
 export const getSubconfig =  param =>{ return postReq('monitor/query/subconfig', param)};
 export const getSubinfo =  param =>{ return postReq('monitor/query/subinfo', param)};
+export const getConfigId =  param =>{ return postReq('monitor/query/getconfigId', param)};
+
 
 
 
