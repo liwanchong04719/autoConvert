@@ -3,6 +3,17 @@
     <div class="content">
       <div class="leftMenu">
         <div>
+          <span style="margin-left: 14px">作业季：</span>
+          <el-select v-model="seasonVal" placeholder="请选择" size="small" style="width: 130px" @change="selectWorkseason">
+            <el-option
+              v-for="one in workSeason"
+              :key="one.seasonValue"
+              :label="one.label"
+              :value="one.seasonValue">
+            </el-option>
+          </el-select>
+        </div>
+        <div style="margin-top: 20px">
           <span>任务类型：</span>
           <el-select v-model="typeVal" placeholder="请选择" size="small" style="width: 130px" @change="selectTasktype">
             <el-option
@@ -21,17 +32,6 @@
               :key="one.configValue"
               :label="one.label"
               :value="one.configValue">
-            </el-option>
-          </el-select>
-        </div>
-        <div style="margin-top: 20px">
-          <span style="margin-left: 14px">作业季：</span>
-          <el-select v-model="seasonVal" placeholder="请选择" size="small" style="width: 130px" @change="selectWorkseason">
-            <el-option
-              v-for="one in workSeason"
-              :key="one.seasonValue"
-              :label="one.label"
-              :value="one.seasonValue">
             </el-option>
           </el-select>
         </div>
@@ -258,6 +258,7 @@
   import mapboxgl from 'mapbox-gl';
   import 'mapbox-gl/dist/mapbox-gl.css';
   import {maplayer} from '../layer.js';
+  import { appConfig } from '../config';
   import {
     getconfig,
     getMaintask,
@@ -347,7 +348,7 @@
 
           getConfigId(param).then((data)=>{
             this.convConfigId = data.convConfigId;
-            console.log(this.convConfigId);
+            console.log(this.convConfigId+'as1');
             getMaintask(`convConfigId=${data.convConfigId}`).then((data) => {
               this.beginTime = data.beginTime;
               this.belongDay = data.belongDay;
@@ -380,31 +381,33 @@
                 }
               })
             })
+            //获取单省转换信息初始化的程序选项
+            console.log(this.convConfigId+'as2');
+            getSubconfig(`convConfigId=${this.convConfigId}`).then((data) => {
+              for(let i in data.allstep){
+                this.stageArr.push({
+                  value: data.allstep[i]
+                })
+              }
+              this.stageArr.unshift({value: '全部'});
+              this.states = data.status;
+              this.states.unshift({"statusValue":"全部"});
+              this.programCollection = data.programCode;        //获取所有程序及对应的状态集合，用于选择程序时联动查找对应状态
+              for (let i = 0; i < data.programCode.length; i++) {
+                for (let key in data.programCode[i]) {
+                  this.programArr.push({
+                    value: key
+                  })
+                }
+              }
+              this.programArr.unshift({
+                value: '全部'
+              })
+            })
           })
         })
 
-        //获取单省转换信息初始化的程序选项
-        getSubconfig().then((data) => {
-          for(let i in data.allstep){
-            this.stageArr.push({
-              value: data.allstep[i]
-            })
-          }
-          this.stageArr.unshift({value: '全部'});
-          this.states = data.status;
-          this.states.unshift({"statusValue":"全部"});
-          this.programCollection = data.programCode;        //获取所有程序及对应的状态集合，用于选择程序时联动查找对应状态
-          for (let i = 0; i < data.programCode.length; i++) {
-            for (let key in data.programCode[i]) {
-              this.programArr.push({
-                value: key
-              })
-            }
-          }
-          this.programArr.unshift({
-            value: '全部'
-          })
-        })
+
       },
       createMap: function () {
         mapboxgl.mapboxToken = 'pk.eyJ1IjoiZmFuZ2xhbmsiLCJhIjoiY2lpcjc1YzQxMDA5NHZra3NpaDAyODB4eSJ9.z6uZHccXvtyVqA5zmalfGg',
@@ -412,8 +415,9 @@
             container: 'map',
             style: maplayer.simple,
             zoom: 3.8,
+            minZoom:3.5,
+            maxZoom:9,
             center: [107.02932, 37.68486],
-//          scrollZoom:false,
             repaint: true,
             pitch: 0
           })
@@ -433,7 +437,7 @@
         }
         this.map.addSource('ProvincialRegion', {
           "tiles": [
-            "http://192.168.15.41:9999/smapapi/automate/monitor/pbf/outline/{z}/{x}/{y}?convListId="+mapParam
+            appConfig.developUrl+"monitor/pbf/outline/{z}/{x}/{y}?convListId="+mapParam
           ],
           "type": "vector"
         })
@@ -481,6 +485,7 @@
           },
           "paint": {
             "fill-color": "#67ba2f",
+            'fill-outline-color': '#ffffff'
           },
           "filter": ["==", "status", "2" ]
         }
@@ -580,11 +585,11 @@
         }
         this.map.addSource('mapMesh', {
           "tiles": [
-            "http://192.168.15.41:9999/smapapi/automate/monitor/pbf/meshoutline/{z}/{x}/{y}?convConfigId="+meshParam
+            appConfig.developUrl+"monitor/pbf/meshoutline/{z}/{x}/{y}?convConfigId="+meshParam
           ],
           "type": "vector"
         })
-        console.log(meshParam);
+
        var meshLayer_circle = {
           id: 'mapblock_layer0',
           type: 'fill',
@@ -592,10 +597,11 @@
           "source" : "mapMesh",
           'source-layer': 'mesharea',
           "layout": {
-          "visibility": "none"
-        },
+            "visibility": "none"
+         },
           "paint": {
-            "fill-color": "rgba(153,51,255,1)"
+            "fill-color": "rgba(153,51,255,1)",
+            'fill-outline-color': '#ffffff'
         },
           "filter": ["==", "adja_mesh", "0" ]
        }
@@ -610,35 +616,62 @@
             "visibility": "none"
           },
           "paint": {
-            "fill-color": "rgba(255,0,0,1)"
+            "fill-color": "rgba(255,0,0,1)",
+            'fill-outline-color': '#ffffff'
           },
           "filter": ["==", "adja_mesh", "1" ]
         }
 
-        var meshLayer_null = {
+        var meshLayer_centername = {
           id: 'mapblock_layer2',
-          type: 'fill',
+          type: 'symbol',
+          "minzoom": 8.0,
           interactive: true,
           "source" : "mapMesh",
           'source-layer': 'mesharea',
-          "layout": {
-            "visibility": "none"
+          layout:{
+            "text-field": "{mesh_id}",
+            'text-size':12,
+            "text-justify": "center",
+            "visibility": "none",
+            "icon-text-fit": "both"
           },
-          "paint": {
-            "fill-color": "rgba(255,240,240,0)",
-            'fill-outline-color': '#ffffff'
+          paint: {
+            "text-color": "#ffffff"
           },
-          "filter": ["==", "adja_mesh", "" ]
+          "filter": ["==", "adja_mesh", "1" ]
         }
 
-        for(let i=0;i<3;i++){                              //第一次不存在图层，其余都存在图层，依次去除5个图层，再添加
+        var meshLayer_circlename = {
+          id: 'mapblock_layer3',
+          type: 'symbol',
+          "minzoom": 8.0,
+          interactive: true,
+          "source" : "mapMesh",
+          'source-layer': 'mesharea',
+          layout:{
+            "text-field": "{mesh_id}",
+            'text-size':12,
+            "text-justify": "center",
+            "visibility": "none",
+            "icon-text-fit": "both",
+            "icon-optional":true
+          },
+          paint: {
+            "text-color": "#ffffff"
+          },
+          "filter": ["==", "adja_mesh", "0" ]
+        }
+
+        for(let i=0;i<4;i++){                              //第一次不存在图层，其余都存在图层，依次去除5个图层，再添加
           if(this.map.getLayer('mapblock_layer'+i)){
             this.map.removeLayer('mapblock_layer'+i);
           }
         }
         this.map.addLayer(meshLayer_center);
         this.map.addLayer(meshLayer_circle);
-        this.map.addLayer(meshLayer_null);
+        this.map.addLayer(meshLayer_centername);
+        this.map.addLayer(meshLayer_circlename);
 
       },
       toLogin: function () {
@@ -681,6 +714,33 @@
             console.log(this.convListId);
             this.mapOperate(this.convListId,this.convConfigId);
           })
+
+          //获取单省转换信息初始化的程序选项
+          console.log(this.convConfigId+'as3');
+          getSubconfig(`convConfigId=${this.convConfigId}`).then((data) => {
+            this.stageArr=[];
+            this.states=[];
+            this.programArr=[];
+            for(let i in data.allstep){
+              this.stageArr.push({
+                value: data.allstep[i]
+              })
+            }
+            this.stageArr.unshift({value: '全部'});
+            this.states = data.status;
+            this.states.unshift({"statusValue":"全部"});
+            this.programCollection = data.programCode;        //获取所有程序及对应的状态集合，用于选择程序时联动查找对应状态
+            for (let i = 0; i < data.programCode.length; i++) {
+              for (let key in data.programCode[i]) {
+                this.programArr.push({
+                  value: key
+                })
+              }
+            }
+            this.programArr.unshift({
+              value: '全部'
+            })
+          })
         })
       },
       changeOption: function (param) {              //改变选项时调用
@@ -715,7 +775,7 @@
           return true;
         }
         this.checkboxDispaly = !this.checkboxDispaly;
-        for(let i=0;i<3;i++) {
+        for(let i=0;i<4;i++) {
           if (this.map.getLayoutProperty('mapblock_layer'+i, 'visibility') === 'visible') {
             this.map.setLayoutProperty('mapblock_layer'+i, 'visibility', 'none');
           } else {
@@ -734,7 +794,7 @@
       },
       selectTasktype(param) {
         if(this.typeVal === '季出品'){
-          for(let i=0;i<3;i++) {
+          for(let i=0;i<4;i++) {
             if (this.map.getLayoutProperty('mapblock_layer'+i, 'visibility') === 'visible') {
               this.map.setLayoutProperty('mapblock_layer'+i, 'visibility', 'none');
             }
@@ -751,7 +811,7 @@
       },
       selectWorkseason(param){
         this.seasonVal = param;
-        for(let i=0;i<3;i++) {
+        for(let i=0;i<4;i++) {
           if (this.map.getLayoutProperty('mapblock_layer'+i, 'visibility') === 'visible') {
             this.map.setLayoutProperty('mapblock_layer'+i, 'visibility', 'none');
           }
@@ -766,7 +826,8 @@
         this.stageVal = '全部';
         //获取单省转换信息初始化的"阶段"选项
         if(param === '全部'){
-          getSubconfig().then((data) => {
+          console.log(this.convConfigId+'as3');
+          getSubconfig(`convConfigId=${this.convConfigId}`).then((data) => {
             for (let i in data.allstep) {
               this.stageArr.push({
                 value: data.allstep[i]

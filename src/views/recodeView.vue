@@ -4,10 +4,10 @@
     <div class="content wrapper" >
       <ul class="indexNav">
         <li>
-          <a href="">功能模块</a>
+          <router-link to="/menu">功能模块</router-link>
         </li>
         <li>
-          <a href="javascript:void(0);" style="color:#777">代码重载</a>
+          <a href="javascript:void(0);" style="color:#777;cursor: default">代码重载</a>
         </li>
       </ul>
        <div class="Main">

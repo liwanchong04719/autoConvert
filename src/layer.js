@@ -1,4 +1,5 @@
 //定义mapbox底图
+import { appConfig } from './config';
 export const maplayer = {
   simple: {
     "version": 8,
@@ -6,7 +7,7 @@ export const maplayer = {
     "sources": {
       "ProvincialPoint":{
         "tiles": [
-          "http://192.168.15.41:9999/smapapi/automate/monitor/pbf/midpoint/{z}/{x}/{y}"
+          appConfig.developUrl+"monitor/pbf/midpoint/{z}/{x}/{y}"
         ],
         "type": "vector"
       },
@@ -72,7 +73,7 @@ export const maplayer = {
       }
     },
     "glyphs": "http://minedata.cn/minemapapi/v1.3/fonts/{fontstack}/{range}.pbf",
-    "sprite": "http://192.168.15.41:9998/static/sprite/sprite",
+    "sprite": appConfig.webLocation+"/static/sprite/sprite",
     "layers": [
       {
         "id": "305e7db2535044feb87d3045a268898b",
