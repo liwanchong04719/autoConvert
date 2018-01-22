@@ -220,6 +220,16 @@
         </div>
       </div>
     </transition>
+    <transition
+      name="bounce"
+    >
+      <div v-if="tipShow" class="provinceDel">
+        <div class="tipBlock">
+          <h2>所选产品线不存在！</h2>
+          <div @click="tipShow = !tipShow">OK</div>
+        </div>
+      </div>
+    </transition>
     <div @click="toLogin()" class="loginBtn">
       <span class="loginbg" v-html="loginVal"></span>
       <img src="../img/border.png" alt="" style="vertical-align: middle">
@@ -279,7 +289,6 @@
         consumTime: '',
         convListId: '',
         convVersion: '',
-        belongDay: '',
         beginTime: '',
         endTime: '',
         releaseFlag: '',
@@ -311,9 +320,9 @@
         singleDate:'',
         convConfigId:'',
         show: false,
+        tipShow:false,
         checked:false,
         checkboxDispaly:false
-
       }
     },
     mounted: function () {
@@ -345,7 +354,6 @@
             })
           }
           let param = `configName=${this.configName}&versionType=${this.versionType}&convVersion=${this.seasonVal}`;
-
           getConfigId(param).then((data)=>{
             this.convConfigId = data.convConfigId;
             console.log(this.convConfigId+'as1');
@@ -382,7 +390,6 @@
               })
             })
             //获取单省转换信息初始化的程序选项
-            console.log(this.convConfigId+'as2');
             getSubconfig(`convConfigId=${this.convConfigId}`).then((data) => {
               for(let i in data.allstep){
                 this.stageArr.push({
@@ -406,8 +413,6 @@
             })
           })
         })
-
-
       },
       createMap: function () {
         mapboxgl.mapboxToken = 'pk.eyJ1IjoiZmFuZ2xhbmsiLCJhIjoiY2lpcjc1YzQxMDA5NHZra3NpaDAyODB4eSJ9.z6uZHccXvtyVqA5zmalfGg',
@@ -541,6 +546,7 @@
 
         for(let i=0;i<3;i++){                            //仅给状态为0失败,1成功,2转换中,的图层添加点击事件和鼠标滑过事件
           this.map.on('click', 'ProvincialRegion_'+i, function (e) {
+            console.log(e);
             console.log('ProvincialRegion_'+i);
             let provincename_click = e.features[0].properties.provinceName;
             that.show = true;
@@ -638,32 +644,10 @@
           },
           paint: {
             "text-color": "#ffffff"
-          },
-          "filter": ["==", "adja_mesh", "1" ]
+          }
         }
 
-        var meshLayer_circlename = {
-          id: 'mapblock_layer3',
-          type: 'symbol',
-          "minzoom": 8.0,
-          interactive: true,
-          "source" : "mapMesh",
-          'source-layer': 'mesharea',
-          layout:{
-            "text-field": "{mesh_id}",
-            'text-size':12,
-            "text-justify": "center",
-            "visibility": "none",
-            "icon-text-fit": "both",
-            "icon-optional":true
-          },
-          paint: {
-            "text-color": "#ffffff"
-          },
-          "filter": ["==", "adja_mesh", "0" ]
-        }
-
-        for(let i=0;i<4;i++){                              //第一次不存在图层，其余都存在图层，依次去除5个图层，再添加
+        for(let i=0;i<3;i++){                              //第一次不存在图层，其余都存在图层，依次去除5个图层，再添加
           if(this.map.getLayer('mapblock_layer'+i)){
             this.map.removeLayer('mapblock_layer'+i);
           }
@@ -671,7 +655,6 @@
         this.map.addLayer(meshLayer_center);
         this.map.addLayer(meshLayer_circle);
         this.map.addLayer(meshLayer_centername);
-        this.map.addLayer(meshLayer_circlename);
 
       },
       toLogin: function () {
@@ -680,6 +663,10 @@
       changeType: function (typeparam) {               //taskType,detailsType改变时调用
         getConfigId(typeparam).then((data)=>{
           this.convConfigId = data.convConfigId;
+          if(!data.convConfigId){
+             this.tipShow = true;
+             return false;
+          }
           getMaintask(`convConfigId=${data.convConfigId}`).then((data) => {
             this.beginTime = data.beginTime;
             this.belongDay = data.belongDay;
@@ -775,7 +762,7 @@
           return true;
         }
         this.checkboxDispaly = !this.checkboxDispaly;
-        for(let i=0;i<4;i++) {
+        for(let i=0;i<3;i++) {
           if (this.map.getLayoutProperty('mapblock_layer'+i, 'visibility') === 'visible') {
             this.map.setLayoutProperty('mapblock_layer'+i, 'visibility', 'none');
           } else {
@@ -794,7 +781,7 @@
       },
       selectTasktype(param) {
         if(this.typeVal === '季出品'){
-          for(let i=0;i<4;i++) {
+          for(let i=0;i<3;i++) {
             if (this.map.getLayoutProperty('mapblock_layer'+i, 'visibility') === 'visible') {
               this.map.setLayoutProperty('mapblock_layer'+i, 'visibility', 'none');
             }
@@ -811,7 +798,7 @@
       },
       selectWorkseason(param){
         this.seasonVal = param;
-        for(let i=0;i<4;i++) {
+        for(let i=0;i<3;i++) {
           if (this.map.getLayoutProperty('mapblock_layer'+i, 'visibility') === 'visible') {
             this.map.setLayoutProperty('mapblock_layer'+i, 'visibility', 'none');
           }
@@ -973,17 +960,17 @@
   }
     ul{
       float: left;
-      width:70px;
+      width:72px;
       min-height:100px;
       li {
         line-height: 30px;
-        /*border-bottom: 1px solid #577398;*/
         text-align: center;
          &:hover {
         color: #47CDF5;
         cursor: pointer;
-        }
-     } }
+          }
+      }
+    }
   }
   .mapInfo {
     overflow: hidden;
@@ -1013,6 +1000,36 @@
     left: 0px;
     top: 0px;
     z-index: 10;
+  .tipBlock{
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    bottom: 0px;
+    right: 0px;
+    margin: auto;
+    width: 450px;
+    height:170px;
+    border-radius: 6px;
+    background-color: #ffffff;
+    padding:30px;
+    text-align:center;
+    h2{
+      color:#575757;
+      text-align: center;
+    }
+    div{
+      display: inline-block;
+      text-align: center;
+      background-color: rgb(140, 212, 245);
+      width: 88px;
+      height: 40px;
+      line-height: 40px;
+      color:#ffffff;
+      border-radius: 5px;
+      margin-top: 40px;
+      cursor: pointer;
+    }
+  }
   .centerBlock {
     position: absolute;
     left: 0px;
@@ -1111,7 +1128,7 @@
     line-height: 30px;
     border-radius: 10px;
     text-align: center;
-    z-index:10;
+    z-index:5;
     cursor:pointer;
     img{
       vertical-align: middle;

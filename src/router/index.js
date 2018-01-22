@@ -3,8 +3,9 @@ import VueRouter from 'vue-router';
 import loginView from '../views/loginView.vue';
 import menuView from '../views/menuView.vue';
 import monitorView from '../views/monitorView.vue';
-import recodeView from '../views/recodeView.vue';
-import retaskView from '../views/retaskView.vue';
+import taskReload from '../views/taskReload.vue';
+import taskRerun from '../views/taskRerun.vue';
+import dataRecover from '../views/dataRecover.vue';
 Vue.use(VueRouter)
 
 
@@ -31,12 +32,16 @@ export default new VueRouter({
       component: menuView
     },
     {
-      path: '/recode',
-      component: recodeView
+      path: '/taskReload',
+      component: taskReload
     },
     {
-      path: '/retask',
-      component: retaskView
+      path: '/taskRerun',
+      component: taskRerun
+    },
+    {
+      path: '/dataRecover',
+      component: dataRecover
     }
 
   ]

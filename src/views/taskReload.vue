@@ -30,7 +30,7 @@
                :value="item.value">
              </el-option>
            </el-select>
-           <el-button type="primary" style="margin-right: 20px;float:right"  size="small">重转<i class="el-icon-upload el-icon--right"></i></el-button>
+           <el-button type="primary" style="margin-right: 20px;float:right"  size="small">执行<i class="el-icon-upload el-icon--right"></i></el-button>
          </div>
          <div style="margin-top: 20px">
            <el-table
@@ -94,6 +94,11 @@
                filter-placement="bottom"
               >
              </el-table-column>
+             <el-table-column
+               prop="repeatNum"
+               label="重转次数"
+             >
+             </el-table-column>
            </el-table>
 
          </div>
@@ -149,7 +154,8 @@
           date:'20171220',
           program:'db_diff',
           stage:'day',
-          status:'成功'
+          status:'成功',
+          repeatNum:0
         }, {
           taskMain: '20',
           taskSub:'1231',
@@ -158,7 +164,8 @@
           date:'20171220',
           program:'idb_conv',
           stage:'mifg',
-          status:'转换中'
+          status:'转换中',
+          repeatNum:0
         }, {
           taskMain: '20',
           taskSub:'1232',
@@ -167,7 +174,8 @@
           date:'20171220',
           program:'db_diff',
           stage:'day',
-          status:'失败'
+          status:'失败',
+          repeatNum:0
         }, {
           taskMain: '20',
           taskSub:'1233',
@@ -176,7 +184,8 @@
           date:'20171220',
           program:'db_diff',
           stage:'mifg',
-          status:'转换中'
+          status:'转换中',
+          repeatNum:0
         }, {
           taskMain: '20',
           taskSub:'1234',
@@ -185,7 +194,8 @@
           date:'20171220',
           program:'db_diff',
           stage:'day',
-          status:'失败'
+          status:'失败',
+          repeatNum:0
         }, {
           taskMain: '20',
           taskSub:'1235',
@@ -195,7 +205,8 @@
           address: '市普',
           program:'db_diff',
           stage:'day',
-          status:'失败'
+          status:'失败',
+          repeatNum:0
         }, {
           taskMain: '20',
           taskSub:'1236',
@@ -204,7 +215,8 @@
           date:'20171220',
           program:'idb_conv',
           stage:'day',
-          status:'成功'
+          status:'成功',
+          repeatNum:1
         }],
         multipleSelection: []
 

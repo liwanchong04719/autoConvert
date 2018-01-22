@@ -7,25 +7,34 @@
             任务管理
         </div>
         <div class="everySpc">
-          <singleblock option="recode" :bgImage="bg1"></singleblock>
-          <singleblock taskTitle="任务重转"  option="retask"></singleblock>
-          <singleblock taskTitle="云端同步" :bgImage="bg2"></singleblock>
-          <singleblock taskTitle="任务重转" :bgImage="bg3"></singleblock>
-          <singleblock taskTitle="数据恢复" :bgImage="bg4"></singleblock>
-          <singleblock taskTitle="废弃任务" :bgImage="bg5"></singleblock>
-          <singleblock taskTitle="任务加锁" :bgImage="bg6"></singleblock>
+          <singleblock option="taskReload" :bgImage="bg1"></singleblock>
+          <singleblock taskTitle="任务重转"  option="taskRerun"></singleblock>
+          <singleblock taskTitle="数据恢复"  option="dataRecover" :bgImage="bg3"></singleblock>
+          <singleblock taskTitle="任务废弃" :bgImage="bg4"></singleblock>
+          <singleblock taskTitle="云端同步" :bgImage="bg5"></singleblock>
+          <singleblock taskTitle="信息收集" :bgImage="bg6"></singleblock>
         </div>
       </div>
       <div style="margin-top: 20px">
         <div class="itemTitle">
-          统计信息
+          查询统计
         </div>
         <div class="everySpc">
-          <singleblock></singleblock>
-          <singleblock taskTitle="代码重载" :bgImage="bg2"></singleblock>
-          <singleblock taskTitle="任务恢复" :bgImage="bg1"></singleblock>
-          <singleblock taskTitle="本地上传" :bgImage="bg6"></singleblock>
-          <singleblock taskTitle="任务加锁" :bgImage="bg5"></singleblock>
+          <singleblock taskTitle="任务历史" :bgImage="bg2"></singleblock>
+          <singleblock taskTitle="恢复履历" :bgImage="bg1"></singleblock>
+          <singleblock taskTitle="文件数据" :bgImage="bg7"></singleblock>
+        </div>
+      </div>
+      <div style="margin-top: 20px">
+        <div class="itemTitle">
+          质检信息
+        </div>
+        <div class="everySpc">
+          <singleblock taskTitle="mifg检查" :bgImage="bg2"></singleblock>
+          <singleblock taskTitle="idb检查" :bgImage="bg1"></singleblock>
+          <singleblock taskTitle="融合失败" :bgImage="bg7"></singleblock>
+          <singleblock taskTitle="mifg统计" :bgImage="bg3"></singleblock>
+          <singleblock taskTitle="idb统计" :bgImage="bg4"></singleblock>
         </div>
       </div>
       <div style="margin-top: 20px">
@@ -33,11 +42,11 @@
           系统管理
         </div>
         <div class="everySpc">
-          <singleblock></singleblock>
-          <singleblock taskTitle="代码重载"></singleblock>
-          <singleblock taskTitle="任务恢复" :bgImage="bg4"></singleblock>
-          <singleblock taskTitle="本地上传" :bgImage="bg3"></singleblock>
-          <singleblock taskTitle="任务加锁" :bgImage="bg2"></singleblock>
+          <singleblock taskTitle="代码库" :bgImage="bg2"></singleblock>
+          <singleblock taskTitle="服务器" :bgImage="bg1"></singleblock>
+          <singleblock taskTitle="省份信息" :bgImage="bg7"></singleblock>
+          <singleblock taskTitle="元数据库" :bgImage="bg3"></singleblock>
+          <singleblock taskTitle="GDB库" :bgImage="bg4"></singleblock>
         </div>
 
       </div>
@@ -58,7 +67,8 @@
         bg3:require('../assets/blockIcon4.png'),
         bg4:require('../assets/blockIcon5.png'),
         bg5:require('../assets/blockIcon6.png'),
-        bg6:require('../assets/blockIcon8.png')
+        bg6:require('../assets/blockIcon8.png'),
+        bg7:require('../assets/blockIcon1.png')
       }
     },
     components: {
