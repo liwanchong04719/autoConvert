@@ -10,8 +10,8 @@
           <singleblock option="taskReload" :bgImage="bg1"></singleblock>
           <singleblock taskTitle="任务重转"  option="taskRerun"></singleblock>
           <singleblock taskTitle="数据恢复"  option="dataRecover" :bgImage="bg3"></singleblock>
-          <singleblock taskTitle="任务废弃" :bgImage="bg4"></singleblock>
-          <singleblock taskTitle="云端同步" :bgImage="bg5"></singleblock>
+          <singleblock taskTitle="任务废弃"  option="taskDiscard" :bgImage="bg4"></singleblock>
+          <singleblock taskTitle="云端同步"  option="dataSync" :bgImage="bg5"></singleblock>
           <singleblock taskTitle="信息收集" :bgImage="bg6"></singleblock>
         </div>
       </div>

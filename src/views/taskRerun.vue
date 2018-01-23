@@ -13,21 +13,21 @@
       <div class="Main">
         <div class="selectOption">
           <span class="demonstration">任务类型</span>
-          <el-select v-model="value" placeholder="请选择" size="small">
+          <el-select v-model="typeVal" placeholder="请选择" size="small"  @change="selectTasktype">
             <el-option
-              v-for="item in options"
-              :key="item.value"
+              v-for="item in taskType"
+              :key="item.versionValue"
               :label="item.label"
-              :value="item.value">
+              :value="item.versionValue">
             </el-option>
           </el-select>
           <span class="demonstration" style="margin-left: 30px">细分类型</span>
-          <el-select v-model="value" placeholder="请选择" size="small" >
+          <el-select v-model="detailsVal" placeholder="请选择" size="small"  @change="selectDetail" >
             <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
+              v-for="one in detailsType"
+              :key="one.configValue"
+              :label="one.label"
+              :value="one.configValue">
             </el-option>
           </el-select>
           <el-button type="primary" style="margin-right: 20px;float:right"  size="small">执行<i class="el-icon-upload el-icon--right"></i></el-button>
@@ -35,7 +35,7 @@
         <div style="margin-top: 20px">
           <el-table
             ref="multipleTable"
-            :data="tableData3"
+            :data="tableData"
             tooltip-effect="dark"
             style="width: 100%; background-color: #F5F5F5;"
             @selection-change="handleSelectionChange"
@@ -46,37 +46,39 @@
               width="55">
             </el-table-column>
             <el-table-column
+              prop = "convListId"
+              width="100"
               label="主任务号"
-              prop = "taskMain"
             >
             </el-table-column>
             <el-table-column
-              prop="taskSub"
+              prop="convListDetailRuntimeId"
               label="子任务号"
               width="120">
             </el-table-column>
             <el-table-column
-              prop="date"
+              prop="belongDay"
               label="所属日期"
               show-overflow-tooltip>
             </el-table-column>
             <el-table-column
-              prop="province"
+              prop="provinceNMNosep"
               label="省份"
               show-overflow-tooltip>
             </el-table-column>
             <el-table-column
-              prop="provinceDe"
+              prop="provinceNM"
               label="省份（份）"
               show-overflow-tooltip>
             </el-table-column>
             <el-table-column
-              prop="program"
+              prop="programCode"
               label="程序"
+              width="130"
               show-overflow-tooltip>
             </el-table-column>
             <el-table-column
-              prop="stage"
+              prop="convStep"
               label="阶段"
               show-overflow-tooltip>
             </el-table-column>
@@ -86,7 +88,7 @@
               show-overflow-tooltip>
             </el-table-column>
             <el-table-column
-              prop="retaskTime"
+              prop="reconvert"
               label="重转次数"
               show-overflow-tooltip>
             </el-table-column>
@@ -107,108 +109,74 @@
 </template>
 <script type='text/ecmascript-6'>
   import headerCom from '../components/headerCom.vue';
-  import singleModule from '../components/singleModule.vue';
+  import {
+    getconfig,
+    getConfigId,
+    getSubinfo
+  } from '../dataService/service';
   export default {
     name: 'menuList',
     data() {
       return {
-        value5: '',
-        value:'',
-        options: [{
-          value: '选项1',
-          label: '17SPR'
-        }, {
-          value: '选项2',
-          label: '17SUM'
-        }, {
-          value: '选项3',
-          label: '17AUT'
-        }, {
-          value: '选项4',
-          label: '17WIN'
-        }],
-        tableData3: [{
-          taskMain: '20',
-          taskSub:'1230',
-          province:'陕西省',
-          provinceDe:'陕西省',
-          date:'20171220',
-          retaskTime:'2',
-          program:'db_diff',
-          stage:'day',
-          status:'成功'
-        }, {
-          taskMain: '20',
-          taskSub:'1231',
-          province:'山西省',
-          provinceDe:'山西省',
-          date:'20171220',
-          retaskTime:'1',
-          program:'idb_conv',
-          stage:'day',
-          status:'成功'
-        }, {
-          taskMain: '20',
-          taskSub:'1232',
-          province:'湖北省',
-          provinceDe:'湖北省',
-          date:'20171220',
-          retaskTime:'133',
-          program:'db_diff',
-          stage:'day',
-          status:'失败'
-        }, {
-          taskMain: '20',
-          taskSub:'1233',
-          province:'云南省',
-          provinceDe:'云南省',
-          date:'20171220',
-          retaskTime:'1',
-          program:'db_diff',
-          stage:'day',
-          status:'失败'
-        }, {
-          taskMain: '20',
-          taskSub:'1234',
-          province:'四川省',
-          provinceDe:'四川1',
-          date:'20171220',
-          retaskTime:'33',
-          program:'db_diff',
-          stage:'day',
-          status:'失败'
-        }, {
-          taskMain: '20',
-          taskSub:'1235',
-          province:'广西省',
-          provinceDe:'广西省',
-          date:'20171220',
-          retaskTime:'1',
-          program:'db_diff',
-          stage:'day',
-          status:'失败'
-        }, {
-          taskMain: '20',
-          taskSub:'1236',
-          province:'浙江省',
-          provinceDe:'浙江省',
-          date:'20171220',
-          retaskTime:'13',
-          program:'idb_conv',
-          stage:'day',
-          status:'成功'
-        }],
-        multipleSelection: []
+        typeVal: '',
+        detailsVal: '',
+        configName: '',
+        versionType: '',
+        convListId:'',
+        taskType: [],
+        detailsType: [],
+        multipleSelection: [],
+        tableData:[]
 
       }
     },
     components: {
-      headerCom,
-      singleModule
+      headerCom
     },
     mounted:function(){
+      this.initConfig()
     },
     methods: {
+      initConfig: function () {
+        getconfig().then((data) => {
+          this.detailsType = data.configName;
+          this.taskType = data.versionType;
+          this.typeVal = data.versionType[0].versionValue;
+          this.detailsVal = data.configName[0].configValue;
+          this.configName = data.configName[0].configKey;
+          this.versionType = data.versionType[0].versionKey;
+          let param = `configName=${this.configName}&versionType=${this.versionType}`;
+          getConfigId(param).then((data) => {
+            this.convListId = data.convListId;
+            console.log(data);
+            console.log(this.convConfigId + 'as1');
+            getSubinfo(`convListId=${this.convListId}`).then((data) => {
+              this.tableData = data;
+              console.log(data);
+            })
+          })
+        })
+      },
+      selectDetail(param) {
+        let spr = {};
+        spr = this.detailsType.find((item) => {
+          return item.configValue === param
+        })
+        this.configName = spr.configKey;
+        console.log(this.configName+'---'+this.versionType);
+        let typeparam = `configName=${this.configName}&versionType=${this.versionType}&convVersion=${this.seasonVal}`;
+        //  this.changeType(typeparam);
+      },
+      selectTasktype(param) {
+        let obj = {};
+        obj = this.taskType.find((item) => {
+          return item.versionValue === param;
+        });
+        this.versionType = obj.versionKey;
+        console.log(this.configName+'---'+this.versionType);
+        let typeparam = `configName=${this.configName}&versionType=${this.versionType}&convVersion=${this.seasonVal}`;
+        // this.changeType(typeparam);
+      },
       handleSelectionChange(val) {
         console.log('aaa');
         this.multipleSelection = val;

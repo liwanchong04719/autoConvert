@@ -6,7 +6,9 @@ import monitorView from '../views/monitorView.vue';
 import taskReload from '../views/taskReload.vue';
 import taskRerun from '../views/taskRerun.vue';
 import dataRecover from '../views/dataRecover.vue';
-Vue.use(VueRouter)
+import taskDiscard from '../views/taskDiscard.vue';
+import dataSync from '../views/dataSync.vue';
+Vue.use(VueRouter);
 
 
 // 创建一个路由器实例
@@ -42,6 +44,14 @@ export default new VueRouter({
     {
       path: '/dataRecover',
       component: dataRecover
+    },
+    {
+      path: '/taskDiscard',
+      component: taskDiscard
+    },
+    {
+      path: '/dataSync',
+      component: dataSync
     }
 
   ]

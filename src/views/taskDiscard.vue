@@ -7,12 +7,21 @@
           <router-link to="/menu">功能模块</router-link>
         </li>
         <li>
-          <a href="javascript:void(0);" style="color:#777;cursor: default">数据恢复</a>
+          <a href="javascript:void(0);" style="color:#777;cursor: default">任务废弃</a>
         </li>
       </ul>
       <div class="Main">
         <div class="selectOption">
-          <span class="demonstration">细分类型</span>
+          <span class="demonstration">任务类型</span>
+          <el-select v-model="typeVal" placeholder="请选择" size="small"  @change="selectTasktype">
+            <el-option
+              v-for="item in taskType"
+              :key="item.versionValue"
+              :label="item.label"
+              :value="item.versionValue">
+            </el-option>
+          </el-select>
+          <span class="demonstration" style="margin-left: 30px">细分类型</span>
           <el-select v-model="detailsVal" placeholder="请选择" size="small"  @change="selectDetail" >
             <el-option
               v-for="one in detailsType"
@@ -26,7 +35,7 @@
         <div style="margin-top: 20px">
           <el-table
             ref="multipleTable"
-            :data="tableData3"
+            :data="tableData"
             tooltip-effect="dark"
             style="width: 100%; background-color: #F5F5F5;"
             @selection-change="handleSelectionChange"
@@ -38,56 +47,60 @@
             </el-table-column>
             <el-table-column
               label="主任务号"
-              prop = "taskMain"
+              prop = "convListId"
+              width="80"
             >
             </el-table-column>
             <el-table-column
-              prop="date"
+              prop="convName"
+              label="任务名称"
+              width="230">
+            </el-table-column>
+            <el-table-column
+              prop="convVersion"
+              label="作业季"
+              width="80"
+            >
+            </el-table-column>
+            <el-table-column
+              prop="belongDay"
               label="所属日期"
-              show-overflow-tooltip>
-            </el-table-column>
-            <el-table-column
-              prop="province"
-              label="省份"
-              show-overflow-tooltip>
-            </el-table-column>
-            <el-table-column
-              prop="provinceDe"
-              label="省份（份）"
-              show-overflow-tooltip>
-            </el-table-column>
-            <el-table-column
-              prop="stage"
-              label="阶段"
-              show-overflow-tooltip>
-            </el-table-column>
-            <el-table-column
-              prop="program"
-              label="备份子程序"
-              show-overflow-tooltip>
-            </el-table-column>
-            <el-table-column
-              prop="retaskTime"
-              label="融合子程序"
-              show-overflow-tooltip>
+              width="100"
+            >
             </el-table-column>
             <el-table-column
               prop="status"
-              label="状态"
+              label="总体状态"
+              width="90"
+            >
+            </el-table-column>
+            <el-table-column
+              prop="releaseFlag"
+              label="发布状态"
+              width="100"
+              show-overflow-tooltip>
+            </el-table-column>
+            <el-table-column
+              prop="versionType"
+              label="任务类型"
+              show-overflow-tooltip>
+            </el-table-column>
+            <el-table-column
+              prop="beginTime"
+              label="开始时间"
+              width="180"
+              show-overflow-tooltip>
+            </el-table-column>
+            <el-table-column
+              prop="endTime"
+              label="结束时间"
+              width="180"
               show-overflow-tooltip>
             </el-table-column>
           </el-table>
 
         </div>
       </div>
-      <el-pagination
-        background
-        layout="prev, pager, next"
-        :total="200"
-        @size-change="pageSize"
-        @current-change="currentPage"
-      >
-      </el-pagination>
     </div>
   </div>
 </template>
@@ -95,86 +108,21 @@
   import headerCom from '../components/headerCom.vue';
   import {
     getconfig,
-    getConfigId
+    getConfigId,
+    getMaintask
   } from '../dataService/service';
   export default {
     name: 'menuList',
     data() {
       return {
+        typeVal: '',
         detailsVal: '',
         configName: '',
+        versionType: '',
+        taskType: [],
         detailsType: [],
-        tableData3: [{
-          taskMain: '20',
-          taskSub:'1230',
-          province:'陕西省',
-          provinceDe:'陕西省',
-          date:'20171220',
-          retaskTime:'2',
-          program:'db_diff',
-          stage:'day',
-          status:'成功'
-        }, {
-          taskMain: '20',
-          taskSub:'1231',
-          province:'山西省',
-          provinceDe:'山西省',
-          date:'20171220',
-          retaskTime:'1',
-          program:'idb_conv',
-          stage:'day',
-          status:'成功'
-        }, {
-          taskMain: '20',
-          taskSub:'1232',
-          province:'湖北省',
-          provinceDe:'湖北省',
-          date:'20171220',
-          retaskTime:'133',
-          program:'db_diff',
-          stage:'day',
-          status:'失败'
-        }, {
-          taskMain: '20',
-          taskSub:'1233',
-          province:'云南省',
-          provinceDe:'云南省',
-          date:'20171220',
-          retaskTime:'1',
-          program:'db_diff',
-          stage:'day',
-          status:'失败'
-        }, {
-          taskMain: '20',
-          taskSub:'1234',
-          province:'四川省',
-          provinceDe:'四川1',
-          date:'20171220',
-          retaskTime:'33',
-          program:'db_diff',
-          stage:'day',
-          status:'失败'
-        }, {
-          taskMain: '20',
-          taskSub:'1235',
-          province:'广西省',
-          provinceDe:'广西省',
-          date:'20171220',
-          retaskTime:'1',
-          program:'db_diff',
-          stage:'day',
-          status:'失败'
-        }, {
-          taskMain: '20',
-          taskSub:'1236',
-          province:'浙江省',
-          provinceDe:'浙江省',
-          date:'20171220',
-          retaskTime:'13',
-          program:'idb_conv',
-          stage:'day',
-          status:'成功'
-        }],
+        convConfigId:'',
+        tableData: [],
         multipleSelection: []
 
       }
@@ -189,13 +137,22 @@
       initConfig: function () {
         getconfig().then((data) => {
           this.detailsType = data.configName;
+          this.taskType = data.versionType;
+          this.typeVal = data.versionType[0].versionValue;
           this.detailsVal = data.configName[0].configValue;
           this.configName = data.configName[0].configKey;
-          let param = `configName=${this.configName}&versionType=1`;
-//        getConfigId(param).then((data) => {
-//            this.convConfigId = data.convConfigId;
-//            console.log(this.convConfigId + 'as1');
-//          })
+          this.versionType = data.versionType[0].versionKey;
+          let param = `configName=${this.configName}&versionType=${this.versionType}`;
+        getConfigId(param).then((data) => {
+            this.convConfigId = data.convConfigId;
+            console.log(this.convConfigId + 'as1');
+          getMaintask(`convConfigId=${data.convConfigId}`).then((data) => {
+            this.tableData = [];
+            this.tableData.push(data);
+            console.log(data);
+
+          })
+        })
         })
       },
       selectDetail(param) {
@@ -205,8 +162,18 @@
         })
         this.configName = spr.configKey;
         console.log(this.configName+'---'+this.versionType);
-        let typeparam = `configName=${this.configName}&versionType=1`;
+        let typeparam = `configName=${this.configName}&versionType=${this.versionType}&convVersion=${this.seasonVal}`;
         //  this.changeType(typeparam);
+      },
+      selectTasktype(param) {
+        let obj = {};
+        obj = this.taskType.find((item) => {
+          return item.versionValue === param;
+        });
+        this.versionType = obj.versionKey;
+        console.log(this.configName+'---'+this.versionType);
+        let typeparam = `configName=${this.configName}&versionType=${this.versionType}&convVersion=${this.seasonVal}`;
+        // this.changeType(typeparam);
       },
       handleSelectionChange(val) {
         console.log('aaa');
