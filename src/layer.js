@@ -12,7 +12,8 @@ export const maplayer = {
         "type": "vector"
       }
     },
-    "glyphs": "http://minedata.cn/minemapapi/v1.3/fonts/{fontstack}/{range}.pbf",
+  // "glyphs": appConfig.webLocation+"/static/map/{fontstack}/{range}.pbf",
+    "glyphs":"http://minedata.cn/minemapapi/v1.3/fonts/{fontstack}/{range}.pbf",
     "sprite": appConfig.webLocation+"/static/map/sprite/sprite",
     "layers": [
       {
@@ -38,15 +39,17 @@ export const maplayer = {
         layout:{
             'icon-image': 'circle-brown-11',
             "text-field": "{provinceName}",
+            "text-offset":[0,1],
             'text-size':12,
-            "text-offset":[0,1.5],
             "text-justify": "center",
-            "visibility": "visible"
+            "visibility": "visible",
+            "icon-allow-overlap":true,
+            "icon-ignore-placement":true,
+            "icon-padding":0,
+            "text-padding":0
           },
         paint: {
-            'icon-color': '#ff2d2d',
-            "text-halo-width": 0.5,
-            "text-color": "#ffffff",
+            "text-color": "#ffffff"
           }
       }
     ]

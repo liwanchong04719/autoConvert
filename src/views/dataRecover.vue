@@ -26,7 +26,7 @@
         <div style="margin-top: 20px">
           <el-table
             ref="multipleTable"
-            :data="tableData3"
+            :data="tableData"
             tooltip-effect="dark"
             style="width: 100%; background-color: #F5F5F5;"
             @selection-change="handleSelectionChange"
@@ -38,56 +38,52 @@
             </el-table-column>
             <el-table-column
               label="主任务号"
-              prop = "taskMain"
+              prop = "convListId"
             >
             </el-table-column>
             <el-table-column
-              prop="date"
+              prop="belongDay"
               label="所属日期"
               show-overflow-tooltip>
             </el-table-column>
             <el-table-column
-              prop="province"
+              prop="provinceNm"
               label="省份"
               show-overflow-tooltip>
             </el-table-column>
             <el-table-column
-              prop="provinceDe"
+              prop="provinceNmNosep"
               label="省份（份）"
               show-overflow-tooltip>
             </el-table-column>
             <el-table-column
-              prop="stage"
+              prop="convStep"
               label="阶段"
               show-overflow-tooltip>
             </el-table-column>
             <el-table-column
-              prop="program"
+              prop="dbCopyId"
               label="备份子程序"
               show-overflow-tooltip>
             </el-table-column>
             <el-table-column
-              prop="retaskTime"
+              prop="copyStatus"
+              label="状态"
+              show-overflow-tooltip>
+            </el-table-column>
+            <el-table-column
+              prop="logFuseId"
               label="融合子程序"
               show-overflow-tooltip>
             </el-table-column>
             <el-table-column
-              prop="status"
+              prop="fuseStatus"
               label="状态"
               show-overflow-tooltip>
             </el-table-column>
           </el-table>
-
         </div>
       </div>
-      <el-pagination
-        background
-        layout="prev, pager, next"
-        :total="200"
-        @size-change="pageSize"
-        @current-change="currentPage"
-      >
-      </el-pagination>
     </div>
   </div>
 </template>
@@ -95,86 +91,18 @@
   import headerCom from '../components/headerCom.vue';
   import {
     getconfig,
-    getConfigId
+    getConfigId,
+    dataRecover
   } from '../dataService/service';
   export default {
     name: 'menuList',
     data() {
       return {
+        convListId:'',
         detailsVal: '',
         configName: '',
         detailsType: [],
-        tableData3: [{
-          taskMain: '20',
-          taskSub:'1230',
-          province:'陕西省',
-          provinceDe:'陕西省',
-          date:'20171220',
-          retaskTime:'2',
-          program:'db_diff',
-          stage:'day',
-          status:'成功'
-        }, {
-          taskMain: '20',
-          taskSub:'1231',
-          province:'山西省',
-          provinceDe:'山西省',
-          date:'20171220',
-          retaskTime:'1',
-          program:'idb_conv',
-          stage:'day',
-          status:'成功'
-        }, {
-          taskMain: '20',
-          taskSub:'1232',
-          province:'湖北省',
-          provinceDe:'湖北省',
-          date:'20171220',
-          retaskTime:'133',
-          program:'db_diff',
-          stage:'day',
-          status:'失败'
-        }, {
-          taskMain: '20',
-          taskSub:'1233',
-          province:'云南省',
-          provinceDe:'云南省',
-          date:'20171220',
-          retaskTime:'1',
-          program:'db_diff',
-          stage:'day',
-          status:'失败'
-        }, {
-          taskMain: '20',
-          taskSub:'1234',
-          province:'四川省',
-          provinceDe:'四川1',
-          date:'20171220',
-          retaskTime:'33',
-          program:'db_diff',
-          stage:'day',
-          status:'失败'
-        }, {
-          taskMain: '20',
-          taskSub:'1235',
-          province:'广西省',
-          provinceDe:'广西省',
-          date:'20171220',
-          retaskTime:'1',
-          program:'db_diff',
-          stage:'day',
-          status:'失败'
-        }, {
-          taskMain: '20',
-          taskSub:'1236',
-          province:'浙江省',
-          provinceDe:'浙江省',
-          date:'20171220',
-          retaskTime:'13',
-          program:'idb_conv',
-          stage:'day',
-          status:'成功'
-        }],
+        tableData: [],
         multipleSelection: []
 
       }
@@ -192,10 +120,7 @@
           this.detailsVal = data.configName[0].configValue;
           this.configName = data.configName[0].configKey;
           let param = `configName=${this.configName}&versionType=1`;
-//        getConfigId(param).then((data) => {
-//            this.convConfigId = data.convConfigId;
-//            console.log(this.convConfigId + 'as1');
-//          })
+          this.changeOption(param);
         })
       },
       selectDetail(param) {
@@ -206,7 +131,19 @@
         this.configName = spr.configKey;
         console.log(this.configName+'---'+this.versionType);
         let typeparam = `configName=${this.configName}&versionType=1`;
-        //  this.changeType(typeparam);
+        this.changeOption(typeparam);
+      },
+      changeOption(param){
+        getConfigId(param).then((data) => {
+          this.convListId = data.convListId;
+          console.log(data);
+          console.log(this.convListId + 'as1');
+          dataRecover(`convListId=${this.convListId}`).then((data)=>{
+            console.log(data);
+            this.tableData = data;
+          })
+
+        })
       },
       handleSelectionChange(val) {
         console.log('aaa');

@@ -253,8 +253,8 @@
         <i>未开始</i>
       </div>
       <div>
-        <span v-bgcolor="'#CDE5FD'"></span>
-        <i>废弃</i>
+        <span v-bgcolor="'#AFCCE9'"></span>
+        <i>未转换</i>
       </div>
     </div>
     <div class="changeMap" @click="changeMesh" :class="{'ban':typeVal === '季出品'}">
@@ -276,7 +276,8 @@
     getProvincestatus,
     getSubstatus,
     getSubinfo,
-    getConfigId
+    getConfigId,
+    getMidpoint
   } from '../dataService/service';
 
   export default {
@@ -419,7 +420,7 @@
           this.map = new mapboxgl.Map({
             container: 'map',
             style: maplayer.simple,
-            zoom: 3.8,
+            zoom: 4,
             minZoom:3.5,
             maxZoom:9,
             center: [107.02932, 37.68486],
@@ -511,7 +512,7 @@
           "filter": ["==", "status", "3" ]
         };
 
-        var provinceAbandonlayer={
+        var provinceUnfindlayer={
           id: 'ProvincialRegion_4',
           type: 'fill',
           interactive: true,
@@ -521,10 +522,10 @@
             "visibility": "visible"
           },
           "paint": {
-            "fill-color": "#CDE5FD",
+            "fill-color": "#AFCCE9",
             'fill-outline-color': '#ffffff'
           },
-          "filter": ["==", "status", "4" ]
+          "filter": ["==", "status", "" ]
         };
 
         for(let i=0;i<5;i++){                              //第一次不存在图层，其余都存在图层，依次去除5个图层，再添加
@@ -536,7 +537,7 @@
         this.map.addLayer(provinceFaillayer);
         this.map.addLayer(provinceRunninglayer);
         this.map.addLayer(provinceUnrunlayer);
-        this.map.addLayer(provinceAbandonlayer);
+        this.map.addLayer(provinceUnfindlayer);
 
         let that=this;
         this.popup = new mapboxgl.Popup({

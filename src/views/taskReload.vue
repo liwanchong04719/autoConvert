@@ -62,12 +62,15 @@
                show-overflow-tooltip>
              </el-table-column>
              <el-table-column
-               prop="provinceNMNosep"
+               prop="provinceNM"
                label="省份"
-               show-overflow-tooltip>
+               :filters="provinceList"
+               :filter-method="filterProvince"
+               filter-placement="bottom"
+             >
              </el-table-column>
              <el-table-column
-               prop="provinceNM"
+               prop="provinceNMNosep"
                label="省份（份）"
                show-overflow-tooltip>
              </el-table-column>
@@ -75,7 +78,7 @@
                prop="programCode"
                label="程序"
                width="130"
-               :filters="[{ text: 'idb_conv', value: 'idb_conv' }, { text: 'db_diff', value: 'db_diff' }]"
+               :filters="programList"
                :filter-method="filterProgram"
                filter-placement="bottom"
                >
@@ -83,7 +86,7 @@
              <el-table-column
                prop="convStep"
                label="阶段"
-               :filters="[{ text: 'day', value: 'day' }, { text: 'mifg', value: 'mifg' }]"
+               :filters="stepList"
                :filter-method="filterStage"
                filter-placement="bottom"
              >
@@ -91,7 +94,7 @@
              <el-table-column
                prop="status"
                label="状态"
-               :filters="[{ text: '成功', value: '成功' }, { text: '失败', value: '失败' },{ text: '转换中', value: '转换中' }]"
+               :filters="statusList"
                :filter-method="filterStatus"
                filter-placement="bottom"
               >
@@ -108,7 +111,7 @@
       <el-pagination
         background
         layout="prev, pager, next"
-        :total="200"
+        :total='10'
         @size-change="pageSize"
         @current-change="currentPage"
       >
@@ -135,7 +138,12 @@
         taskType: [],
         detailsType: [],
         multipleSelection: [],
-        tableData:[]
+        tableData:[],
+        provinceList:[],
+        programList:[],
+        stepList:[],
+        statusList:[],
+        totalPage:3
       }
     },
     components: {
@@ -183,19 +191,79 @@
           console.log(data);
           console.log(this.convConfigId + 'as1');
           getSubinfo(`convListId=${this.convListId}`).then((data) => {
+            console.log(data.length/10);
+//            this.totalPage = Math.ceil(data.length/10);
+          })
+          let param = `convListId=${this.convListId}&pageNum=1&pageSize=20`;
+          getSubinfo(param).then((data) => {
             this.tableData = data;
             console.log(data);
+
+            //筛选字段
+            let provinceArr = [];                                                //定义一个筛选的字段列表
+            let stepArr = [];
+            let programArr = [];
+            let statusArr = [];
+            this.provinceList = [];                                              //push前置空
+            this.stepList = [];
+            this.programList = [];
+            this.statusList = [];
+            for(let i=0;i<data.length;i++) {                                     //获取结果集中筛选字段的数据集合
+              provinceArr.push(data[i].provinceNM);
+              stepArr.push(data[i].convStep);
+              programArr.push(data[i].programCode);
+              statusArr.push(data[i].status);
+            }
+
+            //"省份"筛选字段
+            let provinceResult = provinceArr.filter(function(el,index,self) {    //将取到的字段列表去重
+              return self.indexOf(el) === index;
+            })
+
+            for(let i=0;i<provinceResult.length;i++){                             //将数据键值对放入筛选字段数组中
+                this.provinceList.push({ text: provinceResult[i], value: provinceResult[i]});
+            }
+
+            //"程序"筛选字段
+            let programResult = programArr.filter(function(el,index,self) {
+              return self.indexOf(el) === index;
+            })
+
+            for(let i=0;i<programResult.length;i++){
+              this.programList.push({ text: programResult[i], value: programResult[i]});
+            }
+
+            //"阶段"筛选字段
+            let stepResult = stepArr.filter(function(el,index,self) {
+              return self.indexOf(el) === index;
+            })
+
+            for(let i=0;i<stepResult.length;i++){
+              this.stepList.push({ text: stepResult[i], value: stepResult[i]});
+            }
+
+            //"状态"筛选字段
+            let statusResult = statusArr.filter(function(el,index,self) {
+              return self.indexOf(el) === index;
+            })
+
+            for(let i=0;i<statusResult.length;i++){
+              this.statusList.push({ text: statusResult[i], value: statusResult[i]});
+            }
           })
         })
       },
       filterProgram(value, row) {
-        return row.program === value;
+        return row.programCode === value;
       },
       filterStage(value, row) {
-        return row.stage === value;
+        return row.convStep === value;
       },
       filterStatus(value,row){
         return row.status === value;
+      },
+      filterProvince(value,row){
+        return row.provinceNM === value;
       },
       handleSelectionChange(val) {
         console.log('aaa');

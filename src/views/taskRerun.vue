@@ -62,12 +62,12 @@
               show-overflow-tooltip>
             </el-table-column>
             <el-table-column
-              prop="provinceNMNosep"
+              prop="provinceNM"
               label="省份"
               show-overflow-tooltip>
             </el-table-column>
             <el-table-column
-              prop="provinceNM"
+              prop="provinceNMNosep"
               label="省份（份）"
               show-overflow-tooltip>
             </el-table-column>
@@ -146,15 +146,7 @@
           this.configName = data.configName[0].configKey;
           this.versionType = data.versionType[0].versionKey;
           let param = `configName=${this.configName}&versionType=${this.versionType}`;
-          getConfigId(param).then((data) => {
-            this.convListId = data.convListId;
-            console.log(data);
-            console.log(this.convConfigId + 'as1');
-            getSubinfo(`convListId=${this.convListId}`).then((data) => {
-              this.tableData = data;
-              console.log(data);
-            })
-          })
+          this.changeOption(param);
         })
       },
       selectDetail(param) {
@@ -165,7 +157,7 @@
         this.configName = spr.configKey;
         console.log(this.configName+'---'+this.versionType);
         let typeparam = `configName=${this.configName}&versionType=${this.versionType}&convVersion=${this.seasonVal}`;
-        //  this.changeType(typeparam);
+        this.changeOption(typeparam);
       },
       selectTasktype(param) {
         let obj = {};
@@ -175,7 +167,18 @@
         this.versionType = obj.versionKey;
         console.log(this.configName+'---'+this.versionType);
         let typeparam = `configName=${this.configName}&versionType=${this.versionType}&convVersion=${this.seasonVal}`;
-        // this.changeType(typeparam);
+        this.changeOption(typeparam);
+      },
+      changeOption(param){
+        getConfigId(param).then((data) => {
+          this.convListId = data.convListId;
+          console.log(data);
+          console.log(this.convConfigId + 'as1');
+          getSubinfo(`convListId=${this.convListId}`).then((data) => {
+            this.tableData = data;
+            console.log(data);
+          })
+        })
       },
       handleSelectionChange(val) {
         console.log('aaa');
