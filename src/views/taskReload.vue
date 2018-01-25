@@ -40,7 +40,9 @@
              style="width: 100%; background-color: #F5F5F5;"
              @selection-change="handleSelectionChange"
              @select="selectOnecol"
-             @select-all="selectAllcol">
+             @select-all="selectAllcol"
+             @filter-change="filterMultcol"
+           >
              <el-table-column
                type="selection"
                width="55">
@@ -65,8 +67,8 @@
                prop="provinceNM"
                label="省份"
                :filters="provinceList"
-               :filter-method="filterProvince"
                filter-placement="bottom"
+               column-key="provinceNM"
              >
              </el-table-column>
              <el-table-column
@@ -81,6 +83,7 @@
                :filters="programList"
                :filter-method="filterProgram"
                filter-placement="bottom"
+               column-key="programCode"
                >
              </el-table-column>
              <el-table-column
@@ -89,6 +92,7 @@
                :filters="stepList"
                :filter-method="filterStage"
                filter-placement="bottom"
+               column-key="stepFilterkey"
              >
              </el-table-column>
              <el-table-column
@@ -97,6 +101,7 @@
                :filters="statusList"
                :filter-method="filterStatus"
                filter-placement="bottom"
+               column-key="statusFilterkey"
               >
              </el-table-column>
              <el-table-column
@@ -110,10 +115,10 @@
        </div>
       <el-pagination
         background
-        layout="prev, pager, next"
-        :total='10'
-        @size-change="pageSize"
-        @current-change="currentPage"
+        layout="total, prev, pager, next"
+        :total='totalSize'
+        @current-change="currentPageChange"
+        :page-size="10"
       >
       </el-pagination>
     </div>
@@ -143,7 +148,7 @@
         programList:[],
         stepList:[],
         statusList:[],
-        totalPage:3
+        totalSize:0
       }
     },
     components: {
@@ -188,17 +193,12 @@
       changeOption(param){
         getConfigId(param).then((data) => {
           this.convListId = data.convListId;
-          console.log(data);
-          console.log(this.convConfigId + 'as1');
-          getSubinfo(`convListId=${this.convListId}`).then((data) => {
-            console.log(data.length/10);
-//            this.totalPage = Math.ceil(data.length/10);
-          })
-          let param = `convListId=${this.convListId}&pageNum=1&pageSize=20`;
-          getSubinfo(param).then((data) => {
-            this.tableData = data;
-            console.log(data);
+            getSubinfo(`convListId=${this.convListId}&pageNum=1&pageSize=10`).then((data) => {
+              this.totalSize = data[0].totolPage;
+              this.tableData = data.slice(1, data.length);
+            })
 
+           getSubinfo(`convListId=${this.convListId}`).then((data) => {          //请求得全部的筛选字段集合
             //筛选字段
             let provinceArr = [];                                                //定义一个筛选的字段列表
             let stepArr = [];
@@ -208,7 +208,7 @@
             this.stepList = [];
             this.programList = [];
             this.statusList = [];
-            for(let i=0;i<data.length;i++) {                                     //获取结果集中筛选字段的数据集合
+            for(let i=1;i<data.length;i++) {                                     //获取结果集中筛选字段的数据集合
               provinceArr.push(data[i].provinceNM);
               stepArr.push(data[i].convStep);
               programArr.push(data[i].programCode);
@@ -255,16 +255,58 @@
       },
       filterProgram(value, row) {
         return row.programCode === value;
+        let param = `convListId=${this.convListId}`;
+        getSubinfo(param).then((data) => {
+          console.log(data[0].totolPage);
+          this.totalSize = data.length;
+
+        })
       },
       filterStage(value, row) {
         return row.convStep === value;
+        let param = `convListId=${this.convListId}`;
+        getSubinfo(param).then((data) => {
+          console.log(data[0].totolPage);
+          this.totalSize = data.length;
+
+        })
       },
       filterStatus(value,row){
         return row.status === value;
+        let param = `convListId=${this.convListId}`;
+        getSubinfo(param).then((data) => {
+          console.log(data[0].totolPage);
+          this.totalSize = data.length;
+
+        })
       },
       filterProvince(value,row){
         return row.provinceNM === value;
       },
+      filterMultcol(filters){
+        console.log(filters);
+        console.log('筛选字段改变了。。。。');
+        let param = `convListId=${this.convListId}`;
+        console.log(param);
+
+        let key = Object.keys(filters)[0];
+        let val = filters[key][0] ;
+        console.log(key,val);
+
+        getSubinfo(param).then((data) => {
+          console.log(data);
+          let filterData = data.filter(function (el) {
+             return el[key] == val
+
+          })
+
+          this.tableData = filterData;
+          this.totalSize = filterData.length;
+
+        })
+
+      },
+
       handleSelectionChange(val) {
         console.log('aaa');
         this.multipleSelection = val;
@@ -277,21 +319,14 @@
         console.log('---selectAll---');
         console.log(selection);
       },
-      pageSize(num){
-        console.log('---onepageSize---');
-        console.log(num);
-      },
-      currentPage(curPage){
+      currentPageChange(curPage){
         console.log('---currentPageNum---');
         console.log(curPage);
-      },
-      changeYear(curYear){
-        console.log('-----currentYear-selected----------');
-        console.log(curYear);
-      },
-      curSeason(curSeason){
-        console.log('-----currentSeason-selected----------');
-        console.log(curSeason);
+        let pageParam = `convListId=${this.convListId}&pageNum=${curPage}&pageSize=10`;
+        getSubinfo(pageParam).then((data) => {
+          this.tableData=[];
+          this.tableData = data.slice(1, data.length);
+        })
       }
 
     }

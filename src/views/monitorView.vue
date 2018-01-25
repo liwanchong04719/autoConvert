@@ -421,11 +421,9 @@
             container: 'map',
             style: maplayer.simple,
             zoom: 4,
-            minZoom:3.5,
-            maxZoom:9,
-            center: [107.02932, 37.68486],
-            repaint: true,
-            pitch: 0
+            minZoom:4,
+            maxZoom:8,
+            center: [107.02932, 37.68486]
           })
 
         let that = this;                               //保存this指针的指向：指向vue实例-VueCompents

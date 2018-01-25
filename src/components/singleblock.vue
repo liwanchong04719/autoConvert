@@ -125,8 +125,7 @@
     0% {
       transform: rotate(0deg);
     }
-
-    25% {
+    50%{
       transform: rotate(180deg);
     }
     100% {

@@ -12,8 +12,8 @@ export const maplayer = {
         "type": "vector"
       }
     },
-  // "glyphs": appConfig.webLocation+"/static/map/{fontstack}/{range}.pbf",
-    "glyphs":"http://minedata.cn/minemapapi/v1.3/fonts/{fontstack}/{range}.pbf",
+    "glyphs": appConfig.webLocation+"/static/map/{fontstack}/{range}.pbf",
+  //  "glyphs":"http://minedata.cn/minemapapi/v1.3/fonts/{fontstack}/{range}.pbf",
     "sprite": appConfig.webLocation+"/static/map/sprite/sprite",
     "layers": [
       {
@@ -45,6 +45,7 @@ export const maplayer = {
             "visibility": "visible",
             "icon-allow-overlap":true,
             "icon-ignore-placement":true,
+            "text-allow-overlap":true,
             "icon-padding":0,
             "text-padding":0
           },
