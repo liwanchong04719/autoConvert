@@ -98,9 +98,9 @@
       </div>
       <el-pagination
         background
-        layout="prev, pager, next"
-        :total="200"
-        @size-change="pageSize"
+        layout="total, prev, pager, next"
+        :page-size="10"
+        :total="totalItem"
         @current-change="currentPage"
       >
       </el-pagination>
@@ -126,8 +126,8 @@
         taskType: [],
         detailsType: [],
         multipleSelection: [],
-        tableData:[]
-
+        tableData:[],
+        totalItem:0
       }
     },
     components: {
@@ -174,9 +174,9 @@
           this.convListId = data.convListId;
           console.log(data);
           console.log(this.convConfigId + 'as1');
-          getSubinfo(`convListId=${this.convListId}`).then((data) => {
-            this.tableData = data;
-            console.log(data);
+          getSubinfo(`convListId=${this.convListId}&pageSize=10&pageNum=1`).then((data) => {
+            this.totalItem = data[0].totolPage;
+            this.tableData = data.slice(1,data.length);
           })
         })
       },
@@ -192,14 +192,13 @@
         console.log('---selectAll---');
         console.log(selection);
       },
-      pageSize(num){
-        console.log('---onepageSize---');
-        console.log(num);
-      },
       currentPage(cur){
         console.log('---currentPageNum---');
         console.log(cur);
-
+        getSubinfo(`convListId=${this.convListId}&pageSize=10&pageNum=${cur}`).then((data) => {
+          this.totalItem = data[0].totolPage;
+          this.tableData = data.slice(1,data.length);
+        })
       }
 
     }

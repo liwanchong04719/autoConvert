@@ -68,7 +68,7 @@
                label="省份"
                :filters="provinceList"
                filter-placement="bottom"
-               column-key="provinceNM"
+               column-key="province"
              >
              </el-table-column>
              <el-table-column

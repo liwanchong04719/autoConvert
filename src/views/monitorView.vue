@@ -421,7 +421,7 @@
             container: 'map',
             style: maplayer.simple,
             zoom: 4,
-            minZoom:4,
+            minZoom:3,
             maxZoom:8,
             center: [107.02932, 37.68486]
           })
@@ -584,13 +584,23 @@
           });
         }
 
-        //添加图幅图层
+        //添加图幅图层/图幅中心点图层
         if(this.map.getSource('mapMesh')){
           this.map.removeSource('mapMesh');
         }
         this.map.addSource('mapMesh', {
           "tiles": [
             appConfig.developUrl+"monitor/pbf/meshoutline/{z}/{x}/{y}?convConfigId="+meshParam
+          ],
+          "type": "vector"
+        })
+
+        if(this.map.getSource('mapMeshcenter')){
+          this.map.removeSource('mapMeshcenter');
+        }
+        this.map.addSource('mapMeshcenter', {
+          "tiles": [
+            appConfig.developUrl+"monitor/pbf/meshpoint/{z}/{x}/{y}"
           ],
           "type": "vector"
         })
@@ -632,14 +642,16 @@
           type: 'symbol',
           "minzoom": 8.0,
           interactive: true,
-          "source" : "mapMesh",
-          'source-layer': 'mesharea',
+          "source" : "mapMeshcenter",
+          'source-layer': 'meshpoi',
           layout:{
-            "text-field": "{mesh_id}",
+            "text-field": "{meshId}",
             'text-size':12,
             "text-justify": "center",
             "visibility": "none",
-            "icon-text-fit": "both"
+            "icon-text-fit": "both",
+            "text-allow-overlap":true,
+            "text-padding":0
           },
           paint: {
             "text-color": "#ffffff"

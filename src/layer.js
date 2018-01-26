@@ -12,8 +12,8 @@ export const maplayer = {
         "type": "vector"
       }
     },
-    "glyphs": appConfig.webLocation+"/static/map/{fontstack}/{range}.pbf",
-  //  "glyphs":"http://minedata.cn/minemapapi/v1.3/fonts/{fontstack}/{range}.pbf",
+   // "glyphs": appConfig.webLocation+"/static/map/{fontstack}/{range}.pbf",
+   "glyphs":"http://minedata.cn/minemapapi/v1.3/fonts/{fontstack}/{range}.pbf",
     "sprite": appConfig.webLocation+"/static/map/sprite/sprite",
     "layers": [
       {
