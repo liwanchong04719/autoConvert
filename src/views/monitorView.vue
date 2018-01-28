@@ -421,9 +421,10 @@
             container: 'map',
             style: maplayer.simple,
             zoom: 4,
+            center: [107.02932, 37.68486],
             minZoom:3,
             maxZoom:8,
-            center: [107.02932, 37.68486]
+            repaint: true
           })
 
         let that = this;                               //保存this指针的指向：指向vue实例-VueCompents
@@ -440,18 +441,15 @@
           this.map.removeSource('ProvincialRegion');
         }
         this.map.addSource('ProvincialRegion', {
-          "tiles": [
-            appConfig.developUrl+"monitor/pbf/outline/{z}/{x}/{y}?convListId="+mapParam
-          ],
-          "type": "vector"
+          "type": "vector",
+          "tiles": [appConfig.developUrl+"monitor/pbf/outline/{z}/{x}/{y}?convListId="+mapParam]
         })
 
         var provinceSuccesslayer={
-          id: 'ProvincialRegion_1',
-          type: 'fill',
-          interactive: true,
+          "id": 'ProvincialRegion_1',
+          "type": 'fill',
           "source" : "ProvincialRegion",
-          'source-layer': 'outarea',
+          "source-layer": 'outarea',
           "layout": {
             "visibility": "visible"
           },
@@ -459,15 +457,16 @@
             "fill-color": "#ff7474",
             'fill-outline-color': '#ffffff'
            },
+          "minzoom": 3,
+          "maxZoom":8,
           "filter": ["==", "status", "1" ]
         };
 
         var provinceFaillayer={
-          id: 'ProvincialRegion_0',
-          type: 'fill',
-          interactive: true,
+          "id": 'ProvincialRegion_0',
+          "type": 'fill',
           "source" : "ProvincialRegion",
-          'source-layer': 'outarea',
+          "source-layer": 'outarea',
           "layout": {
             "visibility": "visible"
           },
@@ -475,13 +474,14 @@
             "fill-color": "#ffae45",
             'fill-outline-color': '#ffffff'
            },
+          "minzoom": 3,
+          "maxZoom":8,
           "filter": ["==", "status", "0" ]
         };
 
         var provinceRunninglayer= {
           id: 'ProvincialRegion_2',
           type: 'fill',
-          interactive: true,
           "source" : "ProvincialRegion",
           'source-layer': 'outarea',
           "layout": {
@@ -491,15 +491,16 @@
             "fill-color": "#67ba2f",
             'fill-outline-color': '#ffffff'
           },
+          "minzoom": 3,
+          "maxZoom":8,
           "filter": ["==", "status", "2" ]
         }
 
         var provinceUnrunlayer={
-          id: 'ProvincialRegion_3',
-          type: 'fill',
-          interactive: true,
+          "id": 'ProvincialRegion_3',
+          "type": 'fill',
           "source" : "ProvincialRegion",
-          'source-layer': 'outarea',
+          "source-layer": 'outarea',
           "layout": {
               "visibility": "visible"
           },
@@ -507,15 +508,16 @@
             "fill-color": "#36aeea",
             'fill-outline-color': '#ffffff'
            },
+          "minzoom": 3,
+          "maxZoom":8,
           "filter": ["==", "status", "3" ]
         };
 
         var provinceUnfindlayer={
-          id: 'ProvincialRegion_4',
-          type: 'fill',
-          interactive: true,
+          "id": 'ProvincialRegion_4',
+          "type": 'fill',
           "source" : "ProvincialRegion",
-          'source-layer': 'outarea',
+          "source-layer": 'outarea',
           "layout": {
             "visibility": "visible"
           },
@@ -523,6 +525,8 @@
             "fill-color": "#AFCCE9",
             'fill-outline-color': '#ffffff'
           },
+          "minzoom": 3,
+          "maxZoom":8,
           "filter": ["==", "status", "" ]
         };
 

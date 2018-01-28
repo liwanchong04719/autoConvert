@@ -68,7 +68,7 @@
                label="省份"
                :filters="provinceList"
                filter-placement="bottom"
-               column-key="province"
+               column-key="provinceNM"
              >
              </el-table-column>
              <el-table-column
@@ -81,7 +81,6 @@
                label="程序"
                width="130"
                :filters="programList"
-               :filter-method="filterProgram"
                filter-placement="bottom"
                column-key="programCode"
                >
@@ -253,15 +252,6 @@
           })
         })
       },
-      filterProgram(value, row) {
-        return row.programCode === value;
-        let param = `convListId=${this.convListId}`;
-        getSubinfo(param).then((data) => {
-          console.log(data[0].totolPage);
-          this.totalSize = data.length;
-
-        })
-      },
       filterStage(value, row) {
         return row.convStep === value;
         let param = `convListId=${this.convListId}`;
@@ -283,17 +273,26 @@
       filterProvince(value,row){
         return row.provinceNM === value;
       },
-      filterMultcol(filters){
+      filterMultcol(filters){                     //所有的筛选条件写在这个函数中：多选多条件
         console.log(filters);
         console.log('筛选字段改变了。。。。');
-        let param = `convListId=${this.convListId}`;
-        console.log(param);
+        let param = `convListId=${this.convListId}&pageNum=1&pageSize=10`;
 
         let key = Object.keys(filters)[0];
-        let val = filters[key][0] ;
-        console.log(key,val);
+        let val = filters[key][0] ;               //多选时传的参数：let val = filters[key]为多选字段的集合
+        console.log(key,val+'ooooo');
 
-        getSubinfo(param).then((data) => {
+
+         //若等于全部
+        if(val === undefined){
+          getSubinfo(param).then((data) => {
+            this.totalSize = data[0].totolPage;
+            this.tableData = data.slice(1, data.length);
+          })
+          return true;
+        }
+
+        getSubinfo(param).then((data) => {        //若不进行手动筛选，传参数到后台查询，则都写成以上方式才是对的
           console.log(data);
           let filterData = data.filter(function (el) {
              return el[key] == val

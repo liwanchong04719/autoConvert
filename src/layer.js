@@ -17,7 +17,7 @@ export const maplayer = {
     "sprite": appConfig.webLocation+"/static/map/sprite/sprite",
     "layers": [
       {
-        "id": "305e7db2535044feb87d3045a268898b",
+        "id": "background",
         "maxzoom": 18.0,
         "source": "",
         "layout": {
