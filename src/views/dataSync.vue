@@ -30,7 +30,7 @@
               :value="one.configValue">
             </el-option>
           </el-select>
-          <el-button type="primary" style="margin-right: 20px;float:right"  size="small">执行<i class="el-icon-upload el-icon--right"></i></el-button>
+          <el-button type="primary" style="margin-right: 20px;float:right"  size="small" @click="execute">执行<i class="el-icon-upload el-icon--right"></i></el-button>
         </div>
         <div style="margin-top: 20px">
           <el-table
@@ -39,8 +39,7 @@
             tooltip-effect="dark"
             style="width: 100%; background-color: #F5F5F5;"
             @selection-change="handleSelectionChange"
-            @select="selectOnecol"
-            @select-all="selectAllcol">
+            >
             <el-table-column
               type="selection"
               width="55">
@@ -102,6 +101,26 @@
         </div>
       </div>
     </div>
+    <transition
+      name="bounce"
+    >
+      <div v-if="successTip" class="provinceDel">
+        <div class="tipBlock">
+          <h2>执行成功！</h2>
+          <div @click="successTip = !successTip">OK</div>
+        </div>
+      </div>
+    </transition>
+    <transition
+      name="bounce"
+    >
+      <div v-if="failTip" class="provinceDel">
+        <div class="tipBlock">
+          <h2>执行失败！</h2>
+          <div @click="failTip = !failTip">OK</div>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 <script type='text/ecmascript-6'>
@@ -109,7 +128,8 @@
   import {
     getconfig,
     getConfigId,
-    getMaintask
+    getMaintask,
+    dataSync
   } from '../dataService/service';
   export default {
     name: 'menuList',
@@ -123,7 +143,9 @@
         detailsType: [],
         convConfigId:'',
         tableData: [],
-        multipleSelection: []
+        multipleSelection: [],
+        failTip:false,
+        successTip:false
 
       }
     },
@@ -143,16 +165,7 @@
           this.configName = data.configName[0].configKey;
           this.versionType = data.versionType[0].versionKey;
           let param = `configName=${this.configName}&versionType=${this.versionType}`;
-          getConfigId(param).then((data) => {
-            this.convConfigId = data.convConfigId;
-            console.log(this.convConfigId + 'as1');
-            getMaintask(`convConfigId=${data.convConfigId}`).then((data) => {
-              this.tableData = [];
-              this.tableData.push(data);
-              console.log(data);
-
-            })
-          })
+          this.changeType(param);
         })
       },
       selectDetail(param) {
@@ -163,7 +176,7 @@
         this.configName = spr.configKey;
         console.log(this.configName+'---'+this.versionType);
         let typeparam = `configName=${this.configName}&versionType=${this.versionType}&convVersion=${this.seasonVal}`;
-        //  this.changeType(typeparam);
+        this.changeType(typeparam);
       },
       selectTasktype(param) {
         let obj = {};
@@ -173,30 +186,34 @@
         this.versionType = obj.versionKey;
         console.log(this.configName+'---'+this.versionType);
         let typeparam = `configName=${this.configName}&versionType=${this.versionType}&convVersion=${this.seasonVal}`;
-        // this.changeType(typeparam);
+        this.changeType(typeparam);
+      },
+      changeType(param){
+        getConfigId(param).then((data) => {
+          this.convConfigId = data.convConfigId;
+          console.log(this.convConfigId + 'as1');
+          getMaintask(`convConfigId=${data.convConfigId}`).then((data) => {
+            this.tableData = [];
+            this.tableData.push(data);
+          })
+        })
       },
       handleSelectionChange(val) {
-        console.log('aaa');
         this.multipleSelection = val;
+        this.executeParam = `clid=${this.multipleSelection[0].convListId}`;
       },
-      selectOnecol(selection, row){
-        console.log('---selectOne---');
-        console.log(selection, row);
-      },
-      selectAllcol(selection){
-        console.log('---selectAll---');
-        console.log(selection);
-      },
-      pageSize(num){
-        console.log('---onepageSize---');
-        console.log(num);
-      },
-      currentPage(cur){
-        console.log('---currentPageNum---');
-        console.log(cur);
-
+      execute(){
+        if(this.executeParam) {
+          let that = this;
+          dataSync(this.executeParam).then(function (data) {
+            if(data.code == 200){
+              that.successTip = true;
+            }else{
+              that.failTip = true;
+            }
+          })
+        }
       }
-
     }
   }
 
@@ -238,8 +255,57 @@
     padding: 0 8px;
     color: #ccc;
   }
-  .el-pagination{
-    float: right;
+  .provinceDel {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    z-index: 10;
+  .tipBlock{
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    bottom: 0px;
+    right: 0px;
+    margin: auto;
+    width: 450px;
+    height:170px;
+    border-radius: 6px;
+    background-color: #ffffff;
+    padding:30px;
+    text-align:center;
+  h2{
+    color:#575757;
+    text-align: center;
+  }
+  div{
+    display: inline-block;
+    text-align: center;
+    background-color: rgb(140, 212, 245);
+    width: 88px;
+    height: 40px;
+    line-height: 40px;
+    color:#ffffff;
+    border-radius: 5px;
+    margin-top: 40px;
+    cursor: pointer;
+  }
+  }
+  }
+
+  @keyframes bounce-in {
+    0% {
+      transform: scale(0);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  .bounce-enter-active {
+    animation: bounce-in 0.5s;
   }
 
 </style>

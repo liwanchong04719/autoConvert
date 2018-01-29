@@ -157,13 +157,13 @@
             >
             </el-table-column>
             <el-table-column
-              prop="provinceNM"
+              prop="provinceNMNosep"
               label="省份"
               width="80"
             >
             </el-table-column>
             <el-table-column
-              prop="provinceNMNosep"
+              prop="provinceNM"
               label="省份（份）"
               width="90">
             </el-table-column>
@@ -442,7 +442,7 @@
         }
         this.map.addSource('ProvincialRegion', {
           "type": "vector",
-          "tiles": [appConfig.developUrl+"monitor/pbf/outline/{z}/{x}/{y}?convListId="+mapParam]
+          "tiles": [appConfig.developUrl+"automate/monitor/pbf/outline/{z}/{x}/{y}?convListId="+mapParam]
         })
 
         var provinceSuccesslayer={
@@ -594,7 +594,7 @@
         }
         this.map.addSource('mapMesh', {
           "tiles": [
-            appConfig.developUrl+"monitor/pbf/meshoutline/{z}/{x}/{y}?convConfigId="+meshParam
+            appConfig.developUrl+"automate/monitor/pbf/meshoutline/{z}/{x}/{y}?convConfigId="+meshParam
           ],
           "type": "vector"
         })
@@ -604,7 +604,7 @@
         }
         this.map.addSource('mapMeshcenter', {
           "tiles": [
-            appConfig.developUrl+"monitor/pbf/meshpoint/{z}/{x}/{y}"
+            appConfig.developUrl+"automate/monitor/pbf/meshpoint/{z}/{x}/{y}?convConfigId="+meshParam
           ],
           "type": "vector"
         })

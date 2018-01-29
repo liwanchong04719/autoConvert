@@ -30,7 +30,7 @@
               :value="one.configValue">
             </el-option>
           </el-select>
-          <el-button type="primary" style="margin-right: 20px;float:right"  size="small">执行<i class="el-icon-upload el-icon--right"></i></el-button>
+          <el-button type="primary" style="margin-right: 20px;float:right"  size="small" @click="execute">执行<i class="el-icon-upload el-icon--right"></i></el-button>
         </div>
         <div style="margin-top: 20px">
           <el-table
@@ -39,8 +39,8 @@
             tooltip-effect="dark"
             style="width: 100%; background-color: #F5F5F5;"
             @selection-change="handleSelectionChange"
-            @select="selectOnecol"
-            @select-all="selectAllcol">
+            @filter-change="filterMultcol"
+            >
             <el-table-column
               type="selection"
               width="55">
@@ -62,12 +62,15 @@
               show-overflow-tooltip>
             </el-table-column>
             <el-table-column
-              prop="provinceNM"
+              prop="provinceNMNosep"
               label="省份"
-              show-overflow-tooltip>
+              :filters="provinceList"
+              filter-placement="bottom"
+              column-key="provinceName"
+            >
             </el-table-column>
             <el-table-column
-              prop="provinceNMNosep"
+              prop="provinceNM"
               label="省份（份）"
               show-overflow-tooltip>
             </el-table-column>
@@ -75,22 +78,31 @@
               prop="programCode"
               label="程序"
               width="130"
-              show-overflow-tooltip>
+              :filters="programList"
+              filter-placement="bottom"
+              column-key="programCode"
+            >
             </el-table-column>
             <el-table-column
               prop="convStep"
               label="阶段"
-              show-overflow-tooltip>
+              :filters="stepList"
+              filter-placement="bottom"
+              column-key="step"
+            >
             </el-table-column>
             <el-table-column
               prop="status"
               label="状态"
-              show-overflow-tooltip>
+              :filters="statusList"
+              filter-placement="bottom"
+              column-key="status"
+            >
             </el-table-column>
             <el-table-column
               prop="reconvert"
               label="重转次数"
-              show-overflow-tooltip>
+            >
             </el-table-column>
           </el-table>
 
@@ -100,11 +112,31 @@
         background
         layout="total, prev, pager, next"
         :page-size="10"
-        :total="totalItem"
+        :total="totalSize"
         @current-change="currentPage"
       >
       </el-pagination>
     </div>
+    <transition
+      name="bounce"
+    >
+      <div v-if="successTip" class="provinceDel">
+        <div class="tipBlock">
+          <h2>执行成功！</h2>
+          <div @click="successTip = !successTip">OK</div>
+        </div>
+      </div>
+    </transition>
+    <transition
+      name="bounce"
+    >
+      <div v-if="failTip" class="provinceDel">
+        <div class="tipBlock">
+          <h2>执行失败！</h2>
+          <div @click="failTip = !failTip">OK</div>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 <script type='text/ecmascript-6'>
@@ -112,7 +144,8 @@
   import {
     getconfig,
     getConfigId,
-    getSubinfo
+    getSubinfo,
+    taskRerun
   } from '../dataService/service';
   export default {
     name: 'menuList',
@@ -127,7 +160,18 @@
         detailsType: [],
         multipleSelection: [],
         tableData:[],
-        totalItem:0
+        provinceList:[],
+        programList:[],
+        stepList:[],
+        statusList:[],
+        totalSize:0,
+        executeParam:'',
+        provinceParam:'',
+        programParam:'',
+        stepParam:'',
+        statusParam:'',
+        successTip:false,
+        failTip:false
       }
     },
     components: {
@@ -172,33 +216,145 @@
       changeOption(param){
         getConfigId(param).then((data) => {
           this.convListId = data.convListId;
-          console.log(data);
-          console.log(this.convConfigId + 'as1');
-          getSubinfo(`convListId=${this.convListId}&pageSize=10&pageNum=1`).then((data) => {
-            this.totalItem = data[0].totolPage;
-            this.tableData = data.slice(1,data.length);
+          getSubinfo(`convListId=${this.convListId}&pageNum=1&pageSize=10`).then((data) => {
+            this.totalSize = data[0].totolPage;
+            this.tableData = data.slice(1, data.length);
+          })
+
+          getSubinfo(`convListId=${this.convListId}`).then((data) => {          //请求得全部的筛选字段集合
+            //筛选字段
+            let provinceArr = [];                                                //定义一个筛选的字段列表
+            let stepArr = [];
+            let programArr = [];
+            let statusArr = [];
+            this.provinceList = [];                                              //push前置空
+            this.stepList = [];
+            this.programList = [];
+            this.statusList = [];
+            for(let i=1;i<data.length;i++) {                                     //获取结果集中筛选字段的数据集合
+              provinceArr.push(data[i].provinceNMNosep);
+              stepArr.push(data[i].convStep);
+              programArr.push(data[i].programCode);
+              statusArr.push(data[i].status);
+            }
+
+            //"省份"筛选字段
+            let provinceResult = provinceArr.filter(function(el,index,self) {    //将取到的字段列表去重
+              return self.indexOf(el) === index;
+            })
+
+            for(let i=0;i<provinceResult.length;i++){                             //将数据键值对放入筛选字段数组中
+              this.provinceList.push({ text: provinceResult[i], value: provinceResult[i]});
+            }
+
+            //"程序"筛选字段
+            let programResult = programArr.filter(function(el,index,self) {
+              return self.indexOf(el) === index;
+            })
+
+            for(let i=0;i<programResult.length;i++){
+              this.programList.push({ text: programResult[i], value: programResult[i]});
+            }
+
+            //"阶段"筛选字段
+            let stepResult = stepArr.filter(function(el,index,self) {
+              return self.indexOf(el) === index;
+            })
+
+            for(let i=0;i<stepResult.length;i++){
+              this.stepList.push({ text: stepResult[i], value: stepResult[i]});
+            }
+
+            //"状态"筛选字段
+            let statusResult = statusArr.filter(function(el,index,self) {
+              return self.indexOf(el) === index;
+            })
+
+            for(let i=0;i<statusResult.length;i++){
+              this.statusList.push({ text: statusResult[i], value: statusResult[i]});
+            }
           })
         })
       },
       handleSelectionChange(val) {
         console.log('aaa');
+
         this.multipleSelection = val;
-      },
-      selectOnecol(selection, row){
-        console.log('---selectOne---');
-        console.log(selection, row);
-      },
-      selectAllcol(selection){
-        console.log('---selectAll---');
-        console.log(selection);
+        console.log(this.multipleSelection);
+        let runtimeIds = '';
+        for(let i=0;i<this.multipleSelection.length;i++){
+          console.log(this.multipleSelection[i].convListDetailRuntimeId);
+          runtimeIds = runtimeIds + ','+ this.multipleSelection[i].convListDetailRuntimeId;
+
+        }
+        console.log('bbb');
+        console.log(runtimeIds);
+        let paramConvListId = this.multipleSelection[0].convListId;
+        this.executeParam = `clid=${paramConvListId}&runtimeIds=${runtimeIds.slice(1,runtimeIds.length)}`;
+        console.log(this.executeParam);
       },
       currentPage(cur){
         console.log('---currentPageNum---');
         console.log(cur);
         getSubinfo(`convListId=${this.convListId}&pageSize=10&pageNum=${cur}`).then((data) => {
-          this.totalItem = data[0].totolPage;
+          this.totalSize = data[0].totolPage;
           this.tableData = data.slice(1,data.length);
         })
+      },
+      filterMultcol(filters){                     //所有的筛选条件写在这个函数中：多选多条件
+        console.log(filters);
+        let key = Object.keys(filters)[0];
+        let val = filters[key];                  //多选时传的参数：let val = filters[key]为多选字段的集合
+
+        if(key === 'provinceName'){
+          this.provinceParam =`${key}=${val}`
+        }
+        if(key === 'programCode'){
+          this.programParam =`${key}=${val}`
+        }
+        if(key === 'step'){
+          this.stepParam =`${key}=${val}`
+        }
+        if(key === 'status'){
+          let str = '';
+          for(let i=0;i<val.length;i++){
+            if(val[i] == '失败'){
+              str = str+','+'0'
+            }
+            if(val[i] == '成功'){
+              str = str+','+'1'
+            }
+            if(val[i] == '转换中'){
+              str = str+','+'2'
+            }
+            if(val[i] == '未开始'){
+              str = str+','+'3'
+            }
+            if(val[i] == '废弃'){
+              str = str+','+'4'
+            }
+          }
+          this.statusParam =`${key}=${str.slice(1,str.length)}`
+        }
+
+        let param = `convListId=${this.convListId}&pageNum=1&pageSize=10&${this.provinceParam}&${this.programParam}&${this.stepParam}&${this.statusParam}`;
+        getSubinfo(param).then((data) => {
+          this.totalSize = data[0].totolPage;
+          this.tableData = data.slice(1, data.length);
+        })
+      },
+      execute(){
+        if(this.executeParam) {
+          let that = this;
+          taskRerun(this.executeParam).then(function (data) {
+            if(data.code == 200){
+              that.successTip = true;
+            }else{
+              that.failTip = true;
+            }
+          })
+        }
+
       }
 
     }
@@ -244,6 +400,59 @@
   }
   .el-pagination{
     float: right;
+  }
+
+  .bounce-enter-active {
+    animation: bounce-in 0.5s;
+  }
+
+  @keyframes bounce-in {
+    0% {
+      transform: scale(0);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  .provinceDel {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    z-index: 10;
+  .tipBlock{
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    bottom: 0px;
+    right: 0px;
+    margin: auto;
+    width: 450px;
+    height:170px;
+    border-radius: 6px;
+    background-color: #ffffff;
+    padding:30px;
+    text-align:center;
+  h2{
+    color:#575757;
+    text-align: center;
+  }
+  div{
+    display: inline-block;
+    text-align: center;
+    background-color: rgb(140, 212, 245);
+    width: 88px;
+    height: 40px;
+    line-height: 40px;
+    color:#ffffff;
+    border-radius: 5px;
+    margin-top: 40px;
+    cursor: pointer;
+  }
+  }
   }
 
 </style>
